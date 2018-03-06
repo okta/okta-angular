@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-#!/usr/bin/env node
-
 /** Angular CLI does not support environment variables the same
  * way Node apps do. See:
  * https://github.com/angular/angular-cli/issues/4318
@@ -30,8 +28,7 @@ const defaultEnvValues = {
   BASE_URI: 'http://localhost:3000',
   REDIRECT_URI: 'http://localhost:3000/implicit/callback',
   ISSUER: 'https://{yourOktaDomain}.com/oauth2/default',
-  CLIENT_ID: '{clientId}',
-  CLIENT_SECRET: '{clientSecret}',
+  CLIENT_ID: process.env.SPA_CLIENT_ID || '{clientId}',
   USERNAME: '{userName}',
   PASSWORD: '{password}',
 };
