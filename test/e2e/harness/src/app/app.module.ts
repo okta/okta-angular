@@ -14,8 +14,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 
-import { environment } from './../environments/environment';
-
 /**
  * Okta Library
  */
@@ -104,17 +102,17 @@ const pkce = !!url.searchParams.get('pkce') || url.pathname.indexOf('pkce/callba
 const redirectUri = window.location.origin + (pkce ? '/pkce/callback' : '/implicit/callback');
 
 const config = {
-  issuer: environment.ISSUER,
+  issuer: process.env.ISSUER,
   pkce,
   redirectUri,
-  clientId: environment.CLIENT_ID,
+  clientId: process.env.CLIENT_ID,
   onAuthRequired: onNeedsGlobalAuthenticationGuard,
   testing: {
     disableHttpsCheck: false
   }
 };
 
-if (environment.OKTA_TESTING_DISABLEHTTPSCHECK) {
+if (process.env.OKTA_TESTING_DISABLEHTTPSCHECK) {
   config.testing = {
     disableHttpsCheck: true
   };

@@ -4,6 +4,7 @@
     "./", "../support/tsconfig.spec.json"
   ],
   "compilerOptions": {
+    "types": ["node", "jest"],
     "resolveJsonModule": true
   }
 }

@@ -372,11 +372,11 @@ describe('Angular service', () => {
         expect(OktaAuthService.prototype.loginRedirect).toHaveBeenCalled();
       });
 
-      it('calls onAuthRequired, if provided, instead of loginRedirect', () => {
-        const onAuthRequired = jest.fn().mockReturnValue(expectedRes);
+      it('calls onAuthRequired, if provided, instead of loginRedirect', async () => {
+        const onAuthRequired = jest.fn().mockReturnValue(Promise.resolve(expectedRes));
         const service = createService({ onAuthRequired });
         const injector = TestBed.get(Injector);
-        const res = service.login();
+        const res = await service.login();
         expect(res).toBe(expectedRes);
         expect(OktaAuthService.prototype.loginRedirect).not.toHaveBeenCalled();
         expect(onAuthRequired).toHaveBeenCalledWith(service, injector);
@@ -578,7 +578,7 @@ describe('Angular service', () => {
 
       it('accepts an options object', async () => {
         bootstrap();
-        const options = { foo: 'bar' };
+        const options = { postLogoutRedirectUri: 'bar' };
         await service.logout(options);
         expect((service as any).signOut).toHaveBeenCalledWith(options);
       });

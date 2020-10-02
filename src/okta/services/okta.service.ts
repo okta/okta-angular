@@ -19,12 +19,13 @@ import {
 
 import { OKTA_CONFIG, OktaConfig, AuthRequiredFunction } from '../models/okta.config';
 
+// eslint-disable-next-line node/no-unpublished-import
 import packageInfo from '../packageInfo';
 
 /**
  * Import the okta-auth-js library
  */
-import { OktaAuth, TokenManager, AccessToken, IDToken, UserClaims } from '@okta/okta-auth-js';
+import { OktaAuth, TokenManager, AccessToken, IDToken, UserClaims, SignoutOptions } from '@okta/okta-auth-js';
 import { Observable, Observer } from 'rxjs';
 
 /**
@@ -70,7 +71,7 @@ export class OktaAuthService extends OktaAuth {
       this.$authenticationState = new Observable((observer: Observer<boolean>) => { this.observers.push(observer); });
     }
 
-    login(fromUri?: string, additionalParams?: object) {
+    async login(fromUri?: string, additionalParams?: Record<string, unknown>): Promise<unknown> {
       this.setFromUri(fromUri);
       const onAuthRequired: AuthRequiredFunction | undefined = this.config.onAuthRequired;
       if (onAuthRequired) {
@@ -151,7 +152,7 @@ export class OktaAuthService extends OktaAuth {
      * @param fromUri
      * @param additionalParams
      */
-    loginRedirect(fromUri?: string, additionalParams?: object) {
+    async loginRedirect(fromUri?: string, additionalParams?: Record<string, unknown>): Promise<void> {
       if (fromUri) {
         this.setFromUri(fromUri);
       }
@@ -169,7 +170,7 @@ export class OktaAuthService extends OktaAuth {
      * @param uri
      * @param queryParams
      */
-    setFromUri(fromUri?: string) {
+    setFromUri(fromUri?: string): void {
       // Use current location if fromUri was not passed
       fromUri = fromUri || window.location.href;
       // If a relative path was passed, convert to absolute URI
@@ -210,7 +211,7 @@ export class OktaAuthService extends OktaAuth {
      * tokens stored in the tokenManager.
      * @param options
      */
-    async logout(options?: any): Promise<void> {
+    async logout(options?: string | SignoutOptions): Promise<void> {
       let redirectUri = null;
       options = options || {};
       if (typeof options === 'string') {

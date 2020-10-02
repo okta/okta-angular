@@ -22,9 +22,9 @@
             "dom"
         ],
         "typeRoots": [
-            "node_modules/@types/",
-            "src/@types/"
+            "node_modules/@types/"
         ],
+        "types": ["node"],
         "esModuleInterop": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
@@ -33,13 +33,12 @@
         "importHelpers": true
     },
     "files": [
-        "public-api.ts",
-        "../../node_modules/zone.js/dist/zone.js.d.ts"
+        "public-api.ts"
     ],
     "angularCompilerOptions": {
         "enableResourceInlining": true,
         "skipTemplateCodegen": true,
-        "annotateForClosureCompiler": true,
+        "annotateForClosureCompiler": false,
         "strictMetadataEmit": true,
         "flatModuleOutFile": "okta-angular.js",
         "flatModuleId": "@okta/okta-angular"
