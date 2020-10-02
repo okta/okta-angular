@@ -51,7 +51,7 @@ exports.config = {
       }
     }));
     jasmine.getEnv().addReporter(new JUnitXmlReporter({
-      savePath: '../../../reports/junit',
+      savePath: '../../../test-reports/e2e',
       filePrefix: 'results',
     }));
   }

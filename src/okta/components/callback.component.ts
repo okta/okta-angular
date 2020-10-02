@@ -22,11 +22,11 @@ export class OktaCallbackComponent implements OnInit {
 
   constructor(private okta: OktaAuthService) {}
 
-  async ngOnInit() {
+  ngOnInit(): void {
     /**
      * Handles the response from Okta and parses tokens.
      */
-    return this.okta.handleAuthentication()
+    this.okta.handleAuthentication()
       .then(() => {
         /**
          * Navigate back to the saved uri, or root of application.

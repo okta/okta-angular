@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2017-Present, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
@@ -10,13 +10,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '../services/okta.service';
-
-@Component({ template: `` })
-export class OktaLoginRedirectComponent implements OnInit {
-  constructor(private okta: OktaAuthService) {}
-  ngOnInit(): void {
-    this.okta.loginRedirect();
-  }
-}
+export const environment = {
+  production: false
+};

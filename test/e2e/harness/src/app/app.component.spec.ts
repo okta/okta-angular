@@ -1,11 +1,9 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { environment } from './../environments/environment';
 
 import {
-  OktaAuthModule,
-  OktaAuthService,
+  OktaAuthModule
 } from '@okta/okta-angular';
 
 const mockAccessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXIiOj' +
@@ -27,8 +25,8 @@ const standardAccessTokenParsed = {
   expiresAt: new Date().getTime() + 100, // ensure token is active
   scopes: ['openid', 'email'],
   tokenType: 'Bearer',
-  authorizeUrl: environment.ISSUER + '/oauth2/v1/authorize',
-  userinfoUrl: environment.ISSUER + '/oauth2/v1/userinfo'
+  authorizeUrl: process.env.ISSUER + '/oauth2/v1/authorize',
+  userinfoUrl: process.env.ISSUER + '/oauth2/v1/userinfo'
 };
 
 describe('Unit Tests', () => {
@@ -37,9 +35,9 @@ describe('Unit Tests', () => {
 
   beforeEach(() => {
     const config = {
-      issuer: environment.ISSUER,
-      redirectUri: environment.REDIRECT_URI,
-      clientId: environment.CLIENT_ID,
+      issuer: process.env.ISSUER,
+      redirectUri: process.env.REDIRECT_URI,
+      clientId: process.env.CLIENT_ID,
       scopes: ['email'],
       responseType: 'id_token',
       testing: {
@@ -47,7 +45,7 @@ describe('Unit Tests', () => {
       }
     };
 
-    if (environment.OKTA_TESTING_DISABLEHTTPSCHECK) {
+    if (process.env.OKTA_TESTING_DISABLEHTTPSCHECK) {
       config.testing = {
         disableHttpsCheck: true
       };
@@ -74,9 +72,9 @@ describe('Unit Tests', () => {
 
   it('should instantiate the OktaAuth object', async(() => {
     const config = component.oktaAuth.getOktaConfig();
-    expect(config.issuer).toBe(environment.ISSUER);
-    expect(config.redirectUri).toBe(environment.REDIRECT_URI);
-    expect(config.clientId).toBe(environment.CLIENT_ID);
+    expect(config.issuer).toBe(process.env.ISSUER);
+    expect(config.redirectUri).toBe(process.env.REDIRECT_URI);
+    expect(config.clientId).toBe(process.env.CLIENT_ID);
     expect(config.scopes.join(' ')).toBe('openid email');
     expect(config.responseType).toBe('id_token');
   }));

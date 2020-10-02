@@ -3,6 +3,7 @@
 const shell = require('shelljs');
 const chalk = require('chalk');
 const fs = require('fs');
+const path = require('path');
 
 const PACKAGE = `okta-angular`;
 const NPM_DIR = `dist`;
@@ -12,7 +13,7 @@ const FESM2015_DIR = `${NPM_DIR}/fesm2015`;
 const FESM5_DIR = `${NPM_DIR}/fesm5`;
 const BUNDLES_DIR = `${NPM_DIR}/bundles`;
 const OUT_DIR = `${NPM_DIR}/package`;
-const OUT_DIR_ESM5 = `${NPM_DIR}/package/esm5`;
+const OUT_DIR_ESM5 = path.resolve(__dirname, `${NPM_DIR}/package/esm5`);
 
 shell.echo(`Start building...`);
 
@@ -27,9 +28,9 @@ shell.mkdir(`-p`, `./${OUT_DIR}`);
 /* TSLint with Codelyzer */
 // https://github.com/palantir/tslint/blob/master/src/configs/recommended.ts
 // https://github.com/mgechev/codelyzer
-shell.echo(`Start TSLint`);
+shell.echo(`Start lint`);
 shell.exec(`yarn lint`);
-shell.echo(chalk.green(`TSLint completed`));
+shell.echo(chalk.green(`lint completed`));
 
 shell.cp(`-Rf`, [`src`, `*.ts`, `*.json`], `${OUT_DIR}`);
 
@@ -88,8 +89,19 @@ shell.cp(`-Rf`, [`package.json`, `LICENSE`, `README.md`], `${NPM_DIR}`);
 
 shell.echo(`Modifying final package.json`);
 let packageJSON = JSON.parse(fs.readFileSync(`./${NPM_DIR}/package.json`));
-packageJSON.private = false;
-packageJSON.scripts.prepare = '';
+delete packageJSON.private; // remove private flag
+delete packageJSON.scripts; // remove all scripts
+delete packageJSON.jest; // remove jest section
+delete packageJSON.workspaces; // remove yarn workspace section
+
+// Remove "dist/" from the entrypoint paths.
+['main', 'module', 'es2015', 'esm5', 'esm2015', 'fesm5', 'fesm2015', 'types'].forEach(function(key) {
+  if (packageJSON[key]) { 
+    packageJSON[key] = packageJSON[key].replace(`${NPM_DIR}/`, '');
+  }
+});
+
+
 fs.writeFileSync(`./${NPM_DIR}/package.json`, JSON.stringify(packageJSON, null, 4));
 
 shell.echo(chalk.green(`End building`));

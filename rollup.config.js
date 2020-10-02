@@ -51,7 +51,7 @@ export default {
         }),
         sourcemaps()
     ],
-    onwarn: () => { return },
+    onwarn: () => { return; },
     output: {
         format: 'umd',
         name: 'ng.oktaAngular',
@@ -60,4 +60,4 @@ export default {
         exports: 'named',
         amd: { id: 'okta-angular' }
     }
-}
+};

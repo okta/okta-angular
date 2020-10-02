@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { browser } from 'protractor';
-
 import {
   AppPage,
   OktaSignInPage,
@@ -21,8 +19,6 @@ import {
   SessionTokenSignInPage
 } from './page-objects';
 
-import { environment } from '../src/environments/environment';
-import { Utils } from './utils';
 
 describe('Angular + Okta App', () => {
   let page: AppPage;
@@ -44,10 +40,10 @@ describe('Angular + Okta App', () => {
   describe('implicit flow', () => {
     it('should redirect to Okta for login when trying to access a protected page', () => {
       protectedPage.navigateTo();
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       protectedPage.waitUntilVisible();
@@ -69,10 +65,10 @@ describe('Angular + Okta App', () => {
     it('should preserve query paramaters after redirecting to Okta', () => {
       protectedPage.navigateTo('/foo?state=bar');
 
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       protectedPage.waitUntilVisible('/foo?state=bar');
@@ -87,10 +83,10 @@ describe('Angular + Okta App', () => {
     it('should redirect to Okta for login', () => {
       loginPage.navigateTo();
 
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       loginPage.waitUntilLoggedIn();
@@ -107,10 +103,10 @@ describe('Angular + Okta App', () => {
   describe('PKCE flow', () => {
     it('should redirect to Okta for login when trying to access a protected page', () => {
       protectedPage.navigateTo('?pkce=1');
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       protectedPage.waitUntilVisible('?pkce=1');
@@ -132,10 +128,10 @@ describe('Angular + Okta App', () => {
     it('should preserve query paramaters after redirecting to Okta', () => {
       protectedPage.navigateTo('/foo?state=bar&pkce=1');
 
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       protectedPage.waitUntilVisible('/foo?state=bar&pkce=1');
@@ -150,10 +146,10 @@ describe('Angular + Okta App', () => {
     it('should redirect to Okta for login', () => {
       loginPage.navigateTo();
 
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       loginPage.waitUntilLoggedIn();
@@ -174,8 +170,8 @@ describe('Angular + Okta App', () => {
 
       sessionTokenSignInPage.waitUntilVisible();
       sessionTokenSignInPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       page.waitUntilLoggedIn();
@@ -201,10 +197,10 @@ describe('Angular + Okta App', () => {
     it('displays the child route with authentication', () => {
       publicPage.navigateTo('/private');
 
-      oktaLoginPage.waitUntilVisible(environment.ISSUER);
+      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
-        username: environment.USERNAME,
-        password: environment.PASSWORD
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       });
 
       publicPage.waitUntilVisible();

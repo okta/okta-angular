@@ -31,7 +31,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
    * @param route
    * @param state
    */
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     if (await this.oktaAuth.isAuthenticated()) {
       return true;
     }
@@ -59,7 +59,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
   async canActivateChild(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ) {
+  ): Promise<boolean> {
     return this.canActivate(route, state);
   }
 

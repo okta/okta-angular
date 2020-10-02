@@ -15,6 +15,7 @@ describe('OktaCallbackComponent', () => {
     originalLocation = window.location;
     delete window.location;
     (window.location as any) = {
+      protocol: 'https:',
       replace: jest.fn()
     };
     const config = {
