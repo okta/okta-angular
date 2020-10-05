@@ -11,7 +11,7 @@
     "pretest": "../../../scripts/update_se_drivers.sh 0",
     "test": "ng test --watch=false",
     "lint": "ng lint",
-    "pree2e": "../../../scripts/update_se_drivers.sh 0",
+    "pree2e": "yarn prebuild && ../../../scripts/update_se_drivers.sh 0",
     "e2e": "ng e2e --port 8080 --no-webdriver-update"
   },
   "dependencies": {
