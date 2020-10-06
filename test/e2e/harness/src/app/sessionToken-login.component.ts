@@ -13,7 +13,7 @@
 import { Component } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
 
-import { OktaAuth } from '@okta/okta-auth-js';
+import OktaAuth from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-session-login',

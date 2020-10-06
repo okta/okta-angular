@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "3.0.0",
+  "version": "2.2.1",
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
@@ -42,8 +42,8 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@okta/configuration-validation": "^1.0.0",
-    "@okta/okta-auth-js": "^4.0.0",
+    "@okta/configuration-validation": "^0.4.1",
+    "@okta/okta-auth-js": "^3.2.3",
     "tslib": "^1.9.0"
   },
   "devDependencies": {
@@ -109,7 +109,7 @@
       "jest-junit"
     ],
     "moduleNameMapper": {
-      "@okta/okta-auth-js": "<rootDir>/node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js"
+      "@okta/okta-auth-js": "<rootDir>/node_modules/@okta/okta-auth-js/dist/okta-auth-js.min.js"
     },
     "restoreMocks": true,
     "transform": {

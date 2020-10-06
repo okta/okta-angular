@@ -1,5 +1,8 @@
+jest.mock('@okta/okta-auth-js');
+
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import OktaAuth from '@okta/okta-auth-js';
 
 import {
   OktaAuthModule,
@@ -18,6 +21,10 @@ const VALID_CONFIG = {
 
 function createService(options: any) {
   options = options || {};
+
+  const oktaAuth = options.oktaAuth || {};
+  oktaAuth.tokenManager = oktaAuth.tokenManager || { on: jest.fn() };
+  OktaAuth.mockImplementation(() => oktaAuth);
 
   TestBed.configureTestingModule({
     imports: [
@@ -42,6 +49,9 @@ function createService(options: any) {
 
 describe('Angular auth guard', () => {
 
+  beforeEach(() => {
+    OktaAuth.mockClear();
+  });
   afterEach(() => {
     jest.restoreAllMocks();
   });
