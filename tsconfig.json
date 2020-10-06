@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "emitDecoratorMetadata": true,
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "experimentalDecorators": true,
         "strict": true,
         "strictPropertyInitialization": false,
@@ -18,7 +18,8 @@
             "dom"
         ],
         "typeRoots": [
-            "node_modules/@types/"
+            "node_modules/@types/",
+            "src/@types/"
         ]
     },
     "exclude": [

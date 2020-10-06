@@ -4,7 +4,7 @@
     "./", "../support/tsconfig.spec.json"
   ],
   "compilerOptions": {
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "okta__okta-auth-js", "okta__configuration-validation"],
     "resolveJsonModule": true
   }
 }

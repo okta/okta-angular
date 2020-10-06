@@ -18,6 +18,8 @@ import {
 } from '@okta/configuration-validation';
 
 import { OKTA_CONFIG, OktaConfig, AuthRequiredFunction } from '../models/okta.config';
+import { UserClaims } from '../models/user-claims';
+import { TokenManager, AccessToken, IDToken } from '../models/token-manager';
 
 // eslint-disable-next-line node/no-unpublished-import
 import packageInfo from '../packageInfo';
@@ -25,53 +27,43 @@ import packageInfo from '../packageInfo';
 /**
  * Import the okta-auth-js library
  */
-import { OktaAuth, TokenManager, AccessToken, IDToken, UserClaims, SignoutOptions } from '@okta/okta-auth-js';
+import OktaAuth from '@okta/okta-auth-js';
 import { Observable, Observer } from 'rxjs';
 
-/**
- * Scrub scopes to ensure 'openid' is included
- * @param scopes
- */
-function scrubScopes(scopes: string[]): void {
-  if (scopes.indexOf('openid') >= 0) {
-    return;
-  }
-  scopes.unshift('openid');
-}
-
 @Injectable()
-export class OktaAuthService extends OktaAuth {
+export class OktaAuthService {
+    private oktaAuth: OktaAuth;
     private config: OktaConfig;
     private observers: Observer<boolean>[];
-    private injector: Injector;
-
     $authenticationState: Observable<boolean>;
 
-    constructor(@Inject(OKTA_CONFIG) config: OktaConfig, injector: Injector) {
-      config = Object.assign({}, config);
-      config.scopes = config.scopes || ['openid', 'email'];
+    constructor(@Inject(OKTA_CONFIG) config: OktaConfig, private injector: Injector) {
+      this.observers = [];
 
-      // Scrub scopes to ensure 'openid' is included
-      scrubScopes(config.scopes);
+      /**
+       * Cache the auth config.
+       */
+      this.config = Object.assign({}, config);
+      this.config.scopes = this.config.scopes || ['openid', 'email'];
+
+      /**
+       * Scrub scopes to ensure 'openid' is included
+       */
+
+      this.scrubScopes(this.config.scopes);
 
       // Assert Configuration
-      assertIssuer(config.issuer, config.testing);
-      assertClientId(config.clientId);
-      assertRedirectUri(config.redirectUri);
+      assertIssuer(this.config.issuer, this.config.testing);
+      assertClientId(this.config.clientId);
+      assertRedirectUri(this.config.redirectUri);
 
-      super(config);
-      this.config = config;
-      this.injector = injector;
-
-      // Customize user agent
-      this.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.userAgent}`;
-
-      // Initialize observers
-      this.observers = [];
+      this.oktaAuth = new OktaAuth(this.config);
+      this.oktaAuth.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.oktaAuth.userAgent}`;
       this.$authenticationState = new Observable((observer: Observer<boolean>) => { this.observers.push(observer); });
     }
 
-    async login(fromUri?: string, additionalParams?: Record<string, unknown>): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    login(fromUri?: string, additionalParams?: Record<string, unknown>) {
       this.setFromUri(fromUri);
       const onAuthRequired: AuthRequiredFunction | undefined = this.config.onAuthRequired;
       if (onAuthRequired) {
@@ -81,7 +73,7 @@ export class OktaAuthService extends OktaAuth {
     }
 
     getTokenManager(): TokenManager {
-      return this.tokenManager;
+      return this.oktaAuth.tokenManager;
     }
 
     /**
@@ -108,7 +100,7 @@ export class OktaAuthService extends OktaAuth {
      */
     async getAccessToken(): Promise<string | undefined>  {
       try {
-        const accessToken: AccessToken = await this.tokenManager.get('accessToken') as AccessToken;
+        const accessToken: AccessToken = await this.oktaAuth.tokenManager.get('accessToken') as AccessToken;
         return accessToken.accessToken;
       } catch (err) {
         // The user no longer has an existing SSO session in the browser.
@@ -123,7 +115,7 @@ export class OktaAuthService extends OktaAuth {
      */
     async getIdToken(): Promise<string | undefined> {
       try {
-        const idToken: IDToken = await this.tokenManager.get('idToken') as IDToken;
+        const idToken: IDToken = await this.oktaAuth.tokenManager.get('idToken') as IDToken;
         return idToken.idToken;
       } catch (err) {
         // The user no longer has an existing SSO session in the browser.
@@ -137,7 +129,7 @@ export class OktaAuthService extends OktaAuth {
      * Returns user claims from the /userinfo endpoint.
      */
     async getUser(): Promise<UserClaims> {
-      return this.token.getUserInfo();
+      return this.oktaAuth.token.getUserInfo();
     }
 
     /**
@@ -152,7 +144,8 @@ export class OktaAuthService extends OktaAuth {
      * @param fromUri
      * @param additionalParams
      */
-    async loginRedirect(fromUri?: string, additionalParams?: Record<string, unknown>): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    loginRedirect(fromUri?: string, additionalParams?: Record<string, unknown>) {
       if (fromUri) {
         this.setFromUri(fromUri);
       }
@@ -162,7 +155,7 @@ export class OktaAuthService extends OktaAuth {
         responseType: this.config.responseType
       }, additionalParams);
 
-      return this.token.getWithRedirect(params); // can throw
+      return this.oktaAuth.token.getWithRedirect(params); // can throw
     }
 
     /**
@@ -193,13 +186,13 @@ export class OktaAuthService extends OktaAuth {
      * Parses the tokens from the callback URL.
      */
     async handleAuthentication(): Promise<void> {
-      const res = await this.token.parseFromUrl();
+      const res = await this.oktaAuth.token.parseFromUrl();
       const tokens = res.tokens;
       if (tokens.accessToken) {
-        this.tokenManager.add('accessToken', tokens.accessToken as AccessToken);
+        this.oktaAuth.tokenManager.add('accessToken', tokens.accessToken as AccessToken);
       }
       if (tokens.idToken) {
-        this.tokenManager.add('idToken', tokens.idToken as IDToken);
+        this.oktaAuth.tokenManager.add('idToken', tokens.idToken as IDToken);
       }
       if (await this.isAuthenticated()) {
         this.emitAuthenticationState(true);
@@ -211,7 +204,8 @@ export class OktaAuthService extends OktaAuth {
      * tokens stored in the tokenManager.
      * @param options
      */
-    async logout(options?: string | SignoutOptions): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
+    async logout(options?: any): Promise<void> {
       let redirectUri = null;
       options = options || {};
       if (typeof options === 'string') {
@@ -224,9 +218,18 @@ export class OktaAuthService extends OktaAuth {
           postLogoutRedirectUri: redirectUri
         };
       }
-      await this.signOut(options);
+      await this.oktaAuth.signOut(options);
       this.emitAuthenticationState(false);
     }
 
-
+    /**
+     * Scrub scopes to ensure 'openid' is included
+     * @param scopes
+     */
+    scrubScopes(scopes: string[]): void {
+      if (scopes.indexOf('openid') >= 0) {
+        return;
+      }
+      scopes.unshift('openid');
+    }
 }
