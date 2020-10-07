@@ -1,3 +1,7 @@
+# 3.0.0
+
+[#5](https://github.com/okta/okta-angular/pull/5) Release 3.0.0 - `OktaAuthService` now inherits from an instance of `@okta/okta-auth-js` so all configuration options and public methods are available. See [MIGRATING](MIGRATING.md) for detailed information.
+
 # 2.2.1
 
 ### Bug Fixes

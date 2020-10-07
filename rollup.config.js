@@ -46,14 +46,9 @@ export default {
             browser: true
         }),
         commonjs({
-            namedExports: {
-                '@okta/configuration-validation': [
-                    'assertIssuer',
-                    'assertClientId',
-                    'assertRedirectUri',
-                    'buildConfigObject'
-                ]
-            }
+            // namedExports: {
+            //     'node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js': ['toRelativeUrl']
+            // }
         }),
         sourcemaps()
     ],

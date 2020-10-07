@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaLoginRedirectComponent } from './components/login-redirect.component';
 import { OktaAuthService } from './services/okta.service';
@@ -33,8 +33,7 @@ import { createOktaService } from './createService';
       provide: OktaAuthService,
       useFactory: createOktaService,
       deps: [
-        OKTA_CONFIG,
-        Injector
+        OKTA_CONFIG
       ]
     }
   ]

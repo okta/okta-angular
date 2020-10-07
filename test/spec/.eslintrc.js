@@ -2,10 +2,12 @@
 
 module.exports = {
   extends: [
-    'plugin:jest/recommended'
+    'plugin:jest/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   plugins: [
-    'jest'
+    'jest',
+    '@typescript-eslint'
   ],
   env: {
     jest: true

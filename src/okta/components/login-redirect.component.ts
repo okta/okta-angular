@@ -17,6 +17,6 @@ import { OktaAuthService } from '../services/okta.service';
 export class OktaLoginRedirectComponent implements OnInit {
   constructor(private okta: OktaAuthService) {}
   ngOnInit(): void {
-    this.okta.loginRedirect();
+    this.okta.signInWithRedirect();
   }
 }
