@@ -35,7 +35,7 @@ notifications:
 
 before_script:
   - ls -a
-  - cd /test/selenium-test/
+  - cd test/selenium-test/
   - ls -a
   - docker ps -a
   - docker-compose up -d
