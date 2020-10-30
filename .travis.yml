@@ -43,7 +43,7 @@ before_script:
   - sleep 30
   - docker ps
   - npm install selenium-webdriver
-  - wget https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedriver_linux64.zip
+  - wget https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - sudo mv chromedriver /usr/bin/chromedriver
   - sudo chown root:root /usr/bin/chromedriver

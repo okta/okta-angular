@@ -22,6 +22,7 @@ var assert = require('assert');
     await driver.findElement(By.xpath('//*[contains(text(),\'Logout\')]')).click();
     await driver.findElement(By.xpath('//button[@routerlink=\'/login\']'))
     await driver.quit();
+    console.log("Test passed");
 
   }
    catch(err){

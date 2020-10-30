@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:14.15.0-alpine3.12
 RUN node -v
 RUN npm install -g @angular/cli
 RUN npm install @angular/core
