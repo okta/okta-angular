@@ -10,7 +10,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { Router } from '@angular/router';
+
 import {
   assertIssuer,
   assertClientId,
@@ -35,7 +37,7 @@ export class OktaAuthService extends OktaAuth {
 
     $authenticationState: Observable<boolean>;
 
-    constructor(@Inject(OKTA_CONFIG) config: OktaConfig) {
+    constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() router?: Router) {
       // Assert Configuration
       assertIssuer(config.issuer, config.testing);
       assertClientId(config.clientId);
@@ -53,8 +55,14 @@ export class OktaAuthService extends OktaAuth {
         return authState;
       };
       
+      // If a router is available, provide a default implementation of `restoreOriginalUri`
+      const restoreOriginalUri = (router && !config.restoreOriginalUri) ? async (oktaAuth: OktaAuth, originalUri: string) => {
+        return router.navigateByUrl(originalUri);
+      } : config.restoreOriginalUri;
+
       const options: OktaAuthOptions = Object.assign({
-        transformAuthState
+        transformAuthState,
+        restoreOriginalUri
       }, config);
 
       super(options);

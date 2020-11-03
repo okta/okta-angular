@@ -1,3 +1,6 @@
+[AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
+[transformAuthState]: https://github.com/okta/okta-auth-js/blob/master/README.md#transformauthstate
+
 # Migrating
 
 ## From version 2.x to 3.x
@@ -8,7 +11,7 @@
 
 ### "Active" token renew
 
-Previously, tokens would only be renewed when they were read from storge. This typically occurred when a user was navigating to a protected route. Now, tokens will be renewed in the background before they expire. If token renew fails, the [authState](https://github.com/okta/okta-auth-js/blob/master/README.md#authstatemanager) will be updated and `authState.isAuthenticated` will be recalculated. If the user is currently on a protected route, they will need to re-authenticate. Set the `onAuthRequired` option to customize behavior when authentication is required. You can set [tokenManager.autoRenew](https://github.com/okta/okta-auth-js/blob/master/README.md#autorenew) to `false` to disable active token renew logic.
+Previously, tokens would only be renewed when they were read from storge. This typically occurred when a user was navigating to a protected route. Now, tokens will be renewed in the background before they expire. If token renew fails, the [AuthState][] will be updated and `isAuthenticated` will be recalculated. If the user is currently on a protected route, they will need to re-authenticate. Set the `onAuthRequired` option to customize behavior when authentication is required. You can set [tokenManager.autoRenew](https://github.com/okta/okta-auth-js/blob/master/README.md#autorenew) to `false` to disable active token renew logic.
 
 ### `login` is removed
 
@@ -70,7 +73,7 @@ If you have a custom `isAuthenticated` function which implements the default log
 
 ### `isAuthenticated` is called by `transformAuthState`
 
-After the [authState](https://github.com/okta/okta-auth-js/blob/master/README.md#authstatemanager) is updated, but before it is emitted, [transformAuthState](https://github.com/okta/okta-auth-js/blob/master/README.md#transformauthstate) will be called. During this call, the `isAuthenticated` option, if set on the config object, will be called to set the value of `authState.isAuthenticated`. By default, `authState.isAuthenticated` will be true if **both** the access token and ID token are valid. This logic can be customized by providing a custom `isAuthenticated` function on the config object. You may also provide your own `transformAuthState` function to customize the `authState` object before it is emitted.
+After the [AuthState][] is updated, but before it is emitted, [transformAuthState][] will be called. During this call, the `isAuthenticated` option, if set on the config object, will be called to set the value of `authState.isAuthenticated`. By default, `authState.isAuthenticated` will be true if **both** the access token and ID token are valid. This logic can be customized by providing a custom `isAuthenticated` function on the config object. You may also provide your own [transformAuthState][] function to customize the [AuthState][] object before it is emitted.
 
 ### `getTokenManager` has been removed
 

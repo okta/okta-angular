@@ -1,4 +1,6 @@
 import { TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const PACKAGE_JSON = require("../../package.json");
@@ -90,6 +92,14 @@ describe("Angular service", () => {
       expect(createInstance(VALID_CONFIG)).not.toThrow();
     });
 
+    it("accepts a restoreOriginalUri method", () => {
+      const restoreOriginalUri = jest.fn();
+      const config = extendConfig({
+        restoreOriginalUri
+      });
+      const instance = createInstance(config)();
+      expect(instance.getOktaConfig().restoreOriginalUri).toBe(restoreOriginalUri);
+    });
   });
 
   it("Adds a user agent on internal oktaAuth instance", () => {
@@ -99,26 +109,58 @@ describe("Angular service", () => {
     ).toBeGreaterThan(-1);
   });
 
-  it("Can create the service via angular injection", () => {
-    TestBed.configureTestingModule({
-      imports: [OktaAuthModule],
-      providers: [
-        OktaAuthService,
-        {
-          provide: OKTA_CONFIG,
-          useValue: VALID_CONFIG,
-        },
-      ],
+  describe('dependency injection', () => {
+    it("Can create the service without a router", () => {
+      TestBed.configureTestingModule({
+        imports: [OktaAuthModule],
+        providers: [
+          OktaAuthService,
+          {
+            provide: OKTA_CONFIG,
+            useValue: VALID_CONFIG,
+          },
+        ],
+      });
+      const service = TestBed.get(OktaAuthService);
+      expect(service.config).toMatchInlineSnapshot(`
+        Object {
+          "clientId": "foo",
+          "issuer": "https://foo",
+          "redirectUri": "https://foo",
+        }
+      `);
+      expect(service.options.restoreOriginalUri).toBeUndefined();
     });
-    const service = TestBed.get(OktaAuthService);
-    expect(service.config).toMatchInlineSnapshot(`
-      Object {
-        "clientId": "foo",
-        "issuer": "https://foo",
-        "redirectUri": "https://foo",
-      }
-    `);
+    it("If a router is available, it will define `restoreOriginalUri`", () => {
+      TestBed.configureTestingModule({
+        imports: [
+          RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
+          OktaAuthModule
+        ],
+        providers: [
+          OktaAuthService,
+          {
+            provide: OKTA_CONFIG,
+            useValue: VALID_CONFIG,
+          },
+        ],
+      });
+      const service = TestBed.get(OktaAuthService);
+      expect(service.config).toMatchInlineSnapshot(`
+        Object {
+          "clientId": "foo",
+          "issuer": "https://foo",
+          "redirectUri": "https://foo",
+        }
+      `);
+      expect(service.options.restoreOriginalUri).toBeTruthy();
+      const router = TestBed.get(Router);
+      jest.spyOn(router, 'navigateByUrl').mockReturnValue(true);
+      service.options.restoreOriginalUri(service, '/foo');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/foo');
+    });
   });
+
 
   describe("service methods", () => {
     function createService(config?: OktaConfig) {

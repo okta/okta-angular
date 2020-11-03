@@ -3,6 +3,7 @@
 [Observable]: https://angular.io/guide/observables
 [Dependency Injection]: https://angular.io/guide/dependency-injection
 [OktaAuthService]: #oktaauthservice
+[AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
 
 # Okta Angular SDK
 
@@ -299,7 +300,7 @@ export class MyComponent {
 
 #### `oktaAuth.$authenticationState`
 
-An observable that returns true/false when the [AuthState](https://github.com/okta/okta-auth-js#authstatemanager) changes.
+An observable that returns true/false when the [AuthState][] changes.
 
 ## Contributing
 
