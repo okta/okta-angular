@@ -15,7 +15,7 @@ Previously, tokens would only be renewed when they were read from storge. This t
 
 ### `login` is removed
 
-This method called `onAuthRequired`, if it was set in the config options, or `loginRedirect` if no `onAuthRequired` option was set. If you had code that wa calling this method, you may either call your `onAuthRequired` function directly or `signInWithRedirect`.
+This method called `onAuthRequired`, if it was set in the config options, or `loginRedirect` if no `onAuthRequired` option was set. If you had code that was calling this method, you may either call your `onAuthRequired` function directly or `signInWithRedirect`.
 
 ### `loginRedirect` is replaced by `signInWithRedirect`
 
@@ -54,10 +54,6 @@ Note that the value for `postLogoutRedirectUri` must be an absolute URL. This UR
 ### `handleAuthentication` is replaced by `handleLoginRedirect`
 
 `handleLoginRedirect` is called by the `OktaLoginCallback` component as the last step of the login redirect authorization flow. It will obtain and store tokens and then call `restoreOriginalUri` which will return the browser to the `originalUri` which was set before the login redirect flow began.
-
-### `getUser` is replaced by `getUserInfo`
-
-This method is renamed but has the same signature. See documentation for [getUserInfo](https://github.com/okta/okta-auth-js#tokengetuserinfoaccesstokenobject-idtokenobject).
 
 ### `setFromUri` and `getFromUri` have been replaced with `setOriginalUri` and `getOriginalUri`
 
