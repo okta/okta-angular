@@ -13,12 +13,6 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 
-import {
-  assertIssuer,
-  assertClientId,
-  assertRedirectUri,
-} from '@okta/configuration-validation';
-
 import { OKTA_CONFIG, OktaConfig } from '../models/okta.config';
 
 // eslint-disable-next-line node/no-unpublished-import
@@ -27,21 +21,34 @@ import packageInfo from '../packageInfo';
 /**
  * Import the okta-auth-js library
  */
-import { OktaAuth, AuthState, OktaAuthOptions } from '@okta/okta-auth-js';
+import {
+  OktaAuth,
+  AuthState,
+  OktaAuthOptions,
+  isAbsoluteUrl,
+  toAbsoluteUrl,
+  toRelativeUrl,
+  SigninWithRedirectOptions
+} from '@okta/okta-auth-js';
+
 import { Observable, Observer } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class OktaAuthService extends OktaAuth {
     private config: OktaConfig;
     private observers: Observer<boolean>[];
+    private location?: Location;
 
     $authenticationState: Observable<boolean>;
 
-    constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() router?: Router) {
-      // Assert Configuration
-      assertIssuer(config.issuer, config.testing);
-      assertClientId(config.clientId);
-      assertRedirectUri(config.redirectUri);
+    constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() location?: Location, @Optional() router?: Router) {
+
+      // If a relative `redirectUri` was passed, convert to absolute URL, including base href, if any.
+      if (config.redirectUri && !isAbsoluteUrl(config.redirectUri) && location) {
+        const baseUri = window.location.origin + location.prepareExternalUrl('');
+        config.redirectUri = toAbsoluteUrl(config.redirectUri, baseUri);
+      }
 
       const transformAuthState = async (oktaAuth: OktaAuth, authState: AuthState) => {
         // if `isAuthenticated` was set on config, call it now to override the value of `authState.isAuthenticated`
@@ -56,8 +63,10 @@ export class OktaAuthService extends OktaAuth {
       };
       
       // If a router is available, provide a default implementation of `restoreOriginalUri`
-      const restoreOriginalUri = (router && !config.restoreOriginalUri) ? async (oktaAuth: OktaAuth, originalUri: string) => {
-        return router.navigateByUrl(originalUri);
+      const restoreOriginalUri = (!config.restoreOriginalUri && router && location) ? async (oktaAuth: OktaAuth, originalUri: string) => {
+        const baseUrl = window.location.origin + location.prepareExternalUrl('');
+        const routePath = toRelativeUrl(originalUri, baseUrl);
+        return router.navigateByUrl(routePath);
       } : config.restoreOriginalUri;
 
       const options: OktaAuthOptions = Object.assign({
@@ -68,6 +77,7 @@ export class OktaAuthService extends OktaAuth {
       super(options);
 
       this.config = config;
+      this.location = location;
 
       // Customize user agent
       this.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.userAgent}`;
@@ -87,6 +97,26 @@ export class OktaAuthService extends OktaAuth {
 
     private async emitAuthenticationState(state: boolean) {
       this.observers.forEach(observer => observer.next(state));
+    }
+
+    async signInWithRedirect(options: SigninWithRedirectOptions = {}): Promise<void> {
+      const originalUri = options.originalUri || this.getOriginalUri();
+      if (!originalUri) {
+        // Default to the app base as a relative path.
+        options.originalUri = '/';
+      }
+      return super.signInWithRedirect(options);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+    async signOut(options?: any): Promise<void> {
+      options = options || {};
+      const postLogoutRedirectUri = options.postLogoutRedirectUri || this.options.postLogoutRedirectUri;
+      if (!postLogoutRedirectUri && this.location) {
+        // Default to the app base as an absolute URL, including base href, if any.
+        options.postLogoutRedirectUri = window.location.origin + this.location.prepareExternalUrl('/'); // include trailing slash
+      }
+      return super.signOut(options);
     }
 
     /**
