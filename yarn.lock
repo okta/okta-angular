@@ -1421,15 +1421,7 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@okta/configuration-validation@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@okta/configuration-validation/-/configuration-validation-1.0.0.tgz#18d6220d139e7f5f3d203e11849e1ee61ca3cea1"
-  integrity sha512-CQaBdqP9fyYd2KwIgwwhWDivWx+Lwj7rtyXUbTlAHywKRwnEyNln7zUG6UaBBSRNK63I+W3A3GgPWO0gCpo1FA==
-  dependencies:
-    "@okta/okta-auth-js" "^4.0.0"
-    lodash "^4.17.15"
-
-"@okta/okta-auth-js@^4.0.0", "@okta/okta-auth-js@^4.1.0":
+"@okta/okta-auth-js@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-4.1.0.tgz#b1cb0ac5bb2918c703b461fb9a5c505f18d1db90"
   integrity sha512-ehPFay3+UirXL3F0NTE6yoqSo2idjJIL7ka/bJha129lHsi9fcXwvtwUz56hnn4qOlDQm8/qnHpF+/6HGoe3Eg==
