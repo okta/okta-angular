@@ -1,4 +1,3 @@
 node_modules
 /dist
-src/@types
-src/okta/models
+test-reports

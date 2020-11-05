@@ -11,7 +11,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { OktaAuthService } from '../services/okta.service';
 
 @Component({
@@ -20,22 +20,14 @@ import { OktaAuthService } from '../services/okta.service';
 export class OktaCallbackComponent implements OnInit {
   error: string;
 
-  constructor(private okta: OktaAuthService) {}
+  constructor(private okta: OktaAuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    /**
-     * Handles the response from Okta and parses tokens.
-     */
-    this.okta.handleAuthentication()
-      .then(() => {
-        /**
-         * Navigate back to the saved uri, or root of application.
-         */
-        const fromUri = this.okta.getFromUri();
-        window.location.replace(fromUri);
-      })
-      .catch(e => {
-        this.error = e.toString();
-      });
+  async ngOnInit(): Promise<void> {
+    try {
+      // Parse code or tokens from the URL, store tokens in the TokenManager, and redirect back to the originalUri
+      await this.okta.handleLoginRedirect();
+    } catch (e) {
+      this.error = e.toString();
+    }
   }
 }
