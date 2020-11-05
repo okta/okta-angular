@@ -12,6 +12,7 @@
 
 import { NgModule } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaLoginRedirectComponent } from './components/login-redirect.component';
 import { OktaAuthService } from './services/okta.service';
@@ -35,6 +36,7 @@ import { createOktaService } from './createService';
       useFactory: createOktaService,
       deps: [
         OKTA_CONFIG,
+        Location, // optional
         Router // optional
       ]
     }
