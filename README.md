@@ -51,7 +51,7 @@ This library currently supports:
 - [Okta Guide: Sign users into your single-page application](https://developer.okta.com/docs/guides/sign-into-spa/angular/before-you-begin/)
   - Step-by-step guide to integrating an existing Angular application with Okta login.
 - [Strategies for Obtaining Tokens](https://github.com/okta/okta-auth-js#strategies-for-obtaining-tokens)
-  - Okta Angular SDK supports `PathStrategy` and `HashStrategy` for more details please check spesific section of `okta-auth-js`
+  - Okta Angular SDK supports `PathStrategy` and `HashStrategy` for more details please check specific section of `okta-auth-js`
 
 ## Installation
 
