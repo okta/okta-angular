@@ -39,9 +39,9 @@ describe('OktaLoginRedirectComponent', () => {
     expect(component).toBeTruthy();
   }));
 
-  it('should call loginRedirect', async(() => {
-    jest.spyOn(service, 'loginRedirect').mockReturnValue(Promise.resolve());
+  it('should call signInWithRedirect', async(() => {
+    jest.spyOn(service, 'signInWithRedirect').mockReturnValue(Promise.resolve());
     fixture.detectChanges();
-    expect(service.loginRedirect).toHaveBeenCalled();
+    expect(service.signInWithRedirect).toHaveBeenCalled();
   }));
 });

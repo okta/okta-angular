@@ -4,5 +4,5 @@ node_modules
 testenv
 /test-reports
 /src/okta/packageInfo.ts
-
-
+.yalc
+yalc.lock

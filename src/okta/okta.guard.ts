@@ -16,14 +16,30 @@ import {
   CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  Router,
+  NavigationStart
 } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
+import { AuthState } from '@okta/okta-auth-js';
 
 import { OktaAuthService } from './services/okta.service';
 import { AuthRequiredFunction } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild {
-  constructor(private oktaAuth: OktaAuthService, private injector: Injector) { }
+  private route: ActivatedRouteSnapshot;
+  private state: RouterStateSnapshot;
+
+  constructor(private oktaAuth: OktaAuthService, private injector: Injector) { 
+    // Unsubscribe updateAuthStateListener when route change
+    const router = injector.get(Router);
+    router.events.pipe(
+      filter((e: Event) => e instanceof NavigationStart && this.state && this.state.url !== e.url)
+    ).subscribe(() => {
+      this.oktaAuth.authStateManager.unsubscribe(this.updateAuthStateListener);
+    });
+  }
 
   /**
    * Gateway for protected route. Returns true if there is a valid accessToken,
@@ -32,26 +48,18 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
    * @param state
    */
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    if (await this.oktaAuth.isAuthenticated()) {
+    // Track states for current route
+    this.route = route;
+    this.state = state;
+
+    // Protect the route after accessing
+    this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);
+    const isAuthenticated = await this.oktaAuth.isAuthenticated();
+    if (isAuthenticated) {
       return true;
     }
 
-    /**
-     * Get the operation to perform on failed authentication from
-     * either the global config or route data injection.
-     */
-    const onAuthRequired: AuthRequiredFunction = route.data['onAuthRequired'] || this.oktaAuth.getOktaConfig().onAuthRequired;
-
-    /**
-     * Store the current path
-     */
-    this.oktaAuth.setFromUri(state.url);
-
-    if (onAuthRequired) {
-      onAuthRequired(this.oktaAuth, this.injector);
-    } else {
-      this.oktaAuth.loginRedirect();
-    }
+    await this.handleLogin(state.url);
 
     return false;
   }
@@ -62,5 +70,26 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
   ): Promise<boolean> {
     return this.canActivate(route, state);
   }
+
+  private async handleLogin(fromUri: string): Promise<void> {
+     // Get the operation to perform on failed authentication from
+     // either the global config or route data injection.
+    const onAuthRequired: AuthRequiredFunction = this.route.data['onAuthRequired'] || this.oktaAuth.getOktaConfig().onAuthRequired;
+    
+    // Store the current path
+    this.oktaAuth.setOriginalUri(fromUri);
+
+    if (onAuthRequired) {
+      onAuthRequired(this.oktaAuth, this.injector);
+    } else {
+      this.oktaAuth.signInWithRedirect();
+    }
+  }
+
+  private updateAuthStateListener = (authState: AuthState) => {
+    if (!authState.isAuthenticated) {
+      this.handleLogin(this.state.url);
+    }
+  };
 
 }

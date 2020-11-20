@@ -47,11 +47,11 @@ export default {
         }),
         commonjs({
             namedExports: {
-                '@okta/configuration-validation': [
-                    'assertIssuer',
-                    'assertClientId',
-                    'assertRedirectUri',
-                    'buildConfigObject'
+                // TODO: why is this necessary?
+                'node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js': [
+                  'toRelativeUrl',
+                  'isAbsoluteUrl',
+                  'toAbsoluteUrl'
                 ]
             }
         }),

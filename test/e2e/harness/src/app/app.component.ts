@@ -40,6 +40,6 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.oktaAuth.logout('/');
+    this.oktaAuth.signOut();
   }
 }

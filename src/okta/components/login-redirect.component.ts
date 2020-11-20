@@ -11,12 +11,17 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+
 import { OktaAuthService } from '../services/okta.service';
 
 @Component({ template: `` })
 export class OktaLoginRedirectComponent implements OnInit {
   constructor(private okta: OktaAuthService) {}
   ngOnInit(): void {
-    this.okta.loginRedirect();
+    const originalUri = this.okta.getOriginalUri();
+    if (!originalUri) {
+      this.okta.setOriginalUri('/');
+    }
+    this.okta.signInWithRedirect();
   }
 }

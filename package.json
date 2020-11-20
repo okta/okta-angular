@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "2.3.0",
+  "version": "3.1.0",
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
@@ -42,8 +42,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@okta/configuration-validation": "^0.4.1",
-    "@okta/okta-auth-js": "^3.2.3",
+    "@okta/okta-auth-js": "^4.1.0",
     "tslib": "^1.9.0"
   },
   "devDependencies": {
@@ -77,6 +76,7 @@
     "jest": "^26.4.2",
     "jest-junit": "^11.1.0",
     "jest-preset-angular": "^8.3.1",
+    "prettier": "^2.1.2",
     "raw-loader": "1.0.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "^3.0.2",
@@ -109,7 +109,7 @@
       "jest-junit"
     ],
     "moduleNameMapper": {
-      "@okta/okta-auth-js": "<rootDir>/node_modules/@okta/okta-auth-js/dist/okta-auth-js.min.js"
+      "@okta/okta-auth-js": "<rootDir>/node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js"
     },
     "restoreMocks": true,
     "transform": {
@@ -121,7 +121,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "<rootDir>/test/spec/tsconfig.spec.json"
+        "tsconfig": "<rootDir>/test/spec/tsconfig.spec.json"
       }
     },
     "preset": "jest-preset-angular",
