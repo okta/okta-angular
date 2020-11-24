@@ -8,5 +8,7 @@ services:
      - "4200:4200"
     build: .
     command: ng serve --host 0.0.0.0
+    volumes:
+      - ./test/selenium-test:/app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4200"]

@@ -24,12 +24,12 @@ export class AppComponent {
   }
 
   login() {
-    this.oktaAuth.loginRedirect('/profile');
+    this.oktaAuth.signIn('/profile');
   }
 
   async logout() {
     // Terminates the session with Okta and removes current tokens.
-    await this.oktaAuth.logout();
+    await this.oktaAuth.signOut();
     this.router.navigateByUrl('/');
   }
 }

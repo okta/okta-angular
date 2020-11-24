@@ -44,7 +44,7 @@ export class LoginComponent {
       el: '#okta-signin-container'},
       (res) => {
         if (res.status === 'SUCCESS') {
-          this.signIn.loginRedirect('/', { sessionToken: res.session.token });
+          this.signIn.signIn('/', { sessionToken: res.session.token });
           // Hide the widget
           this.widget.hide();
         }
