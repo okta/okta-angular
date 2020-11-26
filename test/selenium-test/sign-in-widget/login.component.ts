@@ -12,16 +12,18 @@ import * as OktaSignIn from '@okta/okta-signin-widget';
   `
 })
 export class LoginComponent {
-  signIn;
+  authService;
   widget = new OktaSignIn({
     baseUrl: 'https://dev-411042.okta.com',
     authParams: {
       pkce: true
-    }
+    },
+    clientId: '0oaxmzfypar0nMlJj4x6',
+    redirectUri: 'http://localhost:4200/login/callback'
   });
 
   constructor(oktaAuth: OktaAuthService, router: Router) {
-    this.signIn = oktaAuth;
+    this.authService = oktaAuth;
 
     // Show the widget when prompted, otherwise remove it from the DOM.
     router.events.forEach(event => {
@@ -40,17 +42,17 @@ export class LoginComponent {
   }
 
   ngOnInit() {
-    this.widget.renderEl({
-      el: '#okta-signin-container'},
-      (res) => {
-        if (res.status === 'SUCCESS') {
-          this.signIn.signIn('/', { sessionToken: res.session.token });
-          // Hide the widget
-          this.widget.hide();
-        }
-      },
+    this.widget.showSignInToGetTokens({
+      el: '#okta-signin-container'}).then(
+      ({accessToken, idToken}) => {
+        const tokenManager = this.authService.tokenManager;
+        tokenManager.add('idToken', idToken);
+        tokenManager.add('accessToken', accessToken);
+        const navigateToUri = this.authService.getOriginalUri();
+        window.location.assign(navigateToUri);
+      }).catch(
       (err) => {
-        throw err;
+        console.log(err);
       }
     );
   }
