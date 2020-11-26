@@ -64,7 +64,7 @@ module.exports = {
       },
       rules: {
         'node/no-extraneous-require': ['error', {
-          'allowModules': selenium-webdriver
+          'allowModules': ['selenium-webdriver']
         }]
       }
     }
