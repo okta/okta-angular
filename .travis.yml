@@ -13,17 +13,17 @@ jdk:
   - default-jdk
 
 install:
-#- yarn install --frozen-lockfile
+- yarn install --frozen-lockfile
 
 script:
-#- bash ./scripts/snyk.sh
-#- bash ./scripts/travis.sh
+- bash ./scripts/snyk.sh
+- bash ./scripts/travis.sh
 - node selenium/okta-angular-widget-test.js
 before_install:
-#- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.13.0
-#- export PATH="$HOME/.yarn/bin:$PATH"
-#- sudo apt-get update
-#- sudo apt-get install -y libappindicator1
+- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.13.0
+- export PATH="$HOME/.yarn/bin:$PATH"
+- sudo apt-get update
+- sudo apt-get install -y libappindicator1
 
 notifications:
   slack:
