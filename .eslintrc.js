@@ -60,9 +60,11 @@ module.exports = {
         'node/no-unsupported-features/es-syntax': 0,
         'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies
-        }],
-        "node/no-extraneous-require": ["error", {
-        "allowModules": ["selenium-webdriver"]
+        }]
+      },
+      rules: {
+        'node/no-extraneous-require': ['error', {
+          'allowModules': selenium-webdriver
         }]
       }
     }
