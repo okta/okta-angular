@@ -1,4 +1,4 @@
-const {Builder, By, Key, until} = require('selenium-webdriver');
+const {Builder, By} = require('selenium-webdriver');
 var assert = require('assert');
 (async function example() {
   let driver = await new Builder().forBrowser('chrome').build();
@@ -9,7 +9,7 @@ var assert = require('assert');
     await driver.findElement(By.name('username')).sendKeys('testkostyadrozdov@gmail.com');
     await driver.findElement(By.name('password')).sendKeys('Okta455099');
     await driver.findElement(By.id('okta-signin-submit')).click();
-    var url = await driver.getCurrentUrl()
+    var url = await driver.getCurrentUrl();
     console.log(url);
 
     sleep(5);
@@ -20,7 +20,7 @@ var assert = require('assert');
     console.log(protectedEndPoint);
     assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
     await driver.findElement(By.xpath('//*[contains(text(),\'Logout\')]')).click();
-    await driver.findElement(By.xpath('//button[@routerlink=\'/login\']'))
+    await driver.findElement(By.xpath('//button[@routerlink=\'/login\']'));
     await driver.quit();
     console.log("Test passed");
 
@@ -29,13 +29,15 @@ var assert = require('assert');
    console.log(err);
    console.error("Test failed!");
    await driver.quit();
-   process.exit(1);
+   throw new Error('Test failed!');
    }
 
 
   function sleep(seconds)
   {
     var e = new Date().getTime() + (seconds * 1000);
-    while (new Date().getTime() <= e) {}
+    while (new Date().getTime() <= e) {
+    console.log("Waiting...");
+    }
   }
 })();
