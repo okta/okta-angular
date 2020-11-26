@@ -61,11 +61,6 @@ module.exports = {
         'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies
         }]
-      },
-      rules: {
-        'node/no-extraneous-require': ['error', {
-          'allowModules': ['selenium-webdriver']
-        }]
       }
     }
   ]
