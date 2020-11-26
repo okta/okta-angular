@@ -1,43 +1,41 @@
-const {Builder, By} = require('selenium-webdriver');
+var webdriver = require('selenium-webdriver');
+var browser = new webdriver.Builder().usingServer().withCapabilities({'browserName': 'chrome' }).build();
 var assert = require('assert');
 (async function example() {
-  let driver = await new Builder().forBrowser('chrome').build();
-  try {
-    await driver.manage().setTimeouts( { implicit: 10000 } );
-    await driver.get('http://localhost:4200/');
-    await driver.findElement(By.xpath('//button[@routerlink=\'/login\']')).click();
-    await driver.findElement(By.name('username')).sendKeys('testkostyadrozdov@gmail.com');
-    await driver.findElement(By.name('password')).sendKeys('Okta455099');
-    await driver.findElement(By.id('okta-signin-submit')).click();
-    var url = await driver.getCurrentUrl();
-    console.log(url);
+    try {
 
-    sleep(5);
-    await driver.findElement(By.xpath('//button[@routerlink=\'/protected\']')).click();
-    sleep(5);
+        browser.manage().setTimeouts( { implicit: 10000 } );
+        browser.get('http://localhost:4200/');
 
-    var protectedEndPoint = await driver.findElement(By.xpath('//app-secure')).getText();
-    console.log(protectedEndPoint);
-    assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
-    await driver.findElement(By.xpath('//*[contains(text(),\'Logout\')]')).click();
-    await driver.findElement(By.xpath('//button[@routerlink=\'/login\']'));
-    await driver.quit();
-    console.log("Test passed");
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
 
-  }
-   catch(err){
-   console.log(err);
-   console.error("Test failed!");
-   await driver.quit();
-   throw new Error('Test failed!');
-   }
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys('testkostyadrozdov@gmail.com');
 
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys('Okta455099');
 
-  function sleep(seconds)
-  {
-    var e = new Date().getTime() + (seconds * 1000);
-    while (new Date().getTime() <= e) {
-    console.log("Waiting...");
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.id('okta-signin-submit')), 10000).click();
+
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/protected\']')), 10000).click();
+
+        var protectedEndPoint = await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//app-secure[text()="Protected endpoint!"]')), 10000).getText();
+
+        console.log(protectedEndPoint);
+        assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
+
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Logout")]')), 10000).click();
+
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
+
+        await browser.quit();
+
+        console.log("Test passed");
+
     }
-  }
+    catch(err){
+        //console.log(err);
+        console.error(err);
+        browser.quit();
+    }
+    
+
 })();
