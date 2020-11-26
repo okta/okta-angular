@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "paths": { "@angular/*": ["./node_modules/@angular/*","./node_modules/@okta/okta-angular/node_modules/@angular/*"] },
         "baseUrl": ".",
         "emitDecoratorMetadata": true,
         "esModuleInterop": false,

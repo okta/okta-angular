@@ -46,6 +46,15 @@
     "tslib": "^1.9.0"
   },
   "devDependencies": {
+    "@angular/animations": "7.2.16",
+    "@angular/common": "7.2.16",
+    "@angular/compiler": "7.2.16",
+    "@angular/compiler-cli": "7.2.16",
+    "@angular/core": "7.2.16",
+    "@angular/platform-browser": "7.2.16",
+    "@angular/platform-browser-dynamic": "7.2.16",
+    "@angular/platform-server": "7.2.16",
+    "@angular/router": "7.2.16",
     "@compodoc/compodoc": "1.1.9",
     "@rollup/plugin-commonjs": "11.0.1",
     "@rollup/plugin-node-resolve": "7.0.0",
@@ -87,16 +96,7 @@
     "webpack-filter-warnings-plugin": "1.2.1",
     "zone.js": "~0.8.26"
   },
-  "peerDependencies": {
-    "@angular/animations": "~11.0.0",
-    "@angular/common": "~11.0.0",
-    "@angular/compiler": "~11.0.0",
-    "@angular/core": "~11.0.0",
-    "@angular/forms": "~11.0.0",
-    "@angular/platform-browser": "~11.0.0",
-    "@angular/platform-browser-dynamic": "~11.0.0",
-    "@angular/router": "~11.0.0"
-  },
+  "peerDependencies": {},
   "jest": {
     "coverageDirectory": "<rootDir>/test-reports/coverage",
     "collectCoverage": true,
