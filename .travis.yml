@@ -42,7 +42,7 @@ before_script:
   - docker ps
   - sleep 300
   - docker ps
-  - docker logs --tail 40 okta-angular_angular_backend
+  - docker logs --tail 40 angular_backend
   - npm install selenium-webdriver
   - wget https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
