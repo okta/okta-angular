@@ -14,6 +14,7 @@ import * as OktaSignIn from '@okta/okta-signin-widget';
 export class LoginComponent {
   authService;
   widget = new OktaSignIn({
+    el: '#okta-signin-container',
     baseUrl: 'https://dev-411042.okta.com',
     authParams: {
       pkce: true
@@ -42,18 +43,8 @@ export class LoginComponent {
   }
 
   ngOnInit() {
-    this.widget.showSignInToGetTokens({
-      el: '#okta-signin-container'}).then(
-      ({accessToken, idToken}) => {
-        const tokenManager = this.authService.tokenManager;
-        tokenManager.add('idToken', idToken);
-        tokenManager.add('accessToken', accessToken);
-        const navigateToUri = this.authService.getOriginalUri();
-        window.location.assign(navigateToUri);
-      }).catch(
-      (err) => {
-        console.log(err);
-      }
-    );
+    this.widget.showSignInAndRedirect().catch(err => {
+      throw(err);
+    });
   }
 }
