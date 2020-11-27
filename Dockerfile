@@ -15,8 +15,8 @@ WORKDIR ../
 ADD . / okta-angular/
 
 WORKDIR okta-angular
-RUN rm -rf node_modules
-RUN yarn install
+#RUN rm -rf node_modules
+#RUN yarn install
 RUN yarn build
 RUN yarn link
 WORKDIR ../
