@@ -49,5 +49,4 @@ after_script:
   - sudo chown root:root /usr/bin/chromedriver
   - sudo chmod +x /usr/bin/chromedriver
   - pwd
-  - cd ~
   - node selenium/okta-angular-widget-test.ts
