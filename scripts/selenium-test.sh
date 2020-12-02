@@ -1,6 +1,6 @@
 #!/bin/bash
 setup_service xvfb
-setup_service google-chrome-stable 86.0.4240.22-1
+setup_service google-chrome-stable 86.0.4240.22
 
 ls -a
 cd test/selenium-test/
