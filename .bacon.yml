@@ -29,7 +29,7 @@ test_suites:
       queue_name: small
     - name: selenium-test
       script_path: /root/okta/okta-angular/scripts
-      sort_order: '1'
+      sort_order: '5'
       timeout: '60'
       script_name: selenium-test
       criteria: MERGE
