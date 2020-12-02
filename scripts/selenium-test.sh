@@ -14,8 +14,8 @@ docker logs --tail 40 angular_backend
 npm install selenium-webdriver
 wget https://chromedriver.storage.googleapis.com/83.0.4103.39/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
-sudo mv chromedriver /usr/bin/chromedriver
-sudo chown root:root /usr/bin/chromedriver
-sudo chmod +x /usr/bin/chromedriver
+mv chromedriver /usr/bin/chromedriver
+chown root:root /usr/bin/chromedriver
+chmod +x /usr/bin/chromedriver
 pwd
-node selenium/okta-angular-widget-test.ts
+node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts
