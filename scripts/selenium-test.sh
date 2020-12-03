@@ -8,7 +8,7 @@ ls -a
 docker ps -a
 docker-compose up -d
 docker ps
-sleep 300
+sleep 420
 docker ps
 docker logs --tail 40 angular_backend
 cd /root/okta/okta-angular/test/selenium-test/selenium
