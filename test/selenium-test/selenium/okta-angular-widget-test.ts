@@ -1,8 +1,12 @@
 var webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+var chromeCapabilities = webdriver.Capabilities.chrome();
 
-var browser = new webdriver.Builder()   .forBrowser('chrome')
-                                         .setChromeOptions(new chrome.Options().headless())
+var browser = new webdriver.Builder().forBrowser('chrome')
+                                         //.setChromeOptions(new chrome.Options().headless())
+                                         .setChromeOptions(new chrome.Options().addArguments("--headless",
+                                           "--disable-dev-shm-usage"
+                                         ))
                                          .build();
 var assert = require('assert');
 (async function example() {
