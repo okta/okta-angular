@@ -5,7 +5,15 @@ var chromeCapabilities = webdriver.Capabilities.chrome();
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          //.setChromeOptions(new chrome.Options().headless())
                                          .setChromeOptions(new chrome.Options().addArguments("--headless",
-                                           "--disable-dev-shm-usage"
+                                           "--disable-dev-shm-usage",
+                                              "--verbose",
+                                              "--headless",
+                                              "--disable-web-security",
+                                              "--ignore-certificate-errors",
+                                              "--allow-running-insecure-content",
+                                              "--allow-insecure-localhost",
+                                              "--no-sandbox",
+                                              "--disable-gpu"
                                          ))
                                          .build();
 var assert = require('assert');
