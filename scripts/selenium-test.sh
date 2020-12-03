@@ -1,5 +1,5 @@
 #!/bin/bash
-setup_service xvfb
+#setup_service xvfb
 setup_service google-chrome-stable 83.0.4103.61-1
 
 ls -a

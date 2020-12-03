@@ -1,5 +1,9 @@
 var webdriver = require('selenium-webdriver');
-var browser = new webdriver.Builder().usingServer().withCapabilities({'browserName': 'chrome' }).build();
+const chrome = require('selenium-webdriver/chrome');
+
+var browser = new webdriver.Builder()   .forBrowser('chrome')
+                                         .setChromeOptions(new chrome.Options().headless())
+                                         .build();
 var assert = require('assert');
 (async function example() {
     try {
