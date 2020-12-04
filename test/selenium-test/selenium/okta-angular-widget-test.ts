@@ -21,7 +21,7 @@ var assert = require('assert');
     try {
 
         browser.manage().setTimeouts( { implicit: 10000 } );
-        browser.get('http://localhost:4203/');
+        browser.get('http://localhost:4200/');
 
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
 
