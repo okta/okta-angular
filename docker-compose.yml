@@ -5,7 +5,7 @@ services:
     expose:
      - "4200"
     ports:
-     - "4200:4200"
+     - "6379:4200"
     build: .
     command: ng serve --host 0.0.0.0
     volumes:

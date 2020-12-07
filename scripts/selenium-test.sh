@@ -10,9 +10,7 @@ docker-compose up -d
 docker ps
 sleep 420
 echo check port
-ss -nutlp
 netstat -tulnp
-lsof -i
 docker ps
 docker logs --tail 40 angular_backend
 cd /root/okta/okta-angular/test/selenium-test/selenium
