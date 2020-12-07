@@ -38,4 +38,4 @@ pwd
 
 
 node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts
-curl http://localhost:4200/
+curl http://localhost:6379/
