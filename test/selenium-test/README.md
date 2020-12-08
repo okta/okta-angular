@@ -22,7 +22,7 @@ Selenium test script for the app, that authenticates test-user.
 
 # docker-compose.yml
 Bind ports, start the application and do the healthcheck.
-App starts on http://localhost:4200/.
+App starts on http://localhost:9000/.
 
 # Local run
 Before start needs to be installed:
@@ -32,5 +32,5 @@ Before start needs to be installed:
 
 
 To run test locally you need to execute commands:   
-```docker-compose up``` -  will start application on http://localhost:4200/
+```docker-compose up``` -  will start application on http://localhost:9000/
 ```node /selenium/okta-angular-widget-test.js```  - will run selenium test.

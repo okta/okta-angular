@@ -20,7 +20,7 @@ export class LoginComponent {
       pkce: true
     },
     clientId: '0oaxmzfypar0nMlJj4x6',
-    redirectUri: 'http://localhost:4200/login/callback'
+    redirectUri: 'http://localhost:9000/login/callback'
   });
 
   constructor(oktaAuth: OktaAuthService, router: Router) {
