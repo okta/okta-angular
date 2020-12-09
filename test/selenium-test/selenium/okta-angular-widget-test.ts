@@ -3,7 +3,6 @@ const chrome = require('selenium-webdriver/chrome');
 var chromeCapabilities = webdriver.Capabilities.chrome();
 
 var browser = new webdriver.Builder().forBrowser('chrome')
-                                         //.setChromeOptions(new chrome.Options().headless())
                                          .setChromeOptions(new chrome.Options().addArguments(
                                            "--disable-dev-shm-usage",
                                               "--verbose",
@@ -48,6 +47,7 @@ var assert = require('assert');
     catch(err){
         await browser.quit();
         await console.error(err);
+        process.exit(1);
     }
     
 
