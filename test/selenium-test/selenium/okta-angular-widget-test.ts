@@ -4,10 +4,9 @@ var chromeCapabilities = webdriver.Capabilities.chrome();
 
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          //.setChromeOptions(new chrome.Options().headless())
-                                         .setChromeOptions(new chrome.Options().addArguments("--headless",
+                                         .setChromeOptions(new chrome.Options().addArguments(
                                            "--disable-dev-shm-usage",
                                               "--verbose",
-                                              "--headless",
                                               "--disable-web-security",
                                               "--ignore-certificate-errors",
                                               "--allow-running-insecure-content",
@@ -38,9 +37,8 @@ var assert = require('assert');
         console.log(protectedEndPoint);
         assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
 
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contain(text(),"Home")]')), 10000).click();
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Logout")]')), 10000).click();
-
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
 
         await browser.quit();
 
@@ -48,9 +46,8 @@ var assert = require('assert');
 
     }
     catch(err){
-        //console.log(err);
-        console.error(err);
-        browser.quit();
+        await browser.quit();
+        await console.error(err);
     }
     
 
