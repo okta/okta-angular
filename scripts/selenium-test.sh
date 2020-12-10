@@ -19,5 +19,4 @@ chmod +x /usr/bin/chromedriver
 node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts
 curl http://localhost:9000/
 
-get_secrets prod/devex/SIWTestUserPassword SIWTestUserPassword
-printenv
+get_secret prod/devex/SIWTestUserPassword SIWTestUserPassword
