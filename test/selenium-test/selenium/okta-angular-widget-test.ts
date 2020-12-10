@@ -5,7 +5,7 @@ console.log(`${process.env.EMAIL}`);
 console.log(`${process.env.PASSWORD}`);
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          .setChromeOptions(new chrome.Options().addArguments(
-                                              "--headless"
+                                              "--headless",
                                               "--disable-dev-shm-usage",
                                               "--verbose",
                                               "--disable-web-security",
