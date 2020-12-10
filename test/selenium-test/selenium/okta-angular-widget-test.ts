@@ -1,10 +1,12 @@
 var webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 var chromeCapabilities = webdriver.Capabilities.chrome();
-
+console.log(`${process.env.EMAIL}`);
+console.log(`${process.env.PASSWORD}`);
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          .setChromeOptions(new chrome.Options().addArguments(
-                                           "--disable-dev-shm-usage",
+                                              "--headless"
+                                              "--disable-dev-shm-usage",
                                               "--verbose",
                                               "--disable-web-security",
                                               "--ignore-certificate-errors",
@@ -23,9 +25,9 @@ var assert = require('assert');
 
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys('testkostyadrozdov@gmail.com');
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys(`${process.env.EMAIL}`);
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys('Okta455099');
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys(`${process.env.PASSWORD}`);
 
         await browser.wait(webdriver.until.elementLocated(webdriver.By.id('okta-signin-submit')), 10000).click();
 
@@ -36,7 +38,7 @@ var assert = require('assert');
         console.log(protectedEndPoint);
         assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contain(text(),"Home")]')), 10000).click();
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Home")]')), 10000).click();
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Logout")]')), 10000).click();
 
         await browser.quit();
