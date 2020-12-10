@@ -25,9 +25,9 @@ var assert = require('assert');
 
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys(`${process.env.EMAIL}`);
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys('testkostyadrozdov@gmail.com');
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys(`${process.env.PASSWORD}`);
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys(`${process.env.SIWTestUserPassword}`);
 
         await browser.wait(webdriver.until.elementLocated(webdriver.By.id('okta-signin-submit')), 10000).click();
 

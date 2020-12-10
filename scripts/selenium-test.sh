@@ -20,3 +20,4 @@ node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-tes
 curl http://localhost:9000/
 
 get_secret prod/devex/SIWTestUserPassword SIWTestUserPassword
+printenv
