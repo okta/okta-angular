@@ -17,7 +17,7 @@ mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
 chmod +x /usr/bin/chromedriver
 get_secret prod/devex/SIWTestUserPassword SIW_TEST_USER_PASSWORD
-if ! node /Users/kdrozdov/Downloads/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts; then
+if ! node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts; then
   echo "Test failed! Exiting..."
   exit ${TEST_FAILURE}
 fi
