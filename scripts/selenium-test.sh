@@ -13,11 +13,11 @@ cd /root/okta/okta-angular/test/selenium-test/selenium
 npm install selenium-webdriver
 wget https://chromedriver.storage.googleapis.com/83.0.4103.39/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
-get_secret prod/devex/SIWTestUserPassword SIWTestUserPassword
 mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
 chmod +x /usr/bin/chromedriver
-node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts
-curl http://localhost:9000/
-
-printenv
+get_secret prod/devex/SIWTestUserPassword SIW_TEST_USER_PASSWORD
+if ! node /Users/kdrozdov/Downloads/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts; then
+  echo "Test failed! Exiting..."
+  exit ${TEST_FAILURE}
+fi
