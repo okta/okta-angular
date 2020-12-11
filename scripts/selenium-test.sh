@@ -5,7 +5,7 @@ setup_service google-chrome-stable 83.0.4103.61-1
 cd /root/okta/okta-angular
 
 docker-compose up -d
-sleep 180
+sleep 120
 
 docker ps
 docker logs --tail 40 angular_backend
