@@ -7,7 +7,6 @@ addons:
 
 services:
   - xvfb
-  - docker
 
 jdk:
   - default-jdk
