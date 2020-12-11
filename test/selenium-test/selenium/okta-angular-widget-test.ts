@@ -3,6 +3,8 @@ const chrome = require('selenium-webdriver/chrome');
 var chromeCapabilities = webdriver.Capabilities.chrome();
 console.log(`${process.env.EMAIL}`);
 console.log(`${process.env.PASSWORD}`);
+console.log(`${process.env.SIWTestUserPassword}`)
+
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          .setChromeOptions(new chrome.Options().addArguments(
                                               "--headless",
