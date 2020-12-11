@@ -37,7 +37,7 @@ var assert = require('assert');
         console.log(protectedEndPoint);
         assert.deepStrictEqual(protectedEndPoint,'Protected endpoint!');
 
-        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contain(text(),"Home")]')), 10000).click();
+        await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Home")]')), 10000).click();
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//*[contains(text(),"Logout")]')), 10000).click();
 
         await browser.quit();
