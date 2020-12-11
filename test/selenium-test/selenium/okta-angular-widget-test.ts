@@ -3,7 +3,10 @@ const chrome = require('selenium-webdriver/chrome');
 var chromeCapabilities = webdriver.Capabilities.chrome();
 console.log(`${process.env.EMAIL}`);
 console.log(`${process.env.PASSWORD}`);
-console.log(`${process.env.SIWTestUserPassword}`)
+console.log(`${process.env.SIWTestUserPassword}`);
+console.log(`${process.env.SCRIPT_NAME}`);
+console.log(`${process.env.HERMES_AUTH_TOKEN}`);
+
 
 var browser = new webdriver.Builder().forBrowser('chrome')
                                          .setChromeOptions(new chrome.Options().addArguments(
