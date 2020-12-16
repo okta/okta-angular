@@ -1,6 +1,6 @@
-# Test project selenium-test-angular
+# These scripts were created for testing okta-angular library by linking it from the sources to the angular application.
 
-This project created to test okta-angular lib.
+
 
 It consists of:
 * Dockerfile
@@ -10,7 +10,7 @@ It consists of:
 
 # Dockerfile
 Creates a new container with nodejs and 
-creates simple angular application with integreted okta-angular lib.
+creates simple angular application with linked from sources okta-angular lib.
 All steps are described in https://developer.okta.com/code/angular/okta_angular_sign-in_widget/.
 
 # sign-in-widget folder
