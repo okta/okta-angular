@@ -31,7 +31,7 @@ import {
   SigninWithRedirectOptions
 } from '@okta/okta-auth-js';
 
-import { Observable, Observer } from 'rxjs';
+import { Observer, BehaviorSubject } from 'rxjs';
 import { Location } from '@angular/common';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class OktaAuthService extends OktaAuth {
     private observers: Observer<boolean>[];
     private location?: Location;
 
-    $authenticationState: Observable<boolean>;
+    $authenticationState: BehaviorSubject<boolean>;
 
     constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() location?: Location, @Optional() router?: Router) {
 
@@ -82,9 +82,8 @@ export class OktaAuthService extends OktaAuth {
       // Customize user agent
       this.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.userAgent}`;
 
-      // Initialize observers
-      this.observers = [];
-      this.$authenticationState = new Observable((observer: Observer<boolean>) => { this.observers.push(observer); });
+      // Initialize $authenticationState
+      this.$authenticationState = new BehaviorSubject<boolean>(false);
 
       this.authStateManager.subscribe((authState: AuthState) => {
         this.emitAuthenticationState(!!authState.isAuthenticated);
@@ -96,7 +95,7 @@ export class OktaAuthService extends OktaAuth {
     }
 
     private async emitAuthenticationState(state: boolean) {
-      this.observers.forEach(observer => observer.next(state));
+      this.$authenticationState.next(state);
     }
 
     async signInWithRedirect(options: SigninWithRedirectOptions = {}): Promise<void> {
