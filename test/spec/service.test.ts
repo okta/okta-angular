@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const PACKAGE_JSON = require("../../package.json");
@@ -125,7 +126,7 @@ describe("Angular service", () => {
   });
 
 
-  describe("service methods", () => {
+  describe("service properties and methods", () => {
     function createService(config?: OktaConfig) {
       config = extendConfig(config || {});
       TestBed.configureTestingModule({
@@ -145,6 +146,39 @@ describe("Angular service", () => {
       jest.spyOn(service.tokenManager, "on").mockReturnValue(undefined);
       return service;
     }
+
+    describe('$authenticationState', () => {
+      it('should expose as instance of BehaviorSubject', () => {
+        const service = createService(VALID_CONFIG);
+        expect(service.$authenticationState).toBeInstanceOf(BehaviorSubject)
+      });
+
+      it('should initial with false', (done) => {
+        const service = createService(VALID_CONFIG);
+        service.$authenticationState.subscribe((state: Boolean) => {
+          expect(state).toBe(false);
+          done();
+        });
+      });
+
+      it('should update when authState changes from oktaAuth', (done) => {
+        const service = createService({
+          isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+        });
+        const mockFn = jest.fn();
+        service.authStateManager.updateAuthState();
+        service.$authenticationState.subscribe((state:boolean) => {
+          mockFn(state);
+          // end test when state === true is evaluated
+          if (state) {
+            expect(mockFn).toHaveBeenCalledTimes(2);
+            expect(mockFn).toHaveBeenNthCalledWith(1, false);
+            expect(mockFn).toHaveBeenNthCalledWith(2, true);
+            done();
+          }
+        });
+      });
+    });
 
     describe("isAuthenticated", () => {
       it('Will call a custom function if "isAuthenticated" was set on the passed config', async () => {

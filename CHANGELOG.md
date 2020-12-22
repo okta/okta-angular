@@ -1,3 +1,9 @@
+# 4.0.0
+
+### Breaking Changes
+
+[#17](https://github.com/okta/okta-angular/pull/17) Changes type of [$authenticationState](README.md##oktaauthauthenticationstate) from `Observable` to `BehaviorSubject`
+
 # 3.0.0
 
 [#5](https://github.com/okta/okta-angular/pull/5) Release 3.0.0 - `OktaAuthService` now inherits from an instance of `@okta/okta-auth-js` so all configuration options and public methods are available. See [MIGRATING](MIGRATING.md) for detailed information.

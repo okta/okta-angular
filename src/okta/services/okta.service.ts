@@ -31,13 +31,12 @@ import {
   SigninWithRedirectOptions
 } from '@okta/okta-auth-js';
 
-import { Observer, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Location } from '@angular/common';
 
 @Injectable()
 export class OktaAuthService extends OktaAuth {
     private config: OktaConfig;
-    private observers: Observer<boolean>[];
     private location?: Location;
 
     $authenticationState: BehaviorSubject<boolean>;
