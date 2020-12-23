@@ -182,6 +182,26 @@ describe("Angular service", () => {
           expect(mockFn).toHaveBeenNthCalledWith(2, true);
         });
       });
+
+      it('should get the last update state when subscribe after state change', () => {
+        const mockFn = jest.fn();
+        return new Promise((resolve) => {
+          const service = createService({
+            isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+          });
+          service.authStateManager.updateAuthState();
+          // wait on authState update to finish
+          setTimeout(() => {
+            service.$authenticationState.subscribe((state: boolean) => {
+              mockFn(state);
+              resolve(undefined);
+            });
+          }, 100);
+        }).then(() => {
+          expect(mockFn).toHaveBeenCalledTimes(1);
+          expect(mockFn).toHaveBeenNthCalledWith(1, true);
+        });
+      });
     });
 
     describe("isAuthenticated", () => {
