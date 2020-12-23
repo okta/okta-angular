@@ -12,7 +12,6 @@ import {
   OktaConfig,
   OKTA_CONFIG,
 } from "../../src/okta-angular";
-import { resolve } from "path";
 
 describe("Angular service", () => {
   let VALID_CONFIG: OktaConfig;
