@@ -1,3 +1,9 @@
+# 4.0.0
+
+### Breaking Changes
+
+[#17](https://github.com/okta/okta-angular/pull/17) Changes type of [$authenticationState](README.md##oktaauthauthenticationstate) from `Observable` to `BehaviorSubject`
+
 # 3.2.3
 
 ### Other
