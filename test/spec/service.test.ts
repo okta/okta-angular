@@ -12,6 +12,7 @@ import {
   OktaConfig,
   OKTA_CONFIG,
 } from "../../src/okta-angular";
+import { resolve } from "path";
 
 describe("Angular service", () => {
   let VALID_CONFIG: OktaConfig;
@@ -150,32 +151,36 @@ describe("Angular service", () => {
     describe('$authenticationState', () => {
       it('should expose as instance of BehaviorSubject', () => {
         const service = createService(VALID_CONFIG);
-        expect(service.$authenticationState).toBeInstanceOf(BehaviorSubject)
+        expect(service.$authenticationState).toBeInstanceOf(BehaviorSubject);
       });
 
-      it('should initial with false', (done) => {
-        const service = createService(VALID_CONFIG);
-        service.$authenticationState.subscribe((state: Boolean) => {
-          expect(state).toBe(false);
-          done();
+      it('should initial with false', () => {
+        return new Promise((resolve) => {
+          const service = createService(VALID_CONFIG);
+          service.$authenticationState.subscribe((state: boolean) => {
+            expect(state).toBe(false);
+            resolve(undefined);
+          });
         });
       });
 
-      it('should update when authState changes from oktaAuth', (done) => {
-        const service = createService({
-          isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
-        });
+      it('should update when authState changes from oktaAuth', () => {
         const mockFn = jest.fn();
-        service.authStateManager.updateAuthState();
-        service.$authenticationState.subscribe((state:boolean) => {
-          mockFn(state);
-          // end test when state === true is evaluated
-          if (state) {
-            expect(mockFn).toHaveBeenCalledTimes(2);
-            expect(mockFn).toHaveBeenNthCalledWith(1, false);
-            expect(mockFn).toHaveBeenNthCalledWith(2, true);
-            done();
-          }
+        return new Promise((resolve) => {
+          const service = createService({
+            isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+          });
+          service.authStateManager.updateAuthState();
+          service.$authenticationState.subscribe((state: boolean) => {
+            mockFn(state);
+            if (state) {
+              resolve(undefined);
+            }
+          });
+        }).then(() => {
+          expect(mockFn).toHaveBeenCalledTimes(2);
+          expect(mockFn).toHaveBeenNthCalledWith(1, false);
+          expect(mockFn).toHaveBeenNthCalledWith(2, true);
         });
       });
     });
