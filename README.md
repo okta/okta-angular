@@ -326,7 +326,7 @@ export class MyComponent {
 
 #### `oktaAuth.$authenticationState`
 
-An observable that returns true/false when the [AuthState][] changes.
+An [BehaviorSubject](http://reactivex.io/rxjs/manual/overview.html#behaviorsubject) that returns true/false when the [AuthState][] changes.
 
 ## Contributing
 

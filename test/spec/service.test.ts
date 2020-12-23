@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import * as OktaAuth from '@okta/okta-auth-js';
+import { BehaviorSubject } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const PACKAGE_JSON = require("../../package.json");
@@ -132,7 +133,7 @@ describe("Angular service", () => {
   });
 
 
-  describe("service methods", () => {
+  describe("service properties and methods", () => {
     function createService(config?: OktaConfig) {
       config = extendConfig(config || {});
       TestBed.configureTestingModule({
@@ -152,6 +153,63 @@ describe("Angular service", () => {
       jest.spyOn(service.tokenManager, "on").mockReturnValue(undefined);
       return service;
     }
+
+    describe('$authenticationState', () => {
+      it('should expose as instance of BehaviorSubject', () => {
+        const service = createService(VALID_CONFIG);
+        expect(service.$authenticationState).toBeInstanceOf(BehaviorSubject);
+      });
+
+      it('should initial with false', () => {
+        return new Promise((resolve) => {
+          const service = createService(VALID_CONFIG);
+          service.$authenticationState.subscribe((state: boolean) => {
+            expect(state).toBe(false);
+            resolve(undefined);
+          });
+        });
+      });
+
+      it('should update when authState changes from oktaAuth', () => {
+        const mockFn = jest.fn();
+        return new Promise((resolve) => {
+          const service = createService({
+            isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+          });
+          service.authStateManager.updateAuthState();
+          service.$authenticationState.subscribe((state: boolean) => {
+            mockFn(state);
+            if (state) {
+              resolve(undefined);
+            }
+          });
+        }).then(() => {
+          expect(mockFn).toHaveBeenCalledTimes(2);
+          expect(mockFn).toHaveBeenNthCalledWith(1, false);
+          expect(mockFn).toHaveBeenNthCalledWith(2, true);
+        });
+      });
+
+      it('should get the last update state when subscribe after state change', () => {
+        const mockFn = jest.fn();
+        return new Promise((resolve) => {
+          const service = createService({
+            isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+          });
+          service.authStateManager.updateAuthState();
+          // wait on authState update to finish
+          setTimeout(() => {
+            service.$authenticationState.subscribe((state: boolean) => {
+              mockFn(state);
+              resolve(undefined);
+            });
+          }, 100);
+        }).then(() => {
+          expect(mockFn).toHaveBeenCalledTimes(1);
+          expect(mockFn).toHaveBeenNthCalledWith(1, true);
+        });
+      });
+    });
 
     describe("isAuthenticated", () => {
       it('Will call a custom function if "isAuthenticated" was set on the passed config', async () => {
