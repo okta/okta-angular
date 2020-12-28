@@ -4,6 +4,11 @@ setup_service google-chrome-stable 83.0.4103.61-1
 
 cd /root/okta/okta-angular
 
+get_secret prod/devex/SIWTestClientId clientId
+get_secret prod/devex/SIWTestOktaDomain yourOktaDomain
+echo "export const environment = {production: false,clientId: '$clientId',yourOktaDomain:'$yourOktaDomain'};" > environment.ts
+cat environment.ts
+
 docker-compose up -d
 sleep 120
 
