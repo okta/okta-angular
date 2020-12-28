@@ -31,3 +31,4 @@ COPY /test/selenium-test/sign-in-widget/app.component.ts /okta-app/src/app
 COPY /test/selenium-test/sign-in-widget/protected.component.ts /okta-app/src/app
 COPY /test/selenium-test/sign-in-widget/login.component.ts /okta-app/src/app
 COPY /test/selenium-test/tsconfig.json /okta-app
+COPY environment.ts /okta-app/src/environments

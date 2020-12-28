@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
+import { environment } from '../environments/environment';
 
 import {
   OKTA_CONFIG,
@@ -14,9 +15,9 @@ import { ProtectedComponent } from './protected.component';
 import { LoginComponent } from './login.component';
 
 const config = {
-  issuer: 'https://dev-411042.okta.com/oauth2/default',
+  issuer: `https://${environment.yourOktaDomain}/oauth2/default`,
   redirectUri: 'http://localhost:9000/login/callback',
-  clientId: '0oaxmzfypar0nMlJj4x6',
+  clientId: environment.clientId,
   pkce: true
 }
 
