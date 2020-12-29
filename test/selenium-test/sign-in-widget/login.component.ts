@@ -3,6 +3,7 @@ import { Router, NavigationStart} from '@angular/router';
 
 import { OktaAuthService } from '@okta/okta-angular';
 import * as OktaSignIn from '@okta/okta-signin-widget';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-secure',
@@ -15,11 +16,11 @@ export class LoginComponent {
   authService;
   widget = new OktaSignIn({
     el: '#okta-signin-container',
-    baseUrl: 'https://dev-411042.okta.com',
+    baseUrl: `https://${environment.yourOktaDomain}`,
     authParams: {
       pkce: true
     },
-    clientId: '0oaxmzfypar0nMlJj4x6',
+    clientId: environment.clientId,
     redirectUri: 'http://localhost:9000/login/callback'
   });
 

@@ -25,12 +25,22 @@ Bind ports, start the application and do the healthcheck.
 App starts on http://localhost:9000/.
 
 # Local run
-Before start needs to be installed:
+###Before start needs to be installed:
 > NodeJS
 >
 > Docker
 
+###Create file environment.ts in the root folder. Set variables 'clientId' and 'yourOktaDomain'.
+```typescript
+//environment.ts
+export const environment = {
+  production: false,
+  clientId: '{clientId}',
+  yourOktaDomain: '{yourOktaDomain}'
+};
+```
 
-To run test locally you need to execute commands:   
+
+###To run test locally you need to execute commands:   
 ```docker-compose up``` -  will start application on http://localhost:9000/
 ```node /selenium/okta-angular-widget-test.js```  - will run selenium test.
