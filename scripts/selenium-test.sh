@@ -12,8 +12,6 @@ cat environment.ts
 docker-compose up -d
 sleep 120
 
-docker ps
-docker logs --tail 40 angular_backend
 cd /root/okta/okta-angular/test/selenium-test/selenium
 npm install selenium-webdriver
 wget https://chromedriver.storage.googleapis.com/83.0.4103.39/chromedriver_linux64.zip

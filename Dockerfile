@@ -1,11 +1,9 @@
-FROM node:14.15.0-alpine3.12
-RUN npm install -g @angular/cli@11.0.1
-
+FROM node:current-alpine
+RUN npm install -g @angular/cli
 RUN ng new okta-app --routing
 WORKDIR okta-app
 
 RUN npm i rxjs
-RUN npm install @angular/core@11.0.1
 RUN npm install @angular/router
 RUN npm i @angular/common
 
