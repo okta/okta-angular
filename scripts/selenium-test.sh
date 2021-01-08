@@ -14,7 +14,7 @@ sleep 120
 
 cd /root/okta/okta-angular/test/selenium-test/selenium
 npm install selenium-webdriver
-wget https://chromedriver.storage.googleapis.com/87.0.4280.88/chromedriver_linux64.zip
+wget https://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
