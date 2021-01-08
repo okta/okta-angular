@@ -1,6 +1,6 @@
 #!/bin/bash
 setup_service xvfb
-setup_service google-chrome-stable-85.0.4183.102-1
+setup_service google-chrome-stable 85.0.4183.102-1
 
 cd /root/okta/okta-angular
 
