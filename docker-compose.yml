@@ -3,12 +3,12 @@ services:
   angular_backend:
     container_name: "angular_backend"
     expose:
-     - "9000"
+     - "8080"
     ports:
-     - "9000:9000"
+     - "8080:8080"
     build: .
-    command: ng serve --port 9000 --host 0.0.0.0
+    command: ng serve --port 8080 --host 0.0.0.0
     volumes:
       - ./test/selenium-test:/app
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]

@@ -18,7 +18,7 @@ var assert = require('assert');
 (async function e2eTest() {
     try {
         browser.manage().setTimeouts( { implicit: 10000 } );
-        browser.get('http://localhost:9000/');
+        browser.get('http://localhost:8080/');
         await browser.wait(webdriver.until.elementLocated(webdriver.By.xpath('//button[@routerlink=\'/login\']')), 10000).click();
         await browser.wait(webdriver.until.elementLocated(webdriver.By.name('username')), 10000).sendKeys(`${process.env.SIW_TEST_USER_EMAIL}`);
         await browser.wait(webdriver.until.elementLocated(webdriver.By.name('password')), 10000).sendKeys(`${process.env.SIW_TEST_USER_PASSWORD}`);

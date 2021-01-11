@@ -21,7 +21,7 @@ export class LoginComponent {
       pkce: true
     },
     clientId: environment.clientId,
-    redirectUri: 'http://localhost:9000/login/callback'
+    redirectUri: 'http://localhost:8080/login/callback'
   });
 
   constructor(oktaAuth: OktaAuthService, router: Router) {

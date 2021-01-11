@@ -16,7 +16,7 @@ import { LoginComponent } from './login.component';
 
 const config = {
   issuer: `https://${environment.yourOktaDomain}/oauth2/default`,
-  redirectUri: 'http://localhost:9000/login/callback',
+  redirectUri: 'http://localhost:8080/login/callback',
   clientId: environment.clientId,
   pkce: true
 }
