@@ -33,4 +33,4 @@ test_suites:
       timeout: '60'
       script_name: selenium-test
       criteria: MERGE
-      queue_name: small
+      queue_name: ci-queue-prodJenga-Monolith-API
