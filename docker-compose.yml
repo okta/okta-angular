@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  angular_backend:
+    container_name: "angular_backend"
+    expose:
+     - "8080"
+    ports:
+     - "8080:8080"
+    build: .
+    command: ng serve --port 8080 --host 0.0.0.0
+    volumes:
+      - ./test/selenium-test:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
