@@ -285,7 +285,7 @@ export class MyComponent {
     await this.isAuthenticated = this.oktaAuth.isAuthenticated();
 
     // subscribe to authentication state changes
-    this.oktaAuth.$authenticatedState.subscribe(
+    this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
     );
   }
