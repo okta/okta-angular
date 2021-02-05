@@ -1,4 +1,4 @@
-FROM node:current-alpine
+FROM node:14.15.4-alpine3.12
 RUN npm install -g @angular/cli
 RUN ng new okta-app --routing
 WORKDIR okta-app
