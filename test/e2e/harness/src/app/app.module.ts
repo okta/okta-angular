@@ -54,7 +54,7 @@ const appRoutes: Routes = [
     component: SessionTokenLoginComponent
   },
   {
-    path: 'implicit/callback',
+    path: 'login/callback',
     component: OktaCallbackComponent
   },
   {
@@ -99,7 +99,7 @@ const appRoutes: Routes = [
 // On the callback load we detect PKCE by inspecting the pathname
 const url = new URL(window.location.href);
 const pkce = !!url.searchParams.get('pkce') || url.pathname.indexOf('pkce/callback') >= 0;
-const redirectUri = window.location.origin + (pkce ? '/pkce/callback' : '/implicit/callback');
+const redirectUri = window.location.origin + (pkce ? '/pkce/callback' : '/login/callback');
 
 const config = {
   issuer: process.env.ISSUER,
