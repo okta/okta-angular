@@ -85,7 +85,7 @@ shell.rm(`-Rf`, `${NPM_DIR}/src/**/*.js`);
 shell.rm(`-Rf`, `${NPM_DIR}/src/**/*.js.map`);
 shell.rm(`-Rf`, `${ESM2015_DIR}/src/**/*.d.ts`);
 
-shell.cp(`-Rf`, [`package.json`, `LICENSE`, `README.md`], `${NPM_DIR}`);
+shell.cp(`-Rf`, [`package.json`, `LICENSE`, `README.md`, `CHANGELOG.md`], `${NPM_DIR}`);
 
 shell.echo(`Modifying final package.json`);
 let packageJSON = JSON.parse(fs.readFileSync(`./${NPM_DIR}/package.json`));
