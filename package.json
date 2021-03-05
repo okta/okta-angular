@@ -64,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "angular2-template-loader": "0.6.2",
+    "axios": "^0.21.0",
     "chalk": "2.4.2",
     "codelyzer": "^6.0.1",
     "core-js": "3.1.3",
