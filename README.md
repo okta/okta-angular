@@ -267,6 +267,7 @@ The example below shows connecting two buttons to handle **login** and **logout*
 ```typescript
 // sample.component.ts
 
+import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
@@ -281,21 +282,22 @@ import { OktaAuthService } from '@okta/okta-angular';
 export class MyComponent {
   isAuthenticated: boolean;
   constructor(public oktaAuth: OktaAuthService) {
-    // get authentication state for immediate use
-    await this.isAuthenticated = this.oktaAuth.isAuthenticated();
-
     // subscribe to authentication state changes
     this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
     );
   }
-  login() {
-    this.oktaAuth.signInWithRedirect({
+  async ngOnInit() {
+    // get authentication state for immediate use
+    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+  }
+  async login() {
+    await this.oktaAuth.signInWithRedirect({
       originalUri: '/profile'
     });
   }
-  logout() {
-    this.oktaAuth.signOut();
+  async logout() {
+    await this.oktaAuth.signOut();
   }
 }
 ```
