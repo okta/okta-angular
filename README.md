@@ -75,7 +75,7 @@ import {
 } from '@okta/okta-angular';
 
 const oktaConfig = {
-  issuer: 'https://{yourOktaDomain}.com/oauth2/default',
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
   clientId: '{clientId}',
   redirectUri: window.location.origin + '/login/callback'
 }
