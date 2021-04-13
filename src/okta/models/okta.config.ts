@@ -23,6 +23,7 @@ export interface TestingObject {
 
 export interface OktaConfig extends OktaAuthOptions {
   onAuthRequired?: AuthRequiredFunction;
+  onAuthResume?: AuthRequiredFunction;
   testing?: TestingObject;
   isAuthenticated?: IsAuthenticatedFunction;
 }
