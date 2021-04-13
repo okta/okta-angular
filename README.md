@@ -4,6 +4,7 @@
 [Dependency Injection]: https://angular.io/guide/dependency-injection
 [OktaAuthService]: #oktaauthservice
 [AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
+[external identity provider]: https://developer.okta.com/docs/concepts/identity-providers/
 
 # Okta Angular SDK
 
@@ -102,7 +103,8 @@ An Angular InjectionToken used to configure the OktaAuthService. This value must
 
 This SDK accepts all configuration options defined by [@okta/okta-auth-js][] and adds some additional options:
 
-- `onAuthRequired` *(optional)*: - callback function. Called when authentication is required. If not supplied, `okta-angular` will redirect directly to Okta for authentication. This is triggered when a route protected by `OktaAuthGuard` is accessed without authentication.
+- `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication. Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
+- `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
 - `isAuthenticated` *(optional)* - callback function. By default, [OktaAuthService.isAuthenticated()](https://github.com/okta/okta-auth-js#isauthenticatedtimeout) will return true if **both** [getIdToken()](https://github.com/okta/okta-auth-js#getidtoken) **and** [getAccessToken()](https://github.com/okta/okta-auth-js#getaccesstoken) return a value. Setting an `isAuthenticated` function on the config allows you to customize this logic. The function receives an instance of `OktaAuthService` as a parameter and should return a Promise which resolves to either true or false.
 
 ### `OktaAuthModule`
@@ -256,6 +258,34 @@ const appRoutes: Routes = [
     }
   }
 ]
+```
+
+##### Resuming the authentication flow
+
+When using a custom login page and an [external identity provider][] your app should be prepared to handle a redirect callback from Okta to resume the authentication flow. The `OktaCallbackComponent` has built-in logic for this scenario.
+
+The `redirectUri` of your application will be requested with a special parameter (`?error=interaction_required`) to indicate that the authentication flow should be resumed by the application. In this case, the `OktaCallbackComponent` will call the `onAuthResume` function (if set on `OktaConfig`). If `onAuthResume` is not defined, then `onAuthRequired` will be called (if defined). If neither method is set in `OktaConfig`, then the `interaction_required` error will be displayed as a string.
+
+If the authentication flow began on the custom login page using the [Okta SignIn Widget][], the transaction will automatically resume when the widget is rendered again on the custom login page.
+
+Note that `onAuthResume` has the same signature as `onAuthRequired`. If you do not need any special logic for resuming an authorization flow, you can define only an `onAuthRequired` method and it will be called both to start or resume an auth flow.
+
+```typescript
+// myApp.module.ts
+
+function onAuthResume(oktaAuth, injector) {
+  // Use injector to access any service available within your application
+  const router = injector.get(Router);
+
+  // Redirect the user to custom login page which renders the Okta SignIn Widget
+  router.navigate(['/custom-login']);
+}
+
+const oktaConfig = {
+  issuer: environment.ISSUER,
+  ...
+  onAuthResume: onAuthResume
+};
 ```
 
 ### `OktaAuthService`
