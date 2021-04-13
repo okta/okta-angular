@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -22,11 +23,17 @@ describe('OktaCallbackComponent', () => {
       href: 'https://foo',
       search: '?code=fake'
     };
-    const config = {
+  });
+  afterEach(() => {
+    window.location = originalLocation;
+  });
+
+  function bootstrap(config = {}) {
+    config = Object.assign({
       clientId: 'foo',
       issuer: 'https://foo',
       redirectUri: 'https://foo'
-    };
+    }, config);
 
     TestBed.configureTestingModule({
       imports: [
@@ -46,21 +53,22 @@ describe('OktaCallbackComponent', () => {
     service = TestBed.get(OktaAuthService);
     fixture = TestBed.createComponent(OktaCallbackComponent);
     component = fixture.componentInstance;
-  });
-  afterEach(() => {
-    window.location = originalLocation;
-  });
+  }
+
   it('should create the component', async(() => {
+    bootstrap();
     expect(component).toBeTruthy();
   }));
 
   it('should call handleLoginRedirect', async(() => {
+    bootstrap();
     jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.resolve());
     fixture.detectChanges();
     expect(service.handleLoginRedirect).toHaveBeenCalled();
   }));
 
   it('catches errors from handleLoginRedirect', async(() => {
+    bootstrap();
     const error = new Error('test error');
     jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
     fixture.detectChanges();
@@ -69,4 +77,46 @@ describe('OktaCallbackComponent', () => {
       expect(component.error).toBe('Error: test error');
     });
   }));
+
+  describe('interaction code flow', () => {
+    it('will call `onAuthResume` function, if defined', async(() => {
+      const onAuthResume = jest.fn();
+      bootstrap({ onAuthResume });
+      const error = new Error('my fake error');
+      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(onAuthResume).toHaveBeenCalledWith(service, (component as any).injector);
+        expect(component.error).toBe(undefined);
+      });
+    }));
+
+    it('will call `onAuthRequired` function, if `onAuthResume` is not defined', async(() => {
+      const onAuthRequired = jest.fn();
+      bootstrap({ onAuthRequired });
+      const error = new Error('my fake error');
+      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(onAuthRequired).toHaveBeenCalledWith(service, (component as any).injector);
+        expect(component.error).toBe(undefined);
+      });
+    }));
+
+    it('if neither `onAuthRequired` or `onAuthResume` are defined, the error is displayed', async(() => {
+      bootstrap();
+      const error = new Error('my fake error');
+      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(component.error).toBe('Error: my fake error');
+      });
+    }));
+  });
 });
