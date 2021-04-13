@@ -1,3 +1,15 @@
+# 3.1.0
+
+### Features
+
+[#33](https://github.com/okta/okta-angular/pull/33) Adds option `onAuthResume` to resume authorization flow on custom login page.
+
+# 3.0.1
+
+### Bug Fixes
+
+[#9](https://github.com/okta/okta-angular/pull/9) fix: handle --base-href option
+
 # 3.0.0
 
 [#5](https://github.com/okta/okta-angular/pull/5) Release 3.0.0 - `OktaAuthService` now inherits from an instance of `@okta/okta-auth-js` so all configuration options and public methods are available. See [MIGRATING](MIGRATING.md) for detailed information.
