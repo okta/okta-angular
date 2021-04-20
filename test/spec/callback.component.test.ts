@@ -50,7 +50,7 @@ describe('OktaCallbackComponent', () => {
         },
       ],
     });
-    service = TestBed.get(OktaAuthService);
+    service = TestBed.inject(OktaAuthService);
     fixture = TestBed.createComponent(OktaCallbackComponent);
     component = fixture.componentInstance;
   }

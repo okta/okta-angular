@@ -33,7 +33,7 @@ function createService(config: OktaConfig) {
       },
     ],
   });
-  const service = TestBed.get(OktaAuthService);
+  const service = TestBed.inject(OktaAuthService);
   service.getTokenManager = jest.fn().mockReturnValue({ on: jest.fn() });
   service.setOriginalUri = jest.fn();
   service.signInWithRedirect = jest.fn();
@@ -50,7 +50,7 @@ describe('Angular auth guard', () => {
     describe('isAuthenticated() = true', () => {
       it('returns true', async () => {
         const service = createService({ isAuthenticated: () => Promise.resolve(true) });
-        const injector: Injector = TestBed.get(Injector);
+        const injector: Injector = TestBed.inject(Injector);
         const guard = new OktaAuthGuard(service, injector as Injector);
         const route: unknown = undefined;
         const state: unknown = undefined;
@@ -68,8 +68,8 @@ describe('Angular auth guard', () => {
       let injector: Injector;
       beforeEach(() => {
         service = createService({ isAuthenticated: () => Promise.resolve(false) });
-        router = TestBed.get(Router);
-        injector = TestBed.get(Injector);
+        router = TestBed.inject(Router);
+        injector = TestBed.inject(Injector);
         guard = new OktaAuthGuard(service, injector);
         const routerState: RouterState = router.routerState;
         state = routerState.snapshot;
@@ -116,9 +116,9 @@ describe('Angular auth guard', () => {
   describe('canActivateChild', () => {
     it('calls canActivate', () => {
       const service = createService({ isAuthenticated: () => Promise.resolve(false) });
-      const injector = TestBed.get(Injector);
+      const injector = TestBed.inject(Injector);
       const guard = new OktaAuthGuard(service, injector);
-      const router = TestBed.get(Router);
+      const router = TestBed.inject(Router);
       const routerState: RouterState = router.routerState;
       const state = routerState.snapshot;
       const route = state.root;
@@ -144,7 +144,7 @@ describe('Angular auth guard', () => {
         },
       ],
     });
-    const guard = TestBed.get(OktaAuthGuard);
+    const guard = TestBed.inject(OktaAuthGuard);
     expect(guard.oktaAuth).toBeTruthy();
     expect(guard.injector).toBeTruthy();
     expect(typeof guard.canActivate).toBe('function');
