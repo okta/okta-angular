@@ -7,3 +7,4 @@ testenv
 .yalc
 yalc.lock
 yarn-error.log
+.idea
