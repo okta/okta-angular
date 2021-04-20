@@ -10,6 +10,7 @@ import {
 } from '../../src/okta-angular';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, RouterState } from '@angular/router';
 import { Injector } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 const VALID_CONFIG = {
   clientId: 'foo',
@@ -34,7 +35,6 @@ function createService(config: OktaConfig) {
     ],
   });
   const service = TestBed.inject(OktaAuthService);
-  service.getTokenManager = jest.fn().mockReturnValue({ on: jest.fn() });
   service.setOriginalUri = jest.fn();
   service.signInWithRedirect = jest.fn();
   return service;
@@ -144,7 +144,7 @@ describe('Angular auth guard', () => {
         },
       ],
     });
-    const guard = TestBed.inject(OktaAuthGuard);
+    const guard = TestBed.inject(OktaAuthGuard) as unknown as {oktaAuth: OktaAuth, injector: Injector, canActivate: () => boolean};
     expect(guard.oktaAuth).toBeTruthy();
     expect(guard.injector).toBeTruthy();
     expect(typeof guard.canActivate).toBe('function');

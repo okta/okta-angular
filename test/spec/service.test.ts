@@ -13,6 +13,7 @@ import {
   OktaConfig,
   OKTA_CONFIG,
 } from "../../src/okta-angular";
+import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 
 describe("Angular service", () => {
   let VALID_CONFIG: OktaConfig;
@@ -92,7 +93,7 @@ describe("Angular service", () => {
           },
         ],
       });
-      const service = TestBed.inject(OktaAuthService);
+      const service = TestBed.inject(OktaAuthService) as unknown as {options: OktaAuthOptions, config: OktaConfig};
       expect(service.config).toMatchInlineSnapshot(`
         Object {
           "clientId": "foo",
@@ -117,7 +118,7 @@ describe("Angular service", () => {
         ],
       });
       const service = TestBed.inject(OktaAuthService);
-      expect(service.config).toMatchInlineSnapshot(`
+      expect((service as unknown as {config: OktaConfig}).config).toMatchInlineSnapshot(`
         Object {
           "clientId": "foo",
           "issuer": "https://foo",
@@ -126,8 +127,8 @@ describe("Angular service", () => {
       `);
       expect(service.options.restoreOriginalUri).toBeTruthy();
       const router = TestBed.inject(Router);
-      jest.spyOn(router, 'navigateByUrl').mockReturnValue(true);
-      service.options.restoreOriginalUri(service, '/foo');
+      jest.spyOn(router, 'navigateByUrl').mockReturnValue(Promise.resolve(true));
+      service.options?.restoreOriginalUri?.(service, '/foo');
       expect(router.navigateByUrl).toHaveBeenCalledWith('/foo');
     });
   });
