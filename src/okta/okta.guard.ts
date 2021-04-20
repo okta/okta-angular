@@ -17,7 +17,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
-  NavigationStart
+  NavigationStart, Event
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
