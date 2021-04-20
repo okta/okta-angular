@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
+    "downlevelIteration": true,
         "emitDecoratorMetadata": true,
         "esModuleInterop": false,
         "experimentalDecorators": true,
         "strict": true,
         "strictPropertyInitialization": false,
-        "module": "commonjs",
+        "module": "esnext",
         "moduleResolution": "node",
         "rootDir": ".",
         "sourceMap": true,
         "inlineSources": true,
-        "target": "es5",
+        "target": "es2015",
         "skipLibCheck": true,
         "lib": [
             "es2015",
