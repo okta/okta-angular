@@ -99,6 +99,13 @@ export class OktaAuthService extends OktaAuth {
       this.observers.forEach(observer => observer.next(state));
     }
 
+    public async isAuthenticated(): Promise<boolean> {
+      if (this.config.isAuthenticated) {
+        return await this.config.isAuthenticated(this);
+      }
+      return await super.isAuthenticated();
+    }
+
     async signInWithRedirect(options: SigninWithRedirectOptions = {}): Promise<void> {
       const originalUri = options.originalUri || this.getOriginalUri();
       if (!originalUri) {
