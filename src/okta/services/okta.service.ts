@@ -98,7 +98,7 @@ export class OktaAuthService extends OktaAuth implements OnDestroy {
       }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
       this.stop();
     }
 
