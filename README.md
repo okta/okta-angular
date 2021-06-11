@@ -172,7 +172,7 @@ If a user does not have a valid session, then a new authorization flow will begi
 
 Used by the login redirect flow, begun by a call to [signInWithRedirect](https://github.com/okta/okta-auth-js#signinwithredirectoptions). This component handles the callback after the redirect. By default, it parses the tokens from the uri, stores them, then redirects to `/`. If a protected route (using [`OktaAuthGuard`](#oktaauthguard)) caused the redirect, then the callback will redirect back to the protected route. If an error is thrown while processing tokens, the component will display the error and not perform any redirect. This logic can be customized by copying the component to your own source tree and modified as needed. For example, you may want to capture or display errors differently or provide a helpful link for your users in case they encounter an error on the callback route. The most common error is the user does not have permission to access the application. In this case, they may be able to contact an administrator to obtain access.
 
-You should define a route to handle the callback URL (`/login/callback` by default). Also add `OktaCallbackComponent` to the declarations section of in your `NgModule`.
+You should define a route to handle the callback URL (`/login/callback` by default). 
 
 ```typescript
 // myApp.module.ts
@@ -188,14 +188,6 @@ const appRoutes: Routes = [
   },
   ...
 ]
-
-@NgModule({
-  ...
-  declarations: [
-    ...
-    OktaCallbackComponent
-  ]
-})
 ```
 
 ### `OktaLoginRedirectComponent`
