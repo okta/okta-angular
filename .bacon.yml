@@ -27,7 +27,9 @@ test_suites:
       script_name: publish
       criteria: MERGE
       queue_name: small
-    # disable to unblock merge. JIRA: OKTA-404992
+    # disable to unblock merge. 
+    # TODO: re-enable it
+    # JIRA: OKTA-404992
     # - name: selenium-test
       # script_path: /root/okta/okta-angular/scripts
       # sort_order: '5'
