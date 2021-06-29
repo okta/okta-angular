@@ -1,6 +1,6 @@
-# 4.0.0
+# 3.2.0
 
-### Breaking Changes
+### Features
 
 [#40](https://github.com/okta/okta-angular/pull/40) Requires [@okta/okta-auth-js 5.x](https://github.com/okta/okta-auth-js/#from-4x-to-5x)
 

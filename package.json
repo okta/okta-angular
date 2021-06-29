@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "4.0.0",
+  "version": "3.2.0",
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
@@ -60,7 +60,7 @@
     "@rollup/plugin-node-resolve": "7.0.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
-    "@types/node": "^14.11.2",
+    "@types/node": "10.14.0",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "angular2-template-loader": "0.6.2",
