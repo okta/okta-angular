@@ -64,11 +64,9 @@ export class OktaAuthService extends OktaAuth implements OnDestroy {
       
       // If a router is available, provide a default implementation of `restoreOriginalUri`
       const restoreOriginalUri = (!config.restoreOriginalUri && router && location) ? async (oktaAuth: OktaAuth, originalUri: string) => {
-        if (originalUri) {
-          const baseUrl = window.location.origin + location.prepareExternalUrl('');
-          const routePath = toRelativeUrl(originalUri, baseUrl);
-          return router.navigateByUrl(routePath);
-        }
+        const baseUrl = window.location.origin + location.prepareExternalUrl('');
+        const routePath = toRelativeUrl(originalUri || '/', baseUrl);
+        return router.navigateByUrl(routePath);
       } : config.restoreOriginalUri;
 
       const options: OktaAuthOptions = Object.assign({
