@@ -1413,10 +1413,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@okta/okta-auth-js@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-5.2.0.tgz#3090f8ca208169233c4f430b565c8fbccbe45dfd"
-  integrity sha512-X6b2rGQzRNKqrpTIDIbNMg7ALPSZGHccj1AgnSEIXcz8HqmVQsZY52omtYzlY6AIJeJ6GJJ7t8ZND0XREfm9Zg==
+"@okta/okta-auth-js@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-5.2.1.tgz#9fd7bcb871c535daa6a73e63851543129e2ee48d"
+  integrity sha512-FIQCok48HRuMBB5HbR0Y+kjJ4PWBLt+rxagXl9eKR/XoF6t1MOM1KiIkEKTYdOU/xwnDAONfr4YDr5jpz0OS/A==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@okta/okta-idx-js" "0.18.0"
