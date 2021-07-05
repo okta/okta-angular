@@ -6,3 +6,4 @@ testenv
 /src/okta/packageInfo.ts
 .yalc
 yalc.lock
+yarn-error.log

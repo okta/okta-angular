@@ -24,7 +24,7 @@ export class AppComponent {
   }
 
   login() {
-    this.oktaAuth.signIn('/profile');
+    this.oktaAuth.signInWithRedirect({ originalUri: '/profile' });
   }
 
   async logout() {

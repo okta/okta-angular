@@ -48,7 +48,7 @@ export class SessionTokenLoginComponent {
       password: password
     })
     .then(res => {
-      return this.okta.signInWithRedirect({
+      return this.okta.token.getWithRedirect({
         sessionToken: res.sessionToken
       });
     })

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, OnDestroy, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { OKTA_CONFIG, OktaConfig } from '../models/okta.config';
@@ -35,7 +35,7 @@ import { Observable, Observer } from 'rxjs';
 import { Location } from '@angular/common';
 
 @Injectable()
-export class OktaAuthService extends OktaAuth {
+export class OktaAuthService extends OktaAuth implements OnDestroy {
     private config: OktaConfig;
     private observers: Observer<boolean>[];
     private location?: Location;
@@ -65,7 +65,7 @@ export class OktaAuthService extends OktaAuth {
       // If a router is available, provide a default implementation of `restoreOriginalUri`
       const restoreOriginalUri = (!config.restoreOriginalUri && router && location) ? async (oktaAuth: OktaAuth, originalUri: string) => {
         const baseUrl = window.location.origin + location.prepareExternalUrl('');
-        const routePath = toRelativeUrl(originalUri, baseUrl);
+        const routePath = toRelativeUrl(originalUri || '/', baseUrl);
         return router.navigateByUrl(routePath);
       } : config.restoreOriginalUri;
 
@@ -91,12 +91,24 @@ export class OktaAuthService extends OktaAuth {
       });
       if (!this.token.isLoginRedirect()) {
         // Trigger an initial change event to make sure authState is latest
-        this.authStateManager.updateAuthState();
+        // Also starts the token auto-renew service
+        this.start();
       }
+    }
+
+    ngOnDestroy(): void {
+      this.stop();
     }
 
     private async emitAuthenticationState(state: boolean) {
       this.observers.forEach(observer => observer.next(state));
+    }
+
+    public async isAuthenticated(): Promise<boolean> {
+      if (this.config.isAuthenticated) {
+        return await this.config.isAuthenticated(this);
+      }
+      return await super.isAuthenticated();
     }
 
     async signInWithRedirect(options: SigninWithRedirectOptions = {}): Promise<void> {
