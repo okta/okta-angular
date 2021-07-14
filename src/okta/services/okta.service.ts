@@ -91,9 +91,11 @@ export class OktaAuthService extends OktaAuth implements OnDestroy {
       });
       if (!this.token.isLoginRedirect()) {
         // Trigger an initial change event to make sure authState is latest
-        // Also starts the token auto-renew service
-        this.start();
+        this.authStateManager.updateAuthState();
       }
+
+      // Start the token auto-renew service
+      this.tokenManager.start();
     }
 
     ngOnDestroy(): void {
