@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import * as OktaAuth from '@okta/okta-auth-js';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const PACKAGE_JSON = require("../../package.json");
@@ -33,6 +34,12 @@ describe("Angular service", () => {
   const createInstance = (config = {}) => {
     return () => new OktaAuthService(config);
   };
+
+  it("starts tokenService during construction", () => {
+    const tokenManagerStart = jest.spyOn(OktaAuth.TokenManager.prototype, 'start');
+    createInstance(VALID_CONFIG)();
+    expect(tokenManagerStart).toBeCalled();
+  });
 
   describe("configuration", () => {
     it("should throw if no issuer is provided", () => {
