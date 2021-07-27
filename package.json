@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
@@ -42,7 +42,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@okta/okta-auth-js": "^5.2.1",
+    "@okta/okta-auth-js": "^5.2.3",
     "tslib": "^1.9.0"
   },
   "devDependencies": {
