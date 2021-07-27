@@ -1,3 +1,9 @@
+# 3.2.1
+
+### Bug Fixes
+
+[#48](https://github.com/okta/okta-angular/pull/48) fix: start tokenService on login redirect
+
 # 3.2.0
 
 ### Other
