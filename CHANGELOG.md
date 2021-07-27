@@ -1,8 +1,14 @@
+# 3.2.2
+
+### Bug Fixes
+
+[#51](https://github.com/okta/okta-angular/pull/51) Fix token auto renew by using @okta/okta-auth-js ^5.2.3
+
 # 3.2.1
 
 ### Bug Fixes
 
-[#48](https://github.com/okta/okta-angular/pull/48) fix: start tokenService on login redirect
+[#48](https://github.com/okta/okta-angular/pull/48) fix: start tokenService on login redirect 
 
 # 3.2.0
 
