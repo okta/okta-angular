@@ -1,5 +1,8 @@
 #!/bin/bash -xe
 
+# Install yarn
+setup_service yarn 1.21.1
+
 # Add yarn to the $PATH so npm cli commands do not fail
 export PATH="${PATH}:$(yarn global bin)"
 
