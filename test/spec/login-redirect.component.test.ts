@@ -32,7 +32,7 @@ describe('OktaLoginRedirectComponent', () => {
     });
     fixture = TestBed.createComponent(OktaLoginRedirectComponent);
     component = fixture.componentInstance;
-    service = TestBed.get(OktaAuthService);
+    service = TestBed.inject(OktaAuthService);
   });
 
   it('should create the component', async(() => {

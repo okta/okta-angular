@@ -15,7 +15,6 @@ describe('OktaCallbackComponent', () => {
   let originalLocation: Location;
   beforeEach(() => {
     originalLocation = window.location;
-    delete window.location;
     (window.location as unknown) = {
       protocol: 'https:',
       replace: jest.fn(),
@@ -50,7 +49,7 @@ describe('OktaCallbackComponent', () => {
         },
       ],
     });
-    service = TestBed.get(OktaAuthService);
+    service = TestBed.inject(OktaAuthService);
     fixture = TestBed.createComponent(OktaCallbackComponent);
     component = fixture.componentInstance;
   }
