@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import * as OktaAuth from '@okta/okta-auth-js';
 import { BehaviorSubject } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,6 +12,7 @@ import {
   OktaConfig,
   OKTA_CONFIG,
 } from "../../src/okta-angular";
+import { OktaAuthOptions, TokenManager } from '@okta/okta-auth-js';
 
 describe("Angular service", () => {
   let VALID_CONFIG: OktaConfig;
@@ -37,7 +37,7 @@ describe("Angular service", () => {
   };
 
   it("starts tokenService during construction", () => {
-    const tokenManagerStart = jest.spyOn(OktaAuth.TokenManager.prototype, 'start');
+    const tokenManagerStart = jest.spyOn(TokenManager.prototype, 'start');
     createInstance(VALID_CONFIG)();
     expect(tokenManagerStart).toBeCalled();
   });
@@ -93,7 +93,7 @@ describe("Angular service", () => {
           },
         ],
       });
-      const service = TestBed.get(OktaAuthService);
+      const service = TestBed.inject(OktaAuthService) as unknown as {options: OktaAuthOptions, config: OktaConfig};
       expect(service.config).toMatchInlineSnapshot(`
         Object {
           "clientId": "foo",
@@ -117,8 +117,8 @@ describe("Angular service", () => {
           },
         ],
       });
-      const service = TestBed.get(OktaAuthService);
-      expect(service.config).toMatchInlineSnapshot(`
+      const service = TestBed.inject(OktaAuthService);
+      expect((service as unknown as {config: OktaConfig}).config).toMatchInlineSnapshot(`
         Object {
           "clientId": "foo",
           "issuer": "https://foo",
@@ -126,9 +126,9 @@ describe("Angular service", () => {
         }
       `);
       expect(service.options.restoreOriginalUri).toBeTruthy();
-      const router = TestBed.get(Router);
-      jest.spyOn(router, 'navigateByUrl').mockReturnValue(true);
-      service.options.restoreOriginalUri(service, '/foo');
+      const router = TestBed.inject(Router);
+      jest.spyOn(router, 'navigateByUrl').mockReturnValue(Promise.resolve(true));
+      service.options?.restoreOriginalUri?.(service, '/foo');
       expect(router.navigateByUrl).toHaveBeenCalledWith('/foo');
     });
   });
@@ -147,7 +147,7 @@ describe("Angular service", () => {
           },
         ],
       });
-      const service = TestBed.get(OktaAuthService);
+      const service = TestBed.inject(OktaAuthService);
       jest
         .spyOn(service.token, "getWithRedirect")
         .mockReturnValue(Promise.resolve(undefined));
