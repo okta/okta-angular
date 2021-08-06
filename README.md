@@ -282,7 +282,7 @@ const oktaConfig = {
 
 ### `OktaAuthService`
 
-In your components, your can take advantage of all of `okta-angular`'s features by importing the `OktaAuthService`. The `OktaAuthService` inherits from the `OktaAuth` service exported by [@okta/okta-auth-jks][] making the full [configuration](https://github.com/okta/okta-auth-js#configuration-reference) and [api](https://github.com/okta/okta-auth-js#api-reference) available on `OktaAuthService`.
+In your components, your can take advantage of all of `okta-angular`'s features by importing the `OktaAuthService`. The `OktaAuthService` inherits from the `OktaAuth` service exported by [@okta/okta-auth-js][] making the full [configuration](https://github.com/okta/okta-auth-js#configuration-reference) and [api](https://github.com/okta/okta-auth-js#api-reference) available on `OktaAuthService`.
 
 The example below shows connecting two buttons to handle **login** and **logout**:
 
