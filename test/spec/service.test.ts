@@ -209,7 +209,7 @@ describe("Angular service", () => {
         await timeout(100); // wait for observation
         expect(authStateManagerGetAuthState).toBeCalled();
         expect(observer).toHaveBeenCalledTimes(1);
-        expect(observer).toHaveBeenNthCalledWith(1, false);
+        expect(observer).toHaveBeenNthCalledWith(1, true);
       });
 
       it('should update when authState changes from oktaAuth', () => {
