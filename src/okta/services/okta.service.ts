@@ -82,7 +82,9 @@ export class OktaAuthService extends OktaAuth implements OnDestroy {
       this.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.userAgent}`;
 
       // Initialize $authenticationState
-      this.$authenticationState = new BehaviorSubject<boolean>(false);
+      const authState = this.authStateManager.getAuthState();
+      const isAuthenticated = authState ? !!authState.isAuthenticated : false;
+      this.$authenticationState = new BehaviorSubject<boolean>(isAuthenticated);
 
       this.authStateManager.subscribe((authState: AuthState) => {
         this.emitAuthenticationState(!!authState.isAuthenticated);

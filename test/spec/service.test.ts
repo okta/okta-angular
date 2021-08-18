@@ -42,6 +42,19 @@ describe("Angular service", () => {
     expect(tokenManagerStart).toBeCalled();
   });
 
+  it("calls getAuthState and initializes $authenticationState with isAuthenticated", async () => {
+    const authStateManagerGetAuthState = jest
+      .spyOn(OktaAuth.AuthStateManager.prototype, 'getAuthState')
+      .mockReturnValue({
+        isAuthenticated: true
+      });
+    const oktaAuth = new OktaAuthService(VALID_CONFIG);
+    const observer = jest.fn();
+    oktaAuth.$authenticationState.subscribe(observer);
+    expect(authStateManagerGetAuthState).toBeCalled();
+    expect(observer).toHaveBeenCalledWith(true);
+  });
+
   describe("configuration", () => {
     it("should throw if no issuer is provided", () => {
       expect(createInstance()).toThrow();
