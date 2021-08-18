@@ -13,6 +13,7 @@ import {
   OktaConfig,
   OKTA_CONFIG,
 } from "../../src/okta-angular";
+import { AuthStateManager } from "@okta/okta-auth-js";
 
 describe("Angular service", () => {
   let VALID_CONFIG: OktaConfig;
@@ -40,19 +41,6 @@ describe("Angular service", () => {
     const tokenManagerStart = jest.spyOn(OktaAuth.TokenManager.prototype, 'start');
     createInstance(VALID_CONFIG)();
     expect(tokenManagerStart).toBeCalled();
-  });
-
-  it("calls getAuthState and initializes $authenticationState with isAuthenticated", async () => {
-    const authStateManagerGetAuthState = jest
-      .spyOn(OktaAuth.AuthStateManager.prototype, 'getAuthState')
-      .mockReturnValue({
-        isAuthenticated: true
-      });
-    const oktaAuth = new OktaAuthService(VALID_CONFIG);
-    const observer = jest.fn();
-    oktaAuth.$authenticationState.subscribe(observer);
-    expect(authStateManagerGetAuthState).toBeCalled();
-    expect(observer).toHaveBeenCalledWith(true);
   });
 
   describe("configuration", () => {
@@ -168,12 +156,14 @@ describe("Angular service", () => {
     }
 
     describe('$authenticationState', () => {
+      const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      
       it('should expose as instance of BehaviorSubject', () => {
         const service = createService(VALID_CONFIG);
         expect(service.$authenticationState).toBeInstanceOf(BehaviorSubject);
       });
 
-      it('should initial with false', () => {
+      it('should initial with false if authState is null', () => {
         return new Promise((resolve) => {
           const service = createService(VALID_CONFIG);
           service.$authenticationState.subscribe((state: boolean) => {
@@ -181,6 +171,45 @@ describe("Angular service", () => {
             resolve(undefined);
           });
         });
+      });
+
+      it('should initial with getAuthState().isAuthenticated', async () => {
+        const authStateManagerGetAuthState = jest
+          .spyOn(OktaAuth.AuthStateManager.prototype, 'getAuthState')
+          .mockReturnValue({
+            isAuthenticated: true
+          });
+        const service = createService(VALID_CONFIG);
+        const observer = jest.fn();
+        service.$authenticationState.subscribe(observer);
+        await timeout(100); // wait for observation
+        expect(authStateManagerGetAuthState).toBeCalled();
+        expect(observer).toHaveBeenCalledTimes(2);
+        expect(observer).toHaveBeenNthCalledWith(1, true);  // initial state
+        expect(observer).toHaveBeenNthCalledWith(2, false); // after updateAuthState
+      });
+
+      it('should initialize with correct authState for case when subscribe may not fire', async () => {
+        const authStateManagerGetAuthState = jest
+          .spyOn(OktaAuth.AuthStateManager.prototype, 'getAuthState')
+          .mockImplementation(function(this: AuthStateManager) {
+            // Override initial authState
+            // This will lead to case when updateAuthState will not fire update event 
+            // and subscribe will not fire
+            this._authState = {
+              isAuthenticated: true
+            };
+            return this._authState;
+          });
+        const service = createService({
+          isAuthenticated: jest.fn().mockImplementation(() => Promise.resolve(true))
+        });
+        const observer = jest.fn();
+        service.$authenticationState.subscribe(observer);
+        await timeout(100); // wait for observation
+        expect(authStateManagerGetAuthState).toBeCalled();
+        expect(observer).toHaveBeenCalledTimes(1);
+        expect(observer).toHaveBeenNthCalledWith(1, false);
       });
 
       it('should update when authState changes from oktaAuth', () => {
