@@ -72,10 +72,11 @@ describe("Angular service", () => {
     });
   });
 
-  it("Adds a user agent on internal oktaAuth instance", () => {
+  it("Adds an environment to oktaAuth's _oktaUserAgent", () => {
     const service = createInstance(VALID_CONFIG)();
+    const userAgent = service._oktaUserAgent.getHttpHeader()['X-Okta-User-Agent-Extended'];
     expect(
-      service.userAgent.indexOf(`@okta/okta-angular/${PACKAGE_JSON.version}`)
+      userAgent.indexOf(`@okta/okta-angular/${PACKAGE_JSON.version}`)
     ).toBeGreaterThan(-1);
   });
 

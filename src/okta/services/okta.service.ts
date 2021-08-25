@@ -80,7 +80,11 @@ export class OktaAuthService extends OktaAuth implements OnDestroy {
       this.location = location;
 
       // Customize user agent
-      this.userAgent = `${packageInfo.name}/${packageInfo.version} ${this.userAgent}`;
+      if (this._oktaUserAgent) {
+        this._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
+      } else {
+        console.warn('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
+      }
 
       // Initialize observers
       this.observers = [];
