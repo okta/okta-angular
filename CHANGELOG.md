@@ -1,3 +1,9 @@
+# 3.2.3
+
+### Other
+
+[#58](https://github.com/okta/okta-angular/pull/58) Requires @okta/okta-auth-js ^5.3.1
+
 # 3.2.2
 
 ### Bug Fixes
