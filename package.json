@@ -5,10 +5,12 @@
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
+  "es2015_ivy_ngcc": "__ivy_ngcc__/dist/fesm2015/okta-angular.js",
   "es2015": "./dist/fesm2015/okta-angular.js",
   "esm5": "./dist/esm5/okta-angular.js",
   "esm2015": "./dist/esm2015/okta-angular.js",
   "fesm5": "./dist/fesm5/okta-angular.js",
+  "fesm2015_ivy_ngcc": "__ivy_ngcc__/dist/fesm2015/okta-angular.js",
   "fesm2015": "./dist/fesm2015/okta-angular.js",
   "types": "./dist/okta-angular.d.ts",
   "scripts": {
@@ -20,15 +22,16 @@
     "prebuild": "yarn build:package-info",
     "build": "node build.js",
     "prepare": "yarn build",
-    "start": "yarn --cwd test/e2e/harness/ start",
+    "start": "yarn --cwd test/app start",
     "test": "yarn lint && yarn test:e2e && yarn test:unit",
-    "test:e2e": "yarn --cwd test/e2e/harness/ e2e",
+    "test:e2e": "yarn workspace @okta/test.e2e test",
     "test:unit": "jest",
     "pack:lib": "npm run build && npm pack ./dist",
     "publish:lib": "npm run build && npm publish ./dist",
     "publish:lib:next": "npm run build && npm publish --tag next ./dist",
     "compodoc": "compodoc -p tsconfig.json",
-    "compodoc:serve": "compodoc -s"
+    "compodoc:serve": "compodoc -s",
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by NGCC. This is not allowed.\\nPlease delete and rebuild the package, without compiling with NGCC, before attempting to publish.\\nNote that NGCC may have been run by importing this package into another project that is being built with Ivy enabled.\\n')\" && exit 1"
   },
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",
@@ -139,8 +142,17 @@
     "outputName": "junit-result.xml"
   },
   "sideEffects": false,
-  "workspaces": [
-    "./",
-    "test/e2e/harness"
-  ]
+  "workspaces": {
+    "nohoist": ["test/app"],
+    "packages": [
+      "./",
+      "env",
+      "test/e2e"
+    ]
+  },
+  "__processed_by_ivy_ngcc__": {
+    "es2015": "11.2.14",
+    "fesm2015": "11.2.14",
+    "typings": "11.2.14"
+  }
 }
