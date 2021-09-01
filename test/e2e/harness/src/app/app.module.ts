@@ -38,9 +38,8 @@ export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injecto
   router.navigate(['/sessionToken-login']);
 }
 
-export function onNeedsGlobalAuthenticationGuard(oktaAuth: OktaAuth, injector: Injector) {
-  const router = injector.get(Router);
-  router.navigate(['/login']);
+export function onNeedsGlobalAuthenticationGuard(oktaAuth: OktaAuth) {
+  oktaAuth.signInWithRedirect({ originalUri: '/' });
 }
 
 const appRoutes: Routes = [

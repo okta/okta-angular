@@ -10,28 +10,32 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, Inject } from '@angular/core';
 import {
   CanActivate,
   CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
-  NavigationStart, Event
+  NavigationStart, 
+  Event
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-import { AuthState } from '@okta/okta-auth-js';
+import { OktaAuth, AuthState } from '@okta/okta-auth-js';
 
-import { OktaAuthService } from './services/okta.service';
-import { AuthRequiredFunction } from './models/okta.config';
+import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild {
   private route: ActivatedRouteSnapshot;
   private state: RouterStateSnapshot;
 
-  constructor(private oktaAuth: OktaAuthService, private injector: Injector) { 
+  constructor(
+    @Inject(OKTA_CONFIG) private config: OktaConfig, 
+    private oktaAuth: OktaAuth, 
+    private injector: Injector
+  ) { 
     // Unsubscribe updateAuthStateListener when route change
     const router = injector.get(Router);
     router.events.pipe(
@@ -74,7 +78,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
   private async handleLogin(fromUri: string): Promise<void> {
      // Get the operation to perform on failed authentication from
      // either the global config or route data injection.
-    const onAuthRequired: AuthRequiredFunction = this.route.data['onAuthRequired'] || this.oktaAuth.getOktaConfig().onAuthRequired;
+    const onAuthRequired: AuthRequiredFunction = this.route.data['onAuthRequired'] || this.config.onAuthRequired;
     
     // Store the current path
     this.oktaAuth.setOriginalUri(fromUri);

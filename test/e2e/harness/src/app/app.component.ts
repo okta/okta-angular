@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
   isAuthenticated: boolean;
 
   constructor(public oktaAuth: OktaAuth) {
-    console.log(oktaAuth);
     this.oktaAuth.authStateManager.subscribe(authState => this.isAuthenticated = !!authState.isAuthenticated);
     // this.oktaAuth.$authenticationState.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
   }
