@@ -10,13 +10,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
+import { NgModule, Inject, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaAuthGuard } from './okta.guard';
 import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import packageInfo from './packageInfo';
 
 @NgModule({
   declarations: [
@@ -37,5 +38,33 @@ import { OktaAuth } from '@okta/okta-auth-js';
   ]
 })
 export class OktaAuthModule {
+  constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() location?: Location, @Optional() router?: Router) {
+    const { oktaAuth } = config;
+
+    // Add okta-react userAgent
+    if (oktaAuth._oktaUserAgent) {
+      oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
+    } else {
+      console.warn('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
+    }
+
+    // Provide a default implementation of `restoreOriginalUri`
+    if (!oktaAuth.options.restoreOriginalUri && router && location) {
+      oktaAuth.options.restoreOriginalUri = async (_, originalUri: string) => {
+        const baseUrl = window.location.origin + location.prepareExternalUrl('');
+        const routePath = toRelativeUrl(originalUri || '/', baseUrl);
+        router.navigateByUrl(routePath);
+      };
+    }
+
+    // Start services
+    // TODO: do "isLoginRedirect" from auth-js
+    if (!oktaAuth.token.isLoginRedirect()) {
+      // Trigger an initial change event to make sure authState is latest
+      oktaAuth.authStateManager.updateAuthState();
+    }
+    // Start the token auto-renew service
+    oktaAuth.tokenManager.start();
+  }
 
 }
