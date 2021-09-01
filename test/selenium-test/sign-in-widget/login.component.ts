@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationStart} from '@angular/router';
 
-import { OktaAuthService } from '@okta/okta-angular';
 import * as OktaSignIn from '@okta/okta-signin-widget';
 import { environment } from '../environments/environment';
 
@@ -13,7 +12,6 @@ import { environment } from '../environments/environment';
   `
 })
 export class LoginComponent {
-  authService;
   widget = new OktaSignIn({
     el: '#okta-signin-container',
     baseUrl: `https://${environment.yourOktaDomain}`,
@@ -24,9 +22,7 @@ export class LoginComponent {
     redirectUri: 'http://localhost:8080/login/callback'
   });
 
-  constructor(oktaAuth: OktaAuthService, router: Router) {
-    this.authService = oktaAuth;
-
+  constructor(router: Router) {
     // Show the widget when prompted, otherwise remove it from the DOM.
     router.events.forEach(event => {
       if (event instanceof NavigationStart) {
