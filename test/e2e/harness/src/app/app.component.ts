@@ -33,7 +33,7 @@ export class AppComponent {
   constructor(public oktaAuth: OktaAuth, private authStateService: AuthStateService) {}
 
   login() {
-    this.oktaAuth.signInWithRedirect({ originalUri: '/' });
+    this.oktaAuth.signInWithRedirect();
   }
 
   logout() {
