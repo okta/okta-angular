@@ -2006,13 +2006,13 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@okta/okta-auth-js@^5.2.3":
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-5.2.3.tgz#ab6334fdde3236b833d9cd50da33570f114b0667"
-  integrity sha512-I6xcZO4mzNUsQSmZF+m8IojuXr5dxghHUIbpiGjbZLQfUpvaxUGAuxJoXecnsXITnp4/WnvyUxbKWeRLSAIRGQ==
+"@okta/okta-auth-js@^5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-5.4.1.tgz#1b25e6fcb862d1b8c95275bc206d4daa67cd2410"
+  integrity sha512-EMvHx454kkCZ+keLz1cxE1uROICS2C9lhiiZENRJVge6doZy6y4yNXxz+ja31kDULkcApqfPqJvhraK76u94og==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@okta/okta-idx-js" "0.18.0"
+    "@okta/okta-idx-js" "0.19.0"
     "@peculiar/webcrypto" "1.1.6"
     Base64 "1.1.0"
     atob "^2.1.2"

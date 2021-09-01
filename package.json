@@ -42,7 +42,6 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@okta/okta-auth-js": "^5.2.3",
     "tslib": "^1.9.0"
   },
   "devDependencies": {
@@ -98,7 +97,9 @@
     "webpack-filter-warnings-plugin": "1.2.1",
     "zone.js": "~0.10.3"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@okta/okta-auth-js": "^5.4.1"
+  },
   "jest": {
     "coverageDirectory": "<rootDir>/test-reports/coverage",
     "collectCoverage": true,
