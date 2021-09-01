@@ -12,7 +12,7 @@
 
 import { InjectionToken, Injector } from '@angular/core';
 import { OktaAuthService } from '../services/okta.service';
-import { OktaAuthOptions } from '@okta/okta-auth-js';
+import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 
 export type AuthRequiredFunction = (oktaAuth: OktaAuthService, injector: Injector) => void;
 export type IsAuthenticatedFunction = (oktaAuth: OktaAuthService) => Promise<boolean>;
@@ -22,6 +22,7 @@ export interface TestingObject {
 }
 
 export interface OktaConfig extends OktaAuthOptions {
+  oktaAuth: OktaAuth;
   onAuthRequired?: AuthRequiredFunction;
   onAuthResume?: AuthRequiredFunction;
   testing?: TestingObject;

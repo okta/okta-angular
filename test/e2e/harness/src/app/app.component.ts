@@ -11,8 +11,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
-import { OktaAuthService } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-root',
@@ -31,8 +30,10 @@ import { OktaAuthService } from '@okta/okta-angular';
 export class AppComponent implements OnInit {
   isAuthenticated: boolean;
 
-  constructor(public oktaAuth: OktaAuthService) {
-    this.oktaAuth.$authenticationState.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
+  constructor(public oktaAuth: OktaAuth) {
+    console.log(oktaAuth);
+    this.oktaAuth.authStateManager.subscribe(authState => this.isAuthenticated = !!authState.isAuthenticated);
+    // this.oktaAuth.$authenticationState.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
   }
 
   async ngOnInit() {

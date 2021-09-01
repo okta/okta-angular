@@ -10,8 +10,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
+import { Component } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-public',
@@ -25,7 +25,7 @@ import { OktaAuthService } from '@okta/okta-angular';
 export class PublicComponent {
   message;
 
-  constructor(public oktaAuth: OktaAuthService) {
+  constructor(public oktaAuth: OktaAuth) {
     this.message = 'Public!';
   }
 

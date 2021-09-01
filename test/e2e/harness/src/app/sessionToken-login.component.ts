@@ -11,8 +11,6 @@
  */
 
 import { Component } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
-
 import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
@@ -33,14 +31,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
   `
 })
 export class SessionTokenLoginComponent {
-  oktaAuth: OktaAuth;
-
-  constructor(private okta: OktaAuthService) {
-    const baseUrl = process.env.ISSUER.split('/oauth2')[0];
-    this.oktaAuth = new OktaAuth({
-      issuer: baseUrl
-    });
-  }
+  constructor(private oktaAuth: OktaAuth) {}
 
   signIn(username, password) {
     this.oktaAuth.signIn({
@@ -48,7 +39,7 @@ export class SessionTokenLoginComponent {
       password: password
     })
     .then(res => {
-      return this.okta.token.getWithRedirect({
+      return this.oktaAuth.token.getWithRedirect({
         sessionToken: res.sessionToken
       });
     })

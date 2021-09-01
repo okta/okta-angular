@@ -15,10 +15,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaLoginRedirectComponent } from './components/login-redirect.component';
-import { OktaAuthService } from './services/okta.service';
 import { OktaAuthGuard } from './okta.guard';
-import { OKTA_CONFIG } from './models/okta.config';
-import { createOktaService } from './createService';
+import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 @NgModule({
   declarations: [
@@ -32,14 +31,13 @@ import { createOktaService } from './createService';
   providers: [
     OktaAuthGuard,
     {
-      provide: OktaAuthService,
-      useFactory: createOktaService,
-      deps: [
-        OKTA_CONFIG,
-        Location, // optional
-        Router // optional
-      ]
-    }
+      provide: OktaAuth,
+      useFactory(config: OktaConfig) {
+        console.log('factory config', config);
+        return config.oktaAuth;
+      },
+      deps: [ OKTA_CONFIG ]
+    },
   ]
 })
 export class OktaAuthModule {
