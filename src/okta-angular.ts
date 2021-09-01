@@ -10,9 +10,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-export { OktaAuthModule }  from './okta/okta.module';
-export { OktaAuthGuard }   from './okta/okta.guard';
-export { OktaConfig, OKTA_CONFIG }     from './okta/models/okta.config';
+export { OktaAuthModule } from './okta/okta.module';
+export { OktaAuthGuard } from './okta/okta.guard';
+export { OktaConfig, OKTA_CONFIG } from './okta/models/okta.config';
+export { AuthStateService } from './okta/services/auth-state.service';
 
 // Okta View Components
 export { OktaCallbackComponent } from './okta/components/callback.component';

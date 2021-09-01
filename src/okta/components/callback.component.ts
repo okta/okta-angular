@@ -11,7 +11,6 @@
  */
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_CONFIG, OktaConfig } from '../models/okta.config';
 
@@ -22,9 +21,8 @@ export class OktaCallbackComponent implements OnInit {
   error: string;
 
   constructor(
-    @Inject(OKTA_CONFIG) private config: OktaConfig, 
-    private oktaAuth: OktaAuth, 
-    private router: Router, 
+    @Inject(OKTA_CONFIG) private config: OktaConfig,
+    private oktaAuth: OktaAuth,
     @Optional() private injector?: Injector
   ) {}
 

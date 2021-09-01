@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaAuthGuard } from './okta.guard';
+import { AuthStateService } from './services/auth-state.service';
 import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import packageInfo from './packageInfo';
@@ -28,6 +29,7 @@ import packageInfo from './packageInfo';
   ],
   providers: [
     OktaAuthGuard,
+    AuthStateService,
     {
       provide: OktaAuth,
       useFactory(config: OktaConfig) {
@@ -58,7 +60,7 @@ export class OktaAuthModule {
     }
 
     // Start services
-    // TODO: do "isLoginRedirect" from auth-js
+    // TODO: logic here should belong to auth-js
     if (!oktaAuth.token.isLoginRedirect()) {
       // Trigger an initial change event to make sure authState is latest
       oktaAuth.authStateManager.updateAuthState();
