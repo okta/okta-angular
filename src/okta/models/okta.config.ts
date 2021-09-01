@@ -11,11 +11,10 @@
  */
 
 import { InjectionToken, Injector } from '@angular/core';
-import { OktaAuthService } from '../services/okta.service';
 import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 
-export type AuthRequiredFunction = (oktaAuth: OktaAuthService, injector: Injector) => void;
-export type IsAuthenticatedFunction = (oktaAuth: OktaAuthService) => Promise<boolean>;
+export type AuthRequiredFunction = (oktaAuth: OktaAuth, injector: Injector) => void;
+export type IsAuthenticatedFunction = (oktaAuth: OktaAuth) => Promise<boolean>;
 
 export interface TestingObject {
   disableHttpsCheck: boolean;

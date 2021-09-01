@@ -17,7 +17,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
   selector: 'app-root',
   template: `
   <button id="home-button" routerLink="/"> Home </button>
-  <button id="login-button" *ngIf="!isAuthenticated" routerLink="/login" [queryParams]="{ fooParams: 'foo' }"> Login </button>
+  <button id="login-button" *ngIf="!isAuthenticated" (click)="login()"> Login </button>
   <button id="logout-button" *ngIf="isAuthenticated" (click)="logout()"> Logout </button>
   <button id="protected-button" routerLink="/protected" [queryParams]="{ fooParams: 'foo' }"> Protected </button>
   <button id="protected-login-button" routerLink="/protected-with-data"
@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+  }
+
+  login() {
+    this.oktaAuth.signInWithRedirect({ originalUri: '/' });
   }
 
   logout() {
