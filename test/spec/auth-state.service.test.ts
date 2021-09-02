@@ -28,7 +28,7 @@ describe('OktaAuthStateService', () => {
       clientId: 'fake clientId',
       redirectUri: 'fake redirectUri'
     });
-    jest.spyOn(oktaAuth, 'start').mockImplementation(() => {});
+    oktaAuth.start = jest.fn();
   });
 
   it('should be created and subscribe to authState change', () => {
@@ -40,24 +40,28 @@ describe('OktaAuthStateService', () => {
     expect(oktaAuth.authStateManager.subscribe).toHaveBeenCalled();
   });
 
-  it('initials with the current authState of oktaAuth', (done) => {
+  it('initials with the current authState of oktaAuth', () => {
     const mockState = { mock: 'mock' } as unknown as AuthState;
     jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue(mockState);
     setup(oktaAuth);
     const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
-    service.authState$.subscribe(authState => {
-      expect(authState).toBe(mockState);
-      done();
+    return new Promise(resolve => {
+      service.authState$.subscribe(authState => {
+        expect(authState).toBe(mockState);
+        resolve(null);
+      });
     });
   });
 
-  it('initials with default authState when oktaAuth state is not ready', (done) => {
+  it('initials with default authState when oktaAuth state is not ready', () => {
     jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue(null as unknown as AuthState);
     setup(oktaAuth);
     const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
-    service.authState$.subscribe(authState => {
-      expect(authState).toEqual({ isAuthenticated: false });
-      done();
+    return new Promise(resolve => {
+      service.authState$.subscribe(authState => {
+        expect(authState).toEqual({ isAuthenticated: false });
+        resolve(null);
+      });
     });
   });
 
