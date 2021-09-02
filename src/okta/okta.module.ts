@@ -51,15 +51,15 @@ export class OktaAuthModule {
       throw new Error('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
     }
 
-    // Add Okta UA
-    oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
-
     // Auth-js version compatibility runtime check
     const oktaAuthVersion = oktaAuth._oktaUserAgent.getVersion();
     const majorVersion = +oktaAuthVersion?.split('.')[0];
     if (packageInfo.authJSMajorVersion !== majorVersion) {
       throw new Error(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
     }
+
+    // Add Okta UA
+    oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
 
     // Provide a default implementation of `restoreOriginalUri`
     if (!oktaAuth.options.restoreOriginalUri && router && location) {
@@ -71,13 +71,7 @@ export class OktaAuthModule {
     }
 
     // Start services
-    // TODO: logic here should belong to auth-js
-    if (!oktaAuth.token.isLoginRedirect()) {
-      // Trigger an initial change event to make sure authState is latest
-      oktaAuth.authStateManager.updateAuthState();
-    }
-    // Start the token auto-renew service
-    oktaAuth.tokenManager.start();
+    oktaAuth.start();
   }
 
 }

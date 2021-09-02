@@ -99,7 +99,7 @@
     "zone.js": "~0.10.3"
   },
   "peerDependencies": {
-    "@okta/okta-auth-js": "^5.4.1"
+    "@okta/okta-auth-js": "^5.4.2"
   },
   "jest": {
     "coverageDirectory": "<rootDir>/test-reports/coverage",

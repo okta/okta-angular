@@ -52,9 +52,7 @@ describe('Okta Module', () => {
         getAuthState: jest.fn(),
         subscribe: jest.fn()
       },
-      tokenManager: {
-        start: jest.fn()
-      },
+      start: jest.fn(),
       _oktaUserAgent: {
         addEnvironment: jest.fn(),
         getVersion: jest.fn().mockReturnValue(`999.9.9`)
@@ -107,8 +105,7 @@ describe('Okta Module', () => {
     describe('Start service', () => {
       it('starts service', () => {
         setup(oktaAuth);
-        expect(oktaAuth.authStateManager.updateAuthState).toHaveBeenCalled();
-        expect(oktaAuth.tokenManager.start).toHaveBeenCalled();
+        expect(oktaAuth.start).toHaveBeenCalled();
       });
     });  
   });
