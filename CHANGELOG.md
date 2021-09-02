@@ -10,7 +10,7 @@
 
 ### Features
 
-[#60](https://github.com/okta/okta-angular/pull/60) Adds `OktaAuthStateService` that exposes an observable [authState](https://github.com/okta/okta-auth-js#authstatemanager)
+[#60](https://github.com/okta/okta-angular/pull/60) Adds `OktaAuthStateService` that exposes an observable [authState$](https://github.com/okta/okta-auth-js#authstatemanager)
 
 
 # 3.2.2

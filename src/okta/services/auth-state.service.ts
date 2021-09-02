@@ -11,7 +11,7 @@ export class OktaAuthStateService implements OnDestroy {
   private _authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(defaultAuthState);
   
   // only expose readonly property
-  public readonly authState: Observable<AuthState> = this._authState.asObservable();
+  public readonly authState$: Observable<AuthState> = this._authState.asObservable();
 
   constructor(private oktaAuth: OktaAuth) {
     this.updateAuthState = this.updateAuthState.bind(this);

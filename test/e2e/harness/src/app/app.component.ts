@@ -18,8 +18,8 @@ import { OktaAuthStateService } from '@okta/okta-angular';
   selector: 'app-root',
   template: `
   <button id="home-button" routerLink="/"> Home </button>
-  <button id="login-button" *ngIf="!(authStateService.authState | async).isAuthenticated" (click)="login()"> Login </button>
-  <button id="logout-button" *ngIf="(authStateService.authState | async).isAuthenticated" (click)="logout()"> Logout </button>
+  <button id="login-button" *ngIf="!(authStateService.authState$ | async).isAuthenticated" (click)="login()"> Login </button>
+  <button id="logout-button" *ngIf="(authStateService.authState$ | async).isAuthenticated" (click)="logout()"> Logout </button>
   <button id="protected-button" routerLink="/protected" [queryParams]="{ fooParams: 'foo' }"> Protected </button>
   <button id="protected-login-button" routerLink="/protected-with-data"
     [queryParams]="{ fooParams: 'foo' }"> Protected Page w/ custom config </button>

@@ -44,9 +44,6 @@ describe('Okta Module', () => {
   beforeEach(() => {
     oktaAuth = {
       options: {},
-      token: {
-        isLoginRedirect: jest.fn()
-      },
       authStateManager: {
         updateAuthState: jest.fn(),
         getAuthState: jest.fn(),
