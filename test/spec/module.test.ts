@@ -5,7 +5,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
   OKTA_CONFIG, 
-  AuthStateService, 
+  OktaAuthStateService, 
   OktaAuthGuard 
 } from '../../src/okta-angular';
 
@@ -120,7 +120,7 @@ describe('Okta Module', () => {
     });
     it('provides AuthStateService', () => {
       setup(oktaAuth);
-      expect(TestBed.inject(AuthStateService)).toBeDefined();
+      expect(TestBed.inject(OktaAuthStateService)).toBeDefined();
     });
     it('provides OktaAuthGuard', () => {
       setup(oktaAuth);

@@ -7,7 +7,7 @@ const defaultAuthState = {
 };
 
 @Injectable()
-export class AuthStateService implements OnDestroy {
+export class OktaAuthStateService implements OnDestroy {
   private _authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(defaultAuthState);
   
   // only expose readonly property

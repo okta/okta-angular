@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { OktaAuth } from '@okta/okta-auth-js';
-import { AuthStateService } from '@okta/okta-angular';
+import { OktaAuthStateService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ export class AppComponent {
 
   constructor(
     private oktaAuth: OktaAuth, 
-    private authStateService: AuthStateService, 
+    private authStateService: OktaAuthStateService, 
     private router: Router
   ) {}
 

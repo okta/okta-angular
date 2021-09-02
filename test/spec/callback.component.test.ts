@@ -10,7 +10,7 @@ import {
 describe('OktaCallbackComponent', () => {
   let component: OktaCallbackComponent;
   let fixture: ComponentFixture<OktaCallbackComponent>;
-  let oktaAuth: any;
+  let oktaAuth: OktaAuth;
   let originalLocation: Location;
   beforeEach(() => {
     originalLocation = window.location;
@@ -30,7 +30,7 @@ describe('OktaCallbackComponent', () => {
     oktaAuth = {
       handleLoginRedirect: jest.fn(),
       isInteractionRequiredError: jest.fn()
-    };
+    } as unknown as OktaAuth;
 
     TestBed.configureTestingModule({
       imports: [

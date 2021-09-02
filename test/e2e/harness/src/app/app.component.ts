@@ -12,7 +12,7 @@
 
 import { Component } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
-import { AuthStateService } from '@okta/okta-angular';
+import { OktaAuthStateService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +30,7 @@ import { AuthStateService } from '@okta/okta-angular';
 })
 export class AppComponent {
 
-  constructor(public oktaAuth: OktaAuth, private authStateService: AuthStateService) {}
+  constructor(public oktaAuth: OktaAuth, private authStateService: OktaAuthStateService) {}
 
   login() {
     this.oktaAuth.signInWithRedirect();

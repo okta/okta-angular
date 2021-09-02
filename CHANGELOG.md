@@ -2,7 +2,14 @@
 
 ### Breaking Changes
 
-[#17](https://github.com/okta/okta-angular/pull/17) Changes type of [$authenticationState](README.md##oktaauthauthenticationstate) from `Observable` to `BehaviorSubject`
+[#60](https://github.com/okta/okta-angular/pull/60)
+  - Enables inject [oktaAuth](https://github.com/okta/okta-auth-js) instance to the SDK module, it also replaces the `OktaAuthService` with the injected `OktaAuth` instance.
+  - Removes `OktaLoginRedirectComponent`
+
+### Features
+
+[#60](https://github.com/okta/okta-angular/pull/60) Adds `OktaAuthStateService` that exposes an observable [authState](https://github.com/okta/okta-auth-js#authstatemanager)
+
 
 # 3.2.2
 
