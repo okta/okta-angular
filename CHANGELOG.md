@@ -2,8 +2,10 @@
 
 ### Breaking Changes
 
-[#60](https://github.com/okta/okta-angular/pull/60)
-  - Enables inject [oktaAuth](https://github.com/okta/okta-auth-js) instance to the SDK module, it also replaces the `OktaAuthService` with the injected `OktaAuth` instance.
+[#60](https://github.com/okta/okta-angular/pull/60) See [MIGRATING](MIGRATING.md) for detailed information
+  - Enables injecting [oktaAuth](https://github.com/okta/okta-auth-js) instance via `OktaConfig` 
+  - Replaces the `OktaAuthService` with the injected `OktaAuth` instance
+  - Removes [oktaAuth](https://github.com/okta/okta-auth-js) related configs from `OktaConfig`
   - Removes `OktaLoginRedirectComponent`
 
 ### Features
