@@ -6,6 +6,7 @@
   - Enables injecting [oktaAuth](https://github.com/okta/okta-auth-js) instance via `OktaConfig` 
   - Replaces the `OktaAuthService` with the injected `OktaAuth` instance
   - Removes [oktaAuth](https://github.com/okta/okta-auth-js) related configs from `OktaConfig`
+  - Removes `isAuthenticated` callback option from `OktaConfig`
   - Removes `OktaLoginRedirectComponent`
 
 ### Features
