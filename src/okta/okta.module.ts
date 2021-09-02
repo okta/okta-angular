@@ -40,14 +40,25 @@ import packageInfo from './packageInfo';
   ]
 })
 export class OktaAuthModule {
-  constructor(@Inject(OKTA_CONFIG) config: OktaConfig, @Optional() location?: Location, @Optional() router?: Router) {
+  constructor(
+    @Inject(OKTA_CONFIG) config: OktaConfig, 
+    @Optional() location?: Location, 
+    @Optional() router?: Router
+  ) {
     const { oktaAuth } = config;
 
-    // Add okta-react userAgent
-    if (oktaAuth._oktaUserAgent) {
-      oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
-    } else {
-      console.warn('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
+    if (!oktaAuth._oktaUserAgent) {
+      throw new Error('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
+    }
+
+    // Add Okta UA
+    oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
+
+    // Auth-js version compatibility runtime check
+    const oktaAuthVersion = oktaAuth._oktaUserAgent.getVersion();
+    const majorVersion = +oktaAuthVersion?.split('.')[0];
+    if (packageInfo.authJSMajorVersion !== majorVersion) {
+      throw new Error(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
     }
 
     // Provide a default implementation of `restoreOriginalUri`
