@@ -18,7 +18,10 @@ import {
   RouterStateSnapshot,
   Router,
   NavigationStart, 
-  Event
+  Event,
+  CanLoad,
+  Route,
+  UrlSegment
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -27,15 +30,17 @@ import { OktaAuth, AuthState } from '@okta/okta-auth-js';
 import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG } from './models/okta.config';
 
 @Injectable()
-export class OktaAuthGuard implements CanActivate, CanActivateChild {
-  private route: ActivatedRouteSnapshot;
+export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   private state: RouterStateSnapshot;
+  private onAuthRequired?: AuthRequiredFunction;
 
   constructor(
     @Inject(OKTA_CONFIG) private config: OktaConfig, 
     private oktaAuth: OktaAuth, 
     private injector: Injector
-  ) { 
+  ) {
+    this.onAuthRequired = this.config.onAuthRequired;
+
     // Unsubscribe updateAuthStateListener when route change
     const router = injector.get(Router);
     router.events.pipe(
@@ -43,6 +48,20 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
     ).subscribe(() => {
       this.oktaAuth.authStateManager.unsubscribe(this.updateAuthStateListener);
     });
+  }
+
+  async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
+    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
+
+    const isAuthenticated = await this.oktaAuth.isAuthenticated();
+    if (isAuthenticated) {
+      return true;
+    }
+
+    const originalUri = segments[0].path;
+    await this.handleLogin(originalUri);
+
+    return false;
   }
 
   /**
@@ -53,8 +72,8 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
    */
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     // Track states for current route
-    this.route = route;
     this.state = state;
+    this.onAuthRequired = route.data['onAuthRequired'] || this.onAuthRequired;
 
     // Protect the route after accessing
     this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);
@@ -75,16 +94,12 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild {
     return this.canActivate(route, state);
   }
 
-  private async handleLogin(fromUri: string): Promise<void> {
-     // Get the operation to perform on failed authentication from
-     // either the global config or route data injection.
-    const onAuthRequired: AuthRequiredFunction = this.route.data['onAuthRequired'] || this.config.onAuthRequired;
-    
+  private async handleLogin(originalUri: string): Promise<void> {
     // Store the current path
-    this.oktaAuth.setOriginalUri(fromUri);
+    this.oktaAuth.setOriginalUri(originalUri);
 
-    if (onAuthRequired) {
-      onAuthRequired(this.oktaAuth, this.injector);
+    if (this.onAuthRequired) {
+      this.onAuthRequired(this.oktaAuth, this.injector);
     } else {
       this.oktaAuth.signInWithRedirect();
     }
