@@ -59,7 +59,6 @@ describe('Angular auth guard', () => {
       let guard: OktaAuthGuard;
       let route: Route;
       let segments: UrlSegment[];
-      let router: Router;
       let injector: Injector;
       let onAuthRequired: AuthRequiredFunction;
       beforeEach(() => {
@@ -71,7 +70,6 @@ describe('Angular auth guard', () => {
         onAuthRequired = jest.fn();
         const config = { oktaAuth } as OktaConfig;
         setup(oktaAuth, config);
-        router = TestBed.inject(Router);
         injector = TestBed.inject(Injector);
         guard = new OktaAuthGuard(config, oktaAuth, injector);
         route = {} as unknown as Route;
