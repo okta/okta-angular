@@ -73,7 +73,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     // Track states for current route
     this.state = state;
-    this.onAuthRequired = route.data['onAuthRequired'] || this.onAuthRequired;
+    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
 
     // Protect the route after accessing
     this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);
