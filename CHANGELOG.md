@@ -11,7 +11,9 @@
 
 ### Features
 
-[#60](https://github.com/okta/okta-angular/pull/60) Adds `OktaAuthStateService` that exposes an observable [authState$](https://github.com/okta/okta-auth-js#authstatemanager)
+- [#60](https://github.com/okta/okta-angular/pull/60) Adds `OktaAuthStateService` that exposes an observable [authState$](https://github.com/okta/okta-auth-js#authstatemanager)
+- [#63](https://github.com/okta/okta-angular/pull/63) Adds lite role/group based authorization directive (`*oktaHasAnyGroup`) to only render content for authorized users (users in groups)
+
 
 
 # 3.2.2

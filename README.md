@@ -221,6 +221,40 @@ export class MyComponent {
 }
 ```
 
+### `OktaHasAnyGroup` directive
+
+This directive implements lite role based access control (RBAC) to only render content for authenticated users in group/s. It supports `string`, `array` and `object` input formats.
+
+- `string`: single group name. -- `'admin'`
+- `array`: array of group names. -- `['admin', 'it']`
+- `object`: key-value pair of group names, this format of input can be used when custom claim is defined. -- `{ 'custom-groups': ['admin', 'it'] }`
+
+Use any format of input when `groups` is available from user claims:
+
+```typescript
+@Component({ 
+  template: `
+  <div *oktaHasAnyGroup="['admin']">
+    In group
+  </div>
+  ` 
+})
+class RBACComponent { }
+```
+
+Only use `object` format input when custom claim is defined:
+
+```typescript
+@Component({ 
+  template: `
+  <div *oktaHasAnyGroup="{ 'custom-groups': ['admin', 'it'] }">
+    In group
+  </div>
+  ` 
+})
+class RBACComponent { }
+```
+
 #### Using a custom login-page
 
 Using the [Okta Signin Widget](https://github.com/okta/okta-signin-widget), you can embed the complete authentication flow within your application. This allows users to signin without requiring any redirects. A full working example is available [here](https://github.com/okta/samples-js-angular/tree/master/custom-login)
