@@ -16,6 +16,7 @@ import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
 import { OktaAuthGuard } from './okta.guard';
 import { OktaAuthStateService } from './services/auth-state.service';
+import { OktaHasAnyGroupDirective } from './has-any-group.directive';
 import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import packageInfo from './packageInfo';
@@ -23,9 +24,11 @@ import packageInfo from './packageInfo';
 @NgModule({
   declarations: [
     OktaCallbackComponent,
+    OktaHasAnyGroupDirective,
   ],
   exports: [
     OktaCallbackComponent,
+    OktaHasAnyGroupDirective,
   ],
   providers: [
     OktaAuthGuard,
