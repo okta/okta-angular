@@ -174,8 +174,8 @@ describe('Angular + Okta App', () => {
         page.waitUntilLoggedIn();
   
         hasGroupPage.navigateTo();
-        
-        expect(hasGroupPage.getInGroupContent().isPresent()).toBeFalsy();
+
+        expect(hasGroupPage.getInGroupContent().isPresent()).toBeTruthy();
         hasGroupPage.waitUntilTextVisible('in-group', 'In "Test" group');
         expect(hasGroupPage.getNotInGroupContent().isPresent()).toBeFalsy();
       });
