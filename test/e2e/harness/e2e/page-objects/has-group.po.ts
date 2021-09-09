@@ -15,7 +15,7 @@ import { AppPage } from './app.po';
 
 export class HasGroupPage extends AppPage {
   constructor() {
-    super('/has-group');
+    super('/group');
   }
 
   getInGroupContent() {

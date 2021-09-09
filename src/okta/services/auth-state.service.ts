@@ -7,7 +7,7 @@ const defaultAuthState = {
   isAuthenticated: false
 };
 
-export type Groups = string | string[] | { [key: string]: any };
+export type Groups = string | string[] | { [key: string]: string[] };
 
 @Injectable()
 export class OktaAuthStateService implements OnDestroy {

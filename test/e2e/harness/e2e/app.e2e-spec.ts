@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
+import { IterableDiffers } from '@angular/core';
 import {
   AppPage,
   OktaSignInPage,
@@ -161,21 +162,24 @@ describe('Angular + Okta App', () => {
     });
 
     describe('isAuthenticated === true', () => {
-      page.navigateTo();
-      page.getLoginButton().click();
-
-      oktaLoginPage.waitUntilVisible(process.env.ISSUER);
-      oktaLoginPage.signIn({
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD
+      it('displays in-group content', () => {
+        // login with redirect
+        page.navigateTo();
+        page.getLoginButton().click();
+        oktaLoginPage.waitUntilVisible(process.env.ISSUER);
+        oktaLoginPage.signIn({
+          username: process.env.USERNAME,
+          password: process.env.PASSWORD
+        });
+        page.waitUntilLoggedIn();
+  
+        hasGroupPage.navigateTo();
+        
+        expect(hasGroupPage.getInGroupContent().isPresent()).toBeFalsy();
+        hasGroupPage.waitUntilTextVisible('in-group', 'In "Test" group');
+        expect(hasGroupPage.getNotInGroupContent().isPresent()).toBeFalsy();
       });
-
-      page.waitUntilLoggedIn();
-
-      hasGroupPage.navigateTo();
-      expect(hasGroupPage.getInGroupContent().isPresent()).toBeFalsy();
-      hasGroupPage.waitUntilTextVisible('in-group', 'In "Test" group');
-      expect(hasGroupPage.getNotInGroupContent().isPresent()).toBeFalsy();
+      
     });
   });
 

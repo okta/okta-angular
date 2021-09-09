@@ -6,6 +6,7 @@ export class OktaHasAnyGroupDirective {
   private previousIsAuthorized: boolean;
 
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private templateRef: TemplateRef<any>,
     private viewContainer: ViewContainerRef,
     private authStateService: OktaAuthStateService
