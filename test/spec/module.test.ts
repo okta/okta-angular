@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { AuthSdkError, OktaAuth } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
   OKTA_CONFIG, 
@@ -72,7 +72,7 @@ describe('Okta Module', () => {
             getVersion: jest.fn().mockReturnValue('0.9.9')
           }
         } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new Error(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version 999.x is the current supported version.`));
+        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version 999.x is the current supported version.`));
       });
       
     });
@@ -87,7 +87,7 @@ describe('Okta Module', () => {
           ...oktaAuth,
           _oktaUserAgent: null
         } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new Error('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .'));
+        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 or higher.'));
       });
     });
   
