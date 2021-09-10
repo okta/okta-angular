@@ -78,7 +78,7 @@ export class MyComponent {
 
 ### Replacing `isAuthenticated` callback option with [transformAuthState](https://github.com/okta/okta-auth-js#transformauthstate) from [OktaAuth][] configuration.
 
-`isAuthenticated` callback option is removed from version 4.0. You can use the `transformAuthState` callback option from [OktaAuth][] to customize the AuthState.
+`isAuthenticated` callback option is removed from version 4.0. You can use the [transformAuthState](https://github.com/okta/okta-auth-js#transformauthstate) callback option from [OktaAuth][] to customize the AuthState.
 
 ## From version 2.x to 3.x
 

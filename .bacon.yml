@@ -27,6 +27,8 @@ test_suites:
       script_name: publish
       criteria: MERGE
       queue_name: small
+    # TODO: repalce selenium test with sample generator 
+    # https://oktainc.atlassian.net/browse/OKTA-427607
     # disable the doc guide test
     # The selenium test protects doc sample, but the code is not correctly reflect the SDK + widget usage
     # re-visit after release 

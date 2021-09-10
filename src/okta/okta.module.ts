@@ -17,7 +17,7 @@ import { OktaCallbackComponent } from './components/callback.component';
 import { OktaAuthGuard } from './okta.guard';
 import { OktaAuthStateService } from './services/auth-state.service';
 import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
-import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import { OktaAuth, AuthSdkError, toRelativeUrl } from '@okta/okta-auth-js';
 import packageInfo from './packageInfo';
 
 @NgModule({
@@ -48,14 +48,14 @@ export class OktaAuthModule {
     const { oktaAuth } = config;
 
     if (!oktaAuth._oktaUserAgent) {
-      throw new Error('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 .');
+      throw new AuthSdkError('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 or higher.');
     }
 
     // Auth-js version compatibility runtime check
     const oktaAuthVersion = oktaAuth._oktaUserAgent.getVersion();
     const majorVersion = +oktaAuthVersion?.split('.')[0];
     if (packageInfo.authJSMajorVersion !== majorVersion) {
-      throw new Error(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
+      throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
     }
 
     // Add Okta UA
