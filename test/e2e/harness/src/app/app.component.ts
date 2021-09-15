@@ -10,16 +10,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-
-import { OktaAuthService } from '@okta/okta-angular';
+import { Component } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuthStateService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
   template: `
   <button id="home-button" routerLink="/"> Home </button>
-  <button id="login-button" *ngIf="!isAuthenticated" routerLink="/login" [queryParams]="{ fooParams: 'foo' }"> Login </button>
-  <button id="logout-button" *ngIf="isAuthenticated" (click)="logout()"> Logout </button>
+  <button id="login-button" *ngIf="!(authStateService.authState$ | async).isAuthenticated" (click)="login()"> Login </button>
+  <button id="logout-button" *ngIf="(authStateService.authState$ | async).isAuthenticated" (click)="logout()"> Logout </button>
   <button id="protected-button" routerLink="/protected" [queryParams]="{ fooParams: 'foo' }"> Protected </button>
   <button id="protected-login-button" routerLink="/protected-with-data"
     [queryParams]="{ fooParams: 'foo' }"> Protected Page w/ custom config </button>
@@ -28,15 +28,12 @@ import { OktaAuthService } from '@okta/okta-angular';
   <router-outlet></router-outlet>
   `,
 })
-export class AppComponent implements OnInit {
-  isAuthenticated: boolean;
+export class AppComponent {
 
-  constructor(public oktaAuth: OktaAuthService) {
-    this.oktaAuth.$authenticationState.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
-  }
+  constructor(public oktaAuth: OktaAuth, private authStateService: OktaAuthStateService) {}
 
-  async ngOnInit() {
-    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+  login() {
+    this.oktaAuth.signInWithRedirect();
   }
 
   logout() {

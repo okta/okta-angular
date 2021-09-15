@@ -51,7 +51,8 @@ export default {
                 'node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js': [
                   'toRelativeUrl',
                   'isAbsoluteUrl',
-                  'toAbsoluteUrl'
+                  'toAbsoluteUrl',
+                  'AuthSdkError'
                 ]
             }
         }),

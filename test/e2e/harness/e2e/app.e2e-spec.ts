@@ -23,14 +23,12 @@ import {
 describe('Angular + Okta App', () => {
   let page: AppPage;
   let oktaLoginPage: OktaSignInPage;
-  let loginPage: LoginPage;
   let protectedPage: ProtectedPage;
   let sessionTokenSignInPage: SessionTokenSignInPage;
   let publicPage: PublicPage;
 
   beforeEach(() => {
     page = new AppPage();
-    loginPage = new LoginPage();
     oktaLoginPage = new OktaSignInPage();
     protectedPage = new ProtectedPage();
     sessionTokenSignInPage = new SessionTokenSignInPage();
@@ -81,7 +79,8 @@ describe('Angular + Okta App', () => {
     });
 
     it('should redirect to Okta for login', () => {
-      loginPage.navigateTo();
+      page.navigateTo();
+      page.getLoginButton().click();
 
       oktaLoginPage.waitUntilVisible(process.env.ISSUER);
       oktaLoginPage.signIn({
@@ -89,13 +88,11 @@ describe('Angular + Okta App', () => {
         password: process.env.PASSWORD
       });
 
-      loginPage.waitUntilLoggedIn();
-      expect(loginPage.getLogoutButton().isPresent()).toBeTruthy();
+      page.waitUntilLoggedIn();
 
       // Logout
-      loginPage.getLogoutButton().click();
-      loginPage.waitForElement('login-button');
-      expect(loginPage.getLoginButton().isPresent()).toBeTruthy();
+      page.getLogoutButton().click();
+      page.waitUntilLoggedOut();
     });
   });
 

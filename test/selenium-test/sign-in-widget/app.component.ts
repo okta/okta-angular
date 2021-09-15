@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { OktaAuthService } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuthStateService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
@@ -11,17 +12,11 @@ import { OktaAuthService } from '@okta/okta-angular';
 export class AppComponent {
   isAuthenticated: boolean;
 
-  constructor(public oktaAuth: OktaAuthService, public router: Router) {
-    // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
-    );
-  }
-
-  async ngOnInit() {
-    // Get the authentication state for immediate use
-    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-  }
+  constructor(
+    private oktaAuth: OktaAuth, 
+    private authStateService: OktaAuthStateService, 
+    private router: Router
+  ) {}
 
   login() {
     this.oktaAuth.signInWithRedirect({ originalUri: '/profile' });

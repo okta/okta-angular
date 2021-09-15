@@ -10,28 +10,33 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, OnInit, Optional, Injector } from '@angular/core';
-import { Router } from '@angular/router';
-import { OktaAuthService } from '../services/okta.service';
+import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OKTA_CONFIG, OktaConfig } from '../models/okta.config';
+
 @Component({
   template: `<div>{{error}}</div>`
 })
 export class OktaCallbackComponent implements OnInit {
   error: string;
 
-  constructor(private okta: OktaAuthService, private router: Router, @Optional() private injector?: Injector) {}
+  constructor(
+    @Inject(OKTA_CONFIG) private config: OktaConfig,
+    private oktaAuth: OktaAuth,
+    @Optional() private injector?: Injector
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       // Parse code or tokens from the URL, store tokens in the TokenManager, and redirect back to the originalUri
-      await this.okta.handleLoginRedirect();
+      await this.oktaAuth.handleLoginRedirect();
     } catch (e) {
       // Callback from social IDP. Show custom login page to continue.
-      if (this.okta.isInteractionRequiredError(e) && this.injector) {
-        const { onAuthResume, onAuthRequired } = this.okta.getOktaConfig();
+      if (this.oktaAuth.isInteractionRequiredError(e) && this.injector) {
+        const { onAuthResume, onAuthRequired } = this.config;
         const callbackFn = onAuthResume || onAuthRequired;
         if (callbackFn) {
-          callbackFn(this.okta, this.injector);
+          callbackFn(this.oktaAuth, this.injector);
           return;
         }
       }

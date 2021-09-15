@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { OktaAuth } from '@okta/okta-auth-js';
 import {
-  OktaAuthService,
   OKTA_CONFIG,
   OktaCallbackComponent
 } from '../../src/okta-angular';
@@ -11,7 +10,7 @@ import {
 describe('OktaCallbackComponent', () => {
   let component: OktaCallbackComponent;
   let fixture: ComponentFixture<OktaCallbackComponent>;
-  let service: OktaAuthService;
+  let oktaAuth: OktaAuth;
   let originalLocation: Location;
   beforeEach(() => {
     originalLocation = window.location;
@@ -28,11 +27,10 @@ describe('OktaCallbackComponent', () => {
   });
 
   function bootstrap(config = {}) {
-    config = Object.assign({
-      clientId: 'foo',
-      issuer: 'https://foo',
-      redirectUri: 'https://foo'
-    }, config);
+    oktaAuth = {
+      handleLoginRedirect: jest.fn(),
+      isInteractionRequiredError: jest.fn()
+    } as unknown as OktaAuth;
 
     TestBed.configureTestingModule({
       imports: [
@@ -42,14 +40,16 @@ describe('OktaCallbackComponent', () => {
         OktaCallbackComponent
       ],
       providers: [
-        OktaAuthService,
         {
           provide: OKTA_CONFIG,
           useValue: config
         },
+        {
+          provide: OktaAuth,
+          useValue: oktaAuth
+        },
       ],
     });
-    service = TestBed.inject(OktaAuthService);
     fixture = TestBed.createComponent(OktaCallbackComponent);
     component = fixture.componentInstance;
   }
@@ -61,17 +61,17 @@ describe('OktaCallbackComponent', () => {
 
   it('should call handleLoginRedirect', async(() => {
     bootstrap();
-    jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.resolve());
+    jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.resolve());
     fixture.detectChanges();
-    expect(service.handleLoginRedirect).toHaveBeenCalled();
+    expect(oktaAuth.handleLoginRedirect).toHaveBeenCalled();
   }));
 
   it('catches errors from handleLoginRedirect', async(() => {
     bootstrap();
     const error = new Error('test error');
-    jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+    jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
     fixture.detectChanges();
-    expect(service.handleLoginRedirect).toHaveBeenCalled();
+    expect(oktaAuth.handleLoginRedirect).toHaveBeenCalled();
     fixture.whenStable().then(() => {
       expect(component.error).toBe('Error: test error');
     });
@@ -82,12 +82,12 @@ describe('OktaCallbackComponent', () => {
       const onAuthResume = jest.fn();
       bootstrap({ onAuthResume });
       const error = new Error('my fake error');
-      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
-        expect(onAuthResume).toHaveBeenCalledWith(service, (component as any).injector);
+        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(onAuthResume).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
         expect(component.error).toBe(undefined);
       });
     }));
@@ -96,12 +96,12 @@ describe('OktaCallbackComponent', () => {
       const onAuthRequired = jest.fn();
       bootstrap({ onAuthRequired });
       const error = new Error('my fake error');
-      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
-        expect(onAuthRequired).toHaveBeenCalledWith(service, (component as any).injector);
+        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
         expect(component.error).toBe(undefined);
       });
     }));
@@ -109,11 +109,11 @@ describe('OktaCallbackComponent', () => {
     it('if neither `onAuthRequired` or `onAuthResume` are defined, the error is displayed', async(() => {
       bootstrap();
       const error = new Error('my fake error');
-      jest.spyOn(service, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(service, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
+      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(service.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
         expect(component.error).toBe('Error: my fake error');
       });
     }));

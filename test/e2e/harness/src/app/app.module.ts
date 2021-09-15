@@ -17,12 +17,11 @@ import { Routes, RouterModule, Router } from '@angular/router';
 /**
  * Okta Library
  */
+import { OktaAuth } from '@okta/okta-auth-js';
 import {
   OktaAuthGuard,
   OktaAuthModule,
-  OktaAuthService,
   OktaCallbackComponent,
-  OktaLoginRedirectComponent,
   OKTA_CONFIG
 } from '@okta/okta-angular';
 
@@ -34,21 +33,12 @@ import { AppComponent } from './app.component';
 import { SessionTokenLoginComponent } from './sessionToken-login.component';
 import { PublicComponent } from './public.component';
 
-export function onNeedsAuthenticationGuard(oktaAuth: OktaAuthService, injector: Injector) {
+export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injector) {
   const router = injector.get(Router);
   router.navigate(['/sessionToken-login']);
 }
 
-export function onNeedsGlobalAuthenticationGuard(oktaAuth: OktaAuthService, injector: Injector) {
-  const router = injector.get(Router);
-  router.navigate(['/login']);
-}
-
 const appRoutes: Routes = [
-  {
-    path: 'login',
-    component: OktaLoginRedirectComponent
-  },
   {
     path: 'sessionToken-login',
     component: SessionTokenLoginComponent
@@ -96,7 +86,6 @@ const config = {
   issuer: process.env.ISSUER,
   redirectUri,
   clientId: process.env.CLIENT_ID,
-  onAuthRequired: onNeedsGlobalAuthenticationGuard,
   testing: {
     disableHttpsCheck: false
   }
@@ -107,6 +96,8 @@ if (process.env.OKTA_TESTING_DISABLEHTTPSCHECK) {
     disableHttpsCheck: true
   };
 }
+
+const oktaAuth = new OktaAuth(config);
 
 @NgModule({
   imports: [
@@ -122,7 +113,9 @@ if (process.env.OKTA_TESTING_DISABLEHTTPSCHECK) {
   ],
   providers: [{
     provide: OKTA_CONFIG,
-    useValue: config
+    useValue: {
+      oktaAuth
+    }
   }],
   bootstrap: [ AppComponent ]
 })
