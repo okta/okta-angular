@@ -11,7 +11,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-secure',
@@ -25,7 +25,7 @@ export class ProtectedComponent implements OnInit {
   message;
   user;
 
-  constructor(public oktaAuth: OktaAuthService) {
+  constructor(public oktaAuth: OktaAuth) {
     this.message = 'Protected!';
   }
 

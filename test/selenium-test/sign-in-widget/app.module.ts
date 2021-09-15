@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 import { environment } from '../environments/environment';
 
+import { OktaAuth } from '@okta/okta-auth-js';
 import {
   OKTA_CONFIG,
   OktaAuthModule,
@@ -20,6 +21,7 @@ const config = {
   clientId: environment.clientId,
   pkce: true
 }
+const oktaAuth = new OktaAuth(config);
 
 export function onAuthRequired(oktaAuth, injector) {
   const router = injector.get(Router);
@@ -58,7 +60,10 @@ const appRoutes: Routes = [
     OktaAuthModule
   ],
   providers: [
-    { provide: OKTA_CONFIG, useValue: config },
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: { oktaAuth } 
+    },
   ],
   bootstrap: [AppComponent]
 })

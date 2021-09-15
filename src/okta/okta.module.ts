@@ -10,38 +10,68 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
+import { NgModule, Inject, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
-import { OktaLoginRedirectComponent } from './components/login-redirect.component';
-import { OktaAuthService } from './services/okta.service';
 import { OktaAuthGuard } from './okta.guard';
-import { OKTA_CONFIG } from './models/okta.config';
-import { createOktaService } from './createService';
+import { OktaAuthStateService } from './services/auth-state.service';
+import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
+import { OktaAuth, AuthSdkError, toRelativeUrl } from '@okta/okta-auth-js';
+import packageInfo from './packageInfo';
 
 @NgModule({
   declarations: [
     OktaCallbackComponent,
-    OktaLoginRedirectComponent,
   ],
   exports: [
     OktaCallbackComponent,
-    OktaLoginRedirectComponent,
   ],
   providers: [
     OktaAuthGuard,
+    OktaAuthStateService,
     {
-      provide: OktaAuthService,
-      useFactory: createOktaService,
-      deps: [
-        OKTA_CONFIG,
-        Location, // optional
-        Router // optional
-      ]
-    }
+      provide: OktaAuth,
+      useFactory(config: OktaConfig) {
+        return config.oktaAuth;
+      },
+      deps: [ OKTA_CONFIG ]
+    },
   ]
 })
 export class OktaAuthModule {
+  constructor(
+    @Inject(OKTA_CONFIG) config: OktaConfig, 
+    @Optional() location?: Location, 
+    @Optional() router?: Router
+  ) {
+    const { oktaAuth } = config;
+
+    if (!oktaAuth._oktaUserAgent) {
+      throw new AuthSdkError('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 or higher.');
+    }
+
+    // Auth-js version compatibility runtime check
+    const oktaAuthVersion = oktaAuth._oktaUserAgent.getVersion();
+    const majorVersion = +oktaAuthVersion?.split('.')[0];
+    if (packageInfo.authJSMajorVersion !== majorVersion) {
+      throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
+    }
+
+    // Add Okta UA
+    oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
+
+    // Provide a default implementation of `restoreOriginalUri`
+    if (!oktaAuth.options.restoreOriginalUri && router && location) {
+      oktaAuth.options.restoreOriginalUri = async (_, originalUri: string) => {
+        const baseUrl = window.location.origin + location.prepareExternalUrl('');
+        const routePath = toRelativeUrl(originalUri || '/', baseUrl);
+        router.navigateByUrl(routePath);
+      };
+    }
+
+    // Start services
+    oktaAuth.start();
+  }
 
 }

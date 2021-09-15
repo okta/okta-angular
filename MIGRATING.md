@@ -1,7 +1,84 @@
 [AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
 [transformAuthState]: https://github.com/okta/okta-auth-js/blob/master/README.md#transformauthstate
+[OktaAuth]: https://github.com/okta/okta-auth-js
 
 # Migrating
+
+## From version 3.x to 4.x
+
+### Updating `OktaConfig`
+
+From version 4.0, an `OktaConfig` starts to explicitly accept [OktaAuth][] instance to replace the internal `OktaAuthService`. You will need to replace the [OktaAuth related configurations](https://github.com/okta/okta-auth-js#configuration-reference) with a pre-initialized [OktaAuth][] instance.
+
+**Note**
+
+- `@okta/okta-auth-js` is now a peer dependency for this SDK. You must add `@okta/okta-auth-js` as a dependency to your project and install it separately from `@okta/okta-angular`.
+
+```typescript
+import {
+  OKTA_CONFIG,
+  OktaAuthModule
+} from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+const config = {
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  clientId: '{clientId}',
+  redirectUri: window.location.origin + '/login/callback'
+}
+const oktaAuth = new OktaAuth(config);
+
+@NgModule({
+  imports: [
+    ...
+    OktaAuthModule
+  ],
+  providers: [
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: { oktaAuth } 
+    }
+  ],
+})
+export class MyAppModule {}
+```
+
+### Replacing `OktaAuthService` with `OktaAuth`
+
+Previously, the SDK module injects `OktaAuthService` to the application, now it's replaced with `OktaAuth`. Almost all the public APIs are still the same except:
+
+#### Getting `OktaConfig` from dependency injection
+
+[OktaAuth][] instance does not have the `getOktaConfig` method, but it's still provided by OktaAuthModule via Angular dependency injection system.
+
+#### Using Observable [AuthState][] from a seperate data service
+
+[OktaAuth][] instance does not have an observable auth state, `OktaAuthStateService` has been added to serve this purpose. The UI component can track the up to date auth state with code like:
+
+```typescript
+import { Component } from '@angular/core';
+import { OktaAuthStateService } from '@okta/okta-angular';
+
+@Component({
+  selector: 'app-component',
+  template: `
+    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated"">Login</button>
+    <button *ngIf="(authStateService.authState$ | async).isAuthenticated">Logout</button>
+    <router-outlet></router-outlet>
+  `,
+})
+export class MyComponent {
+  constructor(private authStateService: OktaAuthStateService) {}
+}
+```
+
+### Replacing `OktaLoginRedirectComponent` with `oktaAuth.signInWithRedirect`
+
+`OktaLoginRedirectComponent` is removed from version 4.0. You can call `oktaAuth.signInWithRedirect` to achieve the same effect.
+
+### Replacing `isAuthenticated` callback option with [transformAuthState](https://github.com/okta/okta-auth-js#transformauthstate) from [OktaAuth][] configuration.
+
+`isAuthenticated` callback option is removed from version 4.0. You can use the [transformAuthState](https://github.com/okta/okta-auth-js#transformauthstate) callback option from [OktaAuth][] to customize the AuthState.
 
 ## From version 2.x to 3.x
 

@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart} from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { OktaAuthService } from '@okta/okta-angular';
 import * as OktaSignIn from '@okta/okta-signin-widget';
 import { environment } from '../environments/environment';
 
@@ -12,8 +10,7 @@ import { environment } from '../environments/environment';
     <div id="okta-signin-container"></div>
   `
 })
-export class LoginComponent {
-  authService;
+export class LoginComponent implements OnInit, OnDestroy {
   widget = new OktaSignIn({
     el: '#okta-signin-container',
     baseUrl: `https://${environment.yourOktaDomain}`,
@@ -24,28 +21,13 @@ export class LoginComponent {
     redirectUri: 'http://localhost:8080/login/callback'
   });
 
-  constructor(oktaAuth: OktaAuthService, router: Router) {
-    this.authService = oktaAuth;
-
-    // Show the widget when prompted, otherwise remove it from the DOM.
-    router.events.forEach(event => {
-      if (event instanceof NavigationStart) {
-        switch(event.url) {
-          case '/login':
-            break;
-          case '/protected':
-            break;
-          default:
-            this.widget.remove();
-            break;
-        }
-      }
-    });
-  }
-
   ngOnInit() {
     this.widget.showSignInAndRedirect().catch(err => {
       throw(err);
     });
+  }
+
+  ngOnDestroy() {
+    this.widget.remove();
   }
 }

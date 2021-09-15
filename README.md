@@ -2,7 +2,6 @@
 [@angular/router]: https://angular.io/guide/router
 [Observable]: https://angular.io/guide/observables
 [Dependency Injection]: https://angular.io/guide/dependency-injection
-[OktaAuthService]: #oktaauthservice
 [AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
 [external identity provider]: https://developer.okta.com/docs/concepts/identity-providers/
 
@@ -74,12 +73,14 @@ import {
   OKTA_CONFIG,
   OktaAuthModule
 } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
 
-const oktaConfig = {
+const config = {
   issuer: 'https://{yourOktaDomain}/oauth2/default',
   clientId: '{clientId}',
   redirectUri: window.location.origin + '/login/callback'
 }
+const oktaAuth = new OktaAuth(config);
 
 @NgModule({
   imports: [
@@ -87,7 +88,10 @@ const oktaConfig = {
     OktaAuthModule
   ],
   providers: [
-    { provide: OKTA_CONFIG, useValue: oktaConfig }
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: { oktaAuth } 
+    }
   ],
 })
 export class MyAppModule { }
@@ -95,26 +99,20 @@ export class MyAppModule { }
 
 ### `OKTA_CONFIG`
 
-An Angular InjectionToken used to configure the OktaAuthService. This value must be provided by your own application. The base set of configuration options are defined by [@okta/okta-auth-js][]. The following properties are **required**:
+An Angular InjectionToken used to configure the OktaAuthModule. This value must be provided by your own application.
 
-- `issuer` **(required)**: The OpenID Connect `issuer`
-- `clientId` **(required)**: The OpenID Connect `client_id`
-- `redirectUri` **(required)**: Where the callback is hosted
-
-This SDK accepts all configuration options defined by [@okta/okta-auth-js][] and adds some additional options:
-
+- `oktaAuth` *(required)*: - [OktaAuth][@okta/okta-auth-js] instance. The instance that can be shared cross different components of the application. One popular use case is to share one single instance cross the application and [Okta Sign-In Widget](https://github.com/okta/okta-signin-widget).
 - `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication. Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
 - `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
-- `isAuthenticated` *(optional)* - callback function. By default, [OktaAuthService.isAuthenticated()](https://github.com/okta/okta-auth-js#isauthenticatedtimeout) will return true if **both** [getIdToken()](https://github.com/okta/okta-auth-js#getidtoken) **and** [getAccessToken()](https://github.com/okta/okta-auth-js#getaccesstoken) return a value. Setting an `isAuthenticated` function on the config allows you to customize this logic. The function receives an instance of `OktaAuthService` as a parameter and should return a Promise which resolves to either true or false.
 
 ### `OktaAuthModule`
 
 The top-level Angular module which provides these components and services:
 
+- [`OktaAuth`][@okta/okta-auth-js] - The passed in [`OktaAuth`][@okta/okta-auth-js] instance with default behavior setup.
 - [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication.
 - [`OktaCallbackComponent`](#oktacallbackcomponent) - Handles the implicit flow callback by parsing tokens from the URL and storing them automatically.
-- [`OktaLoginRedirectComponent`](#oktaloginredirectcomponent) - Redirects users to the Okta Hosted Login Page for authentication.
-- [`OktaAuthService`](#oktaauthservice) - Highest-level service containing the `okta-angular` public methods.
+- [`OktaAuthStateService`](#oktaauthstateservice) - A data service exposing observable [authState$][AuthState].
 
 ### `OktaAuthGuard`
 
@@ -190,24 +188,37 @@ const appRoutes: Routes = [
 ]
 ```
 
-### `OktaLoginRedirectComponent`
+### `OktaAuthStateService`
 
-The `OktaLoginRedirect` component redirects the user's browser to the Okta-hosted login page for your organization. For more advanced cases, this component can be copied to your own source tree and modified as needed.
+This service exposes an observable (update to date) [authState$][AuthState] to the UI components.
+
+The example below shows connecting two buttons to handle **login** and **logout**:
 
 ```typescript
-// myApp.module.ts
-import {
-  OktaLoginRedirectComponent,
-  ...
-} from '@okta/okta-angular';
+// sample.component.ts
 
-const appRoutes: Routes = [
-  {
-    path: 'login',
-    component: OktaLoginRedirectComponent
-  },
-  ...
-]
+import { Component } from '@angular/core';
+import { OktaAuthStateService } from '@okta/okta-angular';
+
+@Component({
+  selector: 'app-component',
+  template: `
+    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated" (click)="login()">Login</button>
+    <button *ngIf="(authStateService.authState$ | async).isAuthenticated" (click)="logout()">Logout</button>
+    <router-outlet></router-outlet>
+  `,
+})
+export class MyComponent {
+  constructor(private authStateService: OktaAuthStateService) {}
+
+  async login() {
+    await this.oktaAuth.signInWithRedirect();
+  }
+
+  async logout() {
+    await this.oktaAuth.signOut();
+  }
+}
 ```
 
 #### Using a custom login-page
@@ -227,11 +238,24 @@ function onAuthRequired(oktaAuth, injector) {
   router.navigate(['/custom-login']);
 }
 
-const oktaConfig = {
-  issuer: environment.ISSUER,
-  ...
-  onAuthRequired: onAuthRequired
-};
+const oktaAuth = new OktaAuth({ ... });
+
+@NgModule({
+  imports: [
+    ...
+    OktaAuthModule
+  ],
+  providers: [
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: {
+        oktaAuth,
+        onAuthRequired
+      } 
+    }
+  ],
+})
+export class MyAppModule { }
 ```
 
 Alternatively, you can add a `data` attribute directly to a `Route`:
@@ -274,59 +298,10 @@ function onAuthResume(oktaAuth, injector) {
 }
 
 const oktaConfig = {
-  issuer: environment.ISSUER,
   ...
   onAuthResume: onAuthResume
 };
 ```
-
-### `OktaAuthService`
-
-In your components, your can take advantage of all of `okta-angular`'s features by importing the `OktaAuthService`. The `OktaAuthService` inherits from the `OktaAuth` service exported by [@okta/okta-auth-js][] making the full [configuration](https://github.com/okta/okta-auth-js#configuration-reference) and [api](https://github.com/okta/okta-auth-js#api-reference) available on `OktaAuthService`.
-
-The example below shows connecting two buttons to handle **login** and **logout**:
-
-```typescript
-// sample.component.ts
-
-import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
-
-@Component({
-  selector: 'app-component',
-  template: `
-    <button *ngIf="!isAuthenticated" (click)="login()">Login</button>
-    <button *ngIf="isAuthenticated" (click)="logout()">Logout</button>
-
-    <router-outlet></router-outlet>
-  `,
-})
-export class MyComponent {
-  isAuthenticated: boolean;
-  constructor(public oktaAuth: OktaAuthService) {
-    // subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
-    );
-  }
-  async ngOnInit() {
-    // get authentication state for immediate use
-    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-  }
-  async login() {
-    await this.oktaAuth.signInWithRedirect({
-      originalUri: '/profile'
-    });
-  }
-  async logout() {
-    await this.oktaAuth.signOut();
-  }
-}
-```
-
-#### `oktaAuth.$authenticationState`
-
-An [BehaviorSubject](http://reactivex.io/rxjs/manual/overview.html#behaviorsubject) that returns true/false when the [AuthState][] changes.
 
 ## Contributing
 
