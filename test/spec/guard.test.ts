@@ -7,7 +7,14 @@ import {
   OKTA_CONFIG,
 } from '../../src/okta-angular';
 import { AuthRequiredFunction } from '../../src/okta/models/okta.config';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, RouterState } from '@angular/router';
+import { 
+  ActivatedRouteSnapshot, 
+  RouterStateSnapshot, 
+  Router, 
+  RouterState, 
+  Route, 
+  UrlSegment 
+} from '@angular/router';
 import { Injector } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
 
@@ -38,6 +45,80 @@ describe('Angular auth guard', () => {
     jest.restoreAllMocks();
   });
 
+  describe('canLoad', () => {
+    describe('isAuthenticated() = true', () => {
+      it('returns true', async () => {
+        const oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(true),
+        } as unknown;
+        setup(oktaAuth as OktaAuth, {} as OktaConfig);
+        const injector: Injector = TestBed.inject(Injector);
+        const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
+        const route: unknown = {};
+        const segments: unknown = [{} as unknown];
+        const res = await guard.canLoad(route as Route, segments as UrlSegment[]);
+        expect(res).toBe(true);
+      });
+    });
+
+    describe('isAuthenticated() = false', () => {
+      let oktaAuth: OktaAuth;
+      let guard: OktaAuthGuard;
+      let route: Route;
+      let segments: UrlSegment[];
+      let injector: Injector;
+      let onAuthRequired: AuthRequiredFunction;
+      beforeEach(() => {
+        oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(false),
+          setOriginalUri: jest.fn(),
+          signInWithRedirect: jest.fn()
+        } as unknown as OktaAuth;
+        onAuthRequired = jest.fn();
+        const config = { oktaAuth } as OktaConfig;
+        setup(oktaAuth, config);
+        injector = TestBed.inject(Injector);
+        guard = new OktaAuthGuard(config, oktaAuth, injector);
+        route = {} as unknown as Route;
+        segments = [{ path: 'fakepath' } as unknown as UrlSegment];
+      });
+
+      it('returns false', async () => {
+        const res = await guard.canLoad(route, segments);
+        expect(res).toBe(false);
+      });
+
+      it('by default, calls "signInWithRedirect()"', async () => {
+        await guard.canLoad(route, segments);
+        expect(oktaAuth.signInWithRedirect).toHaveBeenCalled();
+      });
+
+      it('calls "setOriginalUri" with state url', async () => {
+        const baseUrl = 'http://fake.url/path';
+        const query = '?query=foo&bar=baz';
+        const hash = '#hash=foo';
+        segments[0].path = `${baseUrl}${query}${hash}`;
+        await guard.canLoad(route, segments);
+        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('http://fake.url/path?query=foo&bar=baz#hash=foo');
+      });
+
+      it('onAuthRequired can be set on route', async () => {
+        const mockFn = jest.fn();
+        route.data = {
+          onAuthRequired: mockFn
+        };
+        await guard.canLoad(route, segments);
+        expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector);
+      });
+
+      it('onAuthRequired can be set on config', async () => {
+        guard = new OktaAuthGuard({ oktaAuth, onAuthRequired }, oktaAuth, injector);
+        await guard.canLoad(route, segments);
+        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
+      });
+    });
+  });
+
   describe('canActivate', () => {
     describe('isAuthenticated() = true', () => {
       it('returns true', async () => {
@@ -50,8 +131,8 @@ describe('Angular auth guard', () => {
         setup(oktaAuth as OktaAuth, {} as OktaConfig);
         const injector: Injector = TestBed.inject(Injector);
         const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
-        const route: unknown = undefined;
-        const state: unknown = undefined;
+        const route: unknown = {};
+        const state: unknown = {};
         const res = await guard.canActivate(route as ActivatedRouteSnapshot, state as RouterStateSnapshot);
         expect(res).toBe(true);
       });
