@@ -1,3 +1,9 @@
+# 4.1.0
+
+### Features
+
+- [#65](https://github.com/okta/okta-angular/pull/65) Supports lazy loaded routes in `OktaAuthGuard`
+
 # 4.0.0
 
 ### Breaking Changes
