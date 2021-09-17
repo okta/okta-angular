@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2017-Present, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021-Present, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,10 +10,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-export { AppPage } from './page-objects/app.po';
-export { OktaSignInPage } from './page-objects/okta-signin.po';
-export { LoginPage } from './page-objects/login.po';
-export { ProtectedPage } from './page-objects/protected.po';
-export { SessionTokenSignInPage } from './page-objects/sessionToken-signin.po';
-export { PublicPage } from './page-objects/public.po';
-export { HasGroupPage } from './page-objects/has-group.po';
+import { element, by } from 'protractor';
+import { AppPage } from './app.po';
+
+export class HasGroupPage extends AppPage {
+  constructor() {
+    super('/group');
+  }
+
+  getInGroupContent() {
+    return element(by.id('in-group'));
+  }
+
+  getNotInGroupContent() {
+    return element(by.id('not-in-group'));
+  }
+}

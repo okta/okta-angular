@@ -32,6 +32,7 @@ import { ProtectedComponent } from './protected.component';
 import { AppComponent } from './app.component';
 import { SessionTokenLoginComponent } from './sessionToken-login.component';
 import { PublicComponent } from './public.component';
+import { HasGroupComponent } from './has-group.component';
 
 export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injector) {
   const router = injector.get(Router);
@@ -82,7 +83,11 @@ const appRoutes: Routes = [
     path: 'lazy',
     loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule),
     canLoad: [ OktaAuthGuard ]
-  }
+  },
+  {
+    path: 'group',
+    component: HasGroupComponent,
+  },
 ];
 
 const redirectUri = window.location.origin + '/login/callback';
@@ -93,7 +98,8 @@ const config = {
   clientId: process.env.CLIENT_ID,
   testing: {
     disableHttpsCheck: false
-  }
+  },
+  scopes: ['email', 'profile', 'openid', 'groups']
 };
 
 if (process.env.OKTA_TESTING_DISABLEHTTPSCHECK) {
@@ -114,7 +120,8 @@ const oktaAuth = new OktaAuth(config);
     AppComponent,
     ProtectedComponent,
     SessionTokenLoginComponent,
-    PublicComponent
+    PublicComponent,
+    HasGroupComponent,
   ],
   providers: [{
     provide: OKTA_CONFIG,

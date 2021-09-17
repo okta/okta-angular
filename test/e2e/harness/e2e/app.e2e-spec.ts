@@ -13,10 +13,10 @@
 import {
   AppPage,
   OktaSignInPage,
-  LoginPage,
   ProtectedPage,
   PublicPage,
-  SessionTokenSignInPage
+  SessionTokenSignInPage,
+  HasGroupPage,
 } from './page-objects';
 
 
@@ -26,6 +26,7 @@ describe('Angular + Okta App', () => {
   let protectedPage: ProtectedPage;
   let sessionTokenSignInPage: SessionTokenSignInPage;
   let publicPage: PublicPage;
+  let hasGroupPage: HasGroupPage;
 
   beforeEach(() => {
     page = new AppPage();
@@ -33,6 +34,7 @@ describe('Angular + Okta App', () => {
     protectedPage = new ProtectedPage();
     sessionTokenSignInPage = new SessionTokenSignInPage();
     publicPage = new PublicPage();
+    hasGroupPage = new HasGroupPage();
   });
 
   describe('implicit flow', () => {
@@ -142,6 +144,41 @@ describe('Angular + Okta App', () => {
       publicPage.waitUntilTextVisible('public-message', 'Public!');
       expect(publicPage.getPrivateArea().isPresent()).toBeTruthy();
       publicPage.waitUntilTextVisible('userinfo-container', 'email');
+
+      // Logout
+      page.getLogoutButton().click();
+      page.waitForElement('login-button');
+      expect(page.getLoginButton().isPresent()).toBeTruthy();
+    });
+  });
+
+  describe('Role Based Access Control (RBAC)', () => {
+    describe('isAuthenticated === false', () => {
+      it('not display elements', () => {
+        hasGroupPage.navigateTo();
+        expect(hasGroupPage.getInGroupContent().isPresent()).toBeFalsy();
+        expect(hasGroupPage.getNotInGroupContent().isPresent()).toBeFalsy();
+      });
+    });
+
+    describe('isAuthenticated === true', () => {
+      it('displays in-group content', () => {
+        // login with redirect
+        page.navigateTo();
+        page.getLoginButton().click();
+        oktaLoginPage.waitUntilVisible(process.env.ISSUER);
+        oktaLoginPage.signIn({
+          username: process.env.USERNAME,
+          password: process.env.PASSWORD
+        });
+        page.waitUntilLoggedIn();
+
+        hasGroupPage.navigateTo();
+
+        expect(hasGroupPage.getInGroupContent().isPresent()).toBeTruthy();
+        hasGroupPage.waitUntilTextVisible('in-group', 'In "Test" group');
+        expect(hasGroupPage.getNotInGroupContent().isPresent()).toBeFalsy();
+      });
     });
   });
 
