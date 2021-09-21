@@ -58,7 +58,7 @@ This library currently supports:
 This library is available through [npm](https://www.npmjs.com/package/@okta/okta-angular). To install it, simply add it to your project:
 
 ```bash
-npm install --save @okta/okta-angular
+npm install @okta/okta-angular @okta/okta-auth-js
 ```
 
 ## Usage
