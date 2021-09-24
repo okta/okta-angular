@@ -164,7 +164,7 @@ const appRoutes: Routes = [
 ]
 ```
 
-You can use `canLoad` to achieve lazy loading for not immediately necessary modules to keep the initial bundle size smaller.
+You can use `canLoad` to achieve lazy loading for modules that are not immediately necessary to keep the initial bundle size smaller.
 
 ```typescript
 // myApp.module.ts
