@@ -62,7 +62,7 @@ import { OktaAuthStateService } from '@okta/okta-angular';
 @Component({
   selector: 'app-component',
   template: `
-    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated"">Login</button>
+    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated">Login</button>
     <button *ngIf="(authStateService.authState$ | async).isAuthenticated">Logout</button>
     <router-outlet></router-outlet>
   `,
