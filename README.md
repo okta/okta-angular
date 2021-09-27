@@ -164,6 +164,24 @@ const appRoutes: Routes = [
 ]
 ```
 
+You can use `canLoad` to achieve lazy loading for modules that are not immediately necessary to keep the initial bundle size smaller.
+
+```typescript
+// myApp.module.ts
+import {
+  OktaAuthGuard,
+  ...
+} from '@okta/okta-angular';
+const appRoutes: Routes = [
+  {
+    path: 'lazy',
+    canLoad: [ OktaAuthGuard ],
+    loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule)
+  },
+  ...
+]
+```
+
 If a user does not have a valid session, then a new authorization flow will begin. By default, they will be redirected to the Okta Login Page for authentication. Once authenticated, they will be redirected back to your application's **protected** page. This logic can be customized by setting an `onAuthRequired` function on the config object.
 
 ### `OktaCallbackComponent`

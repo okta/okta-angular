@@ -77,6 +77,11 @@ const appRoutes: Routes = [
         component: ProtectedComponent
       }
     ]
+  },
+  {
+    path: 'lazy',
+    loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule),
+    canLoad: [ OktaAuthGuard ]
   }
 ];
 
