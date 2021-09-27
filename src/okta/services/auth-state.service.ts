@@ -51,7 +51,7 @@ export class OktaAuthStateService implements OnDestroy {
         const key = Object.keys(groups)[0];
         const value = groups[key];
 
-        // groups or custom claims is avaiable in idToken
+        // groups or custom claims is available in idToken
         if (idToken.claims[key]) {
           return value.some((authority: string) => idToken.claims[key].includes(authority));
         }

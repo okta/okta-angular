@@ -15,7 +15,7 @@ export class OktaHasAnyGroupDirective {
   @Input() set oktaHasAnyGroup(groups: Groups) {
     this.authStateService.hasAnyGroups(groups)
       .subscribe(isAuthorized => {
-        // not update UI if no state change
+        // don't update UI if no state change
         if (isAuthorized === this.previousIsAuthorized) {
           return;
         }
