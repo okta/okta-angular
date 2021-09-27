@@ -3,6 +3,7 @@
 ### Features
 
 - [#65](https://github.com/okta/okta-angular/pull/65) Supports lazy loaded routes in `OktaAuthGuard`
+- [#66](https://github.com/okta/okta-angular/pull/66) Adds lite role/group based authorization directive (`*oktaHasAnyGroup`) to only render content for authorized users (users in groups)
 
 # 4.0.0
 
