@@ -1,3 +1,9 @@
+# 3.2.3
+
+### Bug Fixes
+
+[#75](https://github.com/okta/okta-angular/pull/75) Fixes `signInWithRedirect` types issue by upgrading to `@okta/okta-auth-js` 5.7.0
+
 # 3.2.2
 
 ### Bug Fixes
