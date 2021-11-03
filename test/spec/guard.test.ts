@@ -52,7 +52,7 @@ describe('Angular auth guard', () => {
           isAuthenticated: jest.fn().mockResolvedValue(true),
         } as unknown;
         setup(oktaAuth as OktaAuth, {} as OktaConfig);
-        const injector: Injector = TestBed.inject(Injector);
+        const injector: Injector = TestBed.get(Injector);
         const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
         const route: unknown = {};
         const segments: unknown = [{} as unknown];
@@ -77,7 +77,7 @@ describe('Angular auth guard', () => {
         onAuthRequired = jest.fn();
         const config = { oktaAuth } as OktaConfig;
         setup(oktaAuth, config);
-        injector = TestBed.inject(Injector);
+        injector = TestBed.get(Injector);
         guard = new OktaAuthGuard(config, oktaAuth, injector);
         route = {} as unknown as Route;
         segments = [{ path: 'fakepath' } as unknown as UrlSegment];
@@ -129,7 +129,7 @@ describe('Angular auth guard', () => {
           }
         } as unknown;
         setup(oktaAuth as OktaAuth, {} as OktaConfig);
-        const injector: Injector = TestBed.inject(Injector);
+        const injector: Injector = TestBed.get(Injector);
         const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
         const route: unknown = {};
         const state: unknown = {};
@@ -158,8 +158,8 @@ describe('Angular auth guard', () => {
         onAuthRequired = jest.fn();
         const config = { oktaAuth } as OktaConfig;
         setup(oktaAuth, config);
-        router = TestBed.inject(Router);
-        injector = TestBed.inject(Injector);
+        router = TestBed.get(Router);
+        injector = TestBed.get(Injector);
         guard = new OktaAuthGuard(config, oktaAuth, injector);
         const routerState: RouterState = router.routerState;
         state = routerState.snapshot;
@@ -214,9 +214,9 @@ describe('Angular auth guard', () => {
       } as unknown as OktaAuth;
       const config = { oktaAuth } as OktaConfig;
       setup(oktaAuth, config);
-      const injector = TestBed.inject(Injector);
+      const injector = TestBed.get(Injector);
       const guard = new OktaAuthGuard(config, oktaAuth, injector);
-      const router = TestBed.inject(Router);
+      const router = TestBed.get(Router);
       const routerState: RouterState = router.routerState;
       const state = routerState.snapshot;
       const route = state.root;

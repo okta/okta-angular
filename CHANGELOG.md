@@ -1,3 +1,9 @@
+# 4.1.1
+
+### Fixes
+
+[#74](https://github.com/okta/okta-angular/pull/74) Fixes old version angular compatibility issue
+
 # 4.1.0
 
 ### Features

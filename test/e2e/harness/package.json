@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@okta/okta-angular": "*",
-    "@okta/okta-auth-js": "^5.4.2",
+    "@okta/okta-auth-js": "^5.4.3",
     "@angular/animations": "~11.2.10",
     "@angular/common": "~11.2.10",
     "@angular/compiler": "~11.2.10",
