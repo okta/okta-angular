@@ -56,7 +56,7 @@ export class OktaAuthModule {
 
     // Auth-js version compatibility runtime check
     const oktaAuthVersion = oktaAuth._oktaUserAgent.getVersion();
-    const majorVersion = +oktaAuthVersion?.split('.')[0];
+    const majorVersion = +oktaAuthVersion.split('.')[0];
     if (packageInfo.authJSMajorVersion !== majorVersion) {
       throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version ${packageInfo.authJSMajorVersion}.x is the current supported version.`);
     }

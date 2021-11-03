@@ -94,7 +94,7 @@ describe('Okta Module', () => {
     describe('default restoreOriginalUri', () => {
       it('sets default restoreOriginalUri', () => {
         setup(oktaAuth);
-        const injectedOktaAuth = TestBed.inject(OktaAuth);
+        const injectedOktaAuth = TestBed.get(OktaAuth);
         expect(injectedOktaAuth.options.restoreOriginalUri).toBeDefined();
       });
     });
@@ -110,15 +110,15 @@ describe('Okta Module', () => {
   describe('DI', () => {
     it('provides OktaAuth', () => {
       setup(oktaAuth);
-      expect(TestBed.inject(OktaAuth)).toBeDefined();
+      expect(TestBed.get(OktaAuth)).toBeDefined();
     });
     it('provides AuthStateService', () => {
       setup(oktaAuth);
-      expect(TestBed.inject(OktaAuthStateService)).toBeDefined();
+      expect(TestBed.get(OktaAuthStateService)).toBeDefined();
     });
     it('provides OktaAuthGuard', () => {
       setup(oktaAuth);
-      expect(TestBed.inject(OktaAuthGuard)).toBeDefined();
+      expect(TestBed.get(OktaAuthGuard)).toBeDefined();
     });
   });
   
