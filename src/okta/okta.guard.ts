@@ -52,7 +52,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
-    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
+    this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
 
     const isAuthenticated = await this.oktaAuth.isAuthenticated();
     if (isAuthenticated) {
@@ -74,7 +74,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     // Track states for current route
     this.state = state;
-    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
+    this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
 
     // Protect the route after accessing
     this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);

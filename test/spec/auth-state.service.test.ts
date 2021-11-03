@@ -34,7 +34,7 @@ describe('OktaAuthStateService', () => {
   it('should be created and subscribe to authState change', () => {
     jest.spyOn(oktaAuth.authStateManager, 'subscribe');
     setup(oktaAuth);
-    const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+    const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
     expect(service).toBeTruthy();
     expect(service.authState$).toBeInstanceOf(Observable);
     expect(oktaAuth.authStateManager.subscribe).toHaveBeenCalled();
@@ -44,11 +44,11 @@ describe('OktaAuthStateService', () => {
     const mockState = { mock: 'mock' } as unknown as AuthState;
     jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue(mockState);
     setup(oktaAuth);
-    const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+    const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
     return new Promise(resolve => {
       service.authState$.subscribe(authState => {
         expect(authState).toBe(mockState);
-        resolve(null);
+        resolve(undefined);
       });
     });
   });
@@ -56,11 +56,11 @@ describe('OktaAuthStateService', () => {
   it('initials with default authState when oktaAuth state is not ready', () => {
     jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue(null as unknown as AuthState);
     setup(oktaAuth);
-    const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+    const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
     return new Promise(resolve => {
       service.authState$.subscribe(authState => {
         expect(authState).toEqual({ isAuthenticated: false });
-        resolve(null);
+        resolve(undefined);
       });
     });
   });
@@ -68,13 +68,13 @@ describe('OktaAuthStateService', () => {
   it('updates with oktaAuth state changes', () => {
     const states = [{ mock1: 'mock1' }, { mock2: 'mock2' }];
     setup(oktaAuth);
-    const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+    const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
     const fn = jest.fn();
     return new Promise(resolve => {
       let calls = 0;
       service.authState$.subscribe(authState => {
         if (++calls === 3) {
-          resolve(null);
+          resolve(undefined);
         }
         fn(authState);
       });
@@ -91,11 +91,11 @@ describe('OktaAuthStateService', () => {
       it('observes false result', () => {
         jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue({ isAuthenticated: false } as AuthState);
         setup(oktaAuth);
-        const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+        const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
         return new Promise(resolve => {
           service.hasAnyGroups(['mock']).subscribe(result => {
             expect(result).toEqual(false);
-            resolve(null);
+            resolve(undefined);
           });
         });
       });
@@ -105,11 +105,11 @@ describe('OktaAuthStateService', () => {
       it('observes false result', () => {
         jest.spyOn(oktaAuth.authStateManager, 'getAuthState').mockReturnValue({ idToken: undefined } as AuthState);
         setup(oktaAuth);
-        const service: OktaAuthStateService = TestBed.inject(OktaAuthStateService);
+        const service: OktaAuthStateService = TestBed.get(OktaAuthStateService);
         return new Promise(resolve => {
           service.hasAnyGroups(['mock']).subscribe(result => {
             expect(result).toEqual(false);
-            resolve(null);
+            resolve(undefined);
           });
         });
       });
@@ -129,7 +129,7 @@ describe('OktaAuthStateService', () => {
               }
             } as unknown as AuthState);
           setup(oktaAuth);
-          service = TestBed.inject(OktaAuthStateService);
+          service = TestBed.get(OktaAuthStateService);
         });
 
         describe('can verify with string input', () => {
@@ -137,7 +137,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups('test').subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -145,7 +145,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups('non-exist-group').subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -155,7 +155,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups(['test']).subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -163,7 +163,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups(['non-exist-group']).subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -173,7 +173,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ groups: ['test'] }).subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -181,7 +181,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ groups: ['non-exist-group'] }).subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -204,14 +204,14 @@ describe('OktaAuthStateService', () => {
             'custom-groups': ['test']
           } as unknown as UserClaims);
           setup(oktaAuth);
-          service = TestBed.inject(OktaAuthStateService);
+          service = TestBed.get(OktaAuthStateService);
         });
         describe('can verify with object input', () => {
           it('observes true when groups match', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ 'custom-groups': ['test'] }).subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -219,7 +219,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ 'custom-groups': ['non-exist-group'] }).subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -228,7 +228,7 @@ describe('OktaAuthStateService', () => {
           return new Promise(resolve => {
             service.hasAnyGroups(['test']).subscribe(result => {
               expect(result).toEqual(false);
-              resolve(null);
+              resolve(undefined);
             });
           });
         });
@@ -236,7 +236,7 @@ describe('OktaAuthStateService', () => {
           return new Promise(resolve => {
             service.hasAnyGroups('test').subscribe(result => {
               expect(result).toEqual(false);
-              resolve(null);
+              resolve(undefined);
             });
           });
         });
@@ -256,14 +256,14 @@ describe('OktaAuthStateService', () => {
             groups: ['test']
           } as unknown as UserClaims);
           setup(oktaAuth);
-          service = TestBed.inject(OktaAuthStateService);
+          service = TestBed.get(OktaAuthStateService);
         });
 
         it('calls oktaAuth.getUser()', () => {
           return new Promise(resolve => {
             service.hasAnyGroups('test').subscribe(() => {
               expect(oktaAuth.getUser).toHaveBeenCalled();
-              resolve(null);
+              resolve(undefined);
             });
           });
         });
@@ -273,7 +273,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups('test').subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -281,7 +281,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups('non-exist-group').subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -291,7 +291,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups(['test']).subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -299,7 +299,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups(['non-exist-group']).subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -309,7 +309,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ groups: ['test'] }).subscribe(result => {
                 expect(result).toEqual(true);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
@@ -317,7 +317,7 @@ describe('OktaAuthStateService', () => {
             return new Promise(resolve => {
               service.hasAnyGroups({ groups: ['non-exist-group'] }).subscribe(result => {
                 expect(result).toEqual(false);
-                resolve(null);
+                resolve(undefined);
               });
             });
           });
