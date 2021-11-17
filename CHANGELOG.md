@@ -1,3 +1,9 @@
+# 4.1.2
+
+### Fixes
+
+[#78](https://github.com/okta/okta-angular/pull/78) Fixes angular 7 & 8 producation build issue
+
 # 4.1.1
 
 ### Fixes
