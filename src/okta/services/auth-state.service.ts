@@ -1,7 +1,8 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, Inject, OnDestroy } from '@angular/core';
 import { AuthState, OktaAuth } from '@okta/okta-auth-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { OKTA_AUTH } from '../models/okta.config';
 
 const defaultAuthState = {
   isAuthenticated: false
@@ -16,7 +17,7 @@ export class OktaAuthStateService implements OnDestroy {
   // only expose readonly property
   public readonly authState$: Observable<AuthState> = this._authState.asObservable();
 
-  constructor(private oktaAuth: OktaAuth) {
+  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {
     this.updateAuthState = this.updateAuthState.bind(this);
 
     // set initial authState

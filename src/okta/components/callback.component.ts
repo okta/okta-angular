@@ -12,7 +12,7 @@
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
-import { OKTA_CONFIG, OktaConfig } from '../models/okta.config';
+import { OKTA_CONFIG, OKTA_AUTH, OktaConfig } from '../models/okta.config';
 
 @Component({
   template: `<div>{{error}}</div>`
@@ -22,7 +22,7 @@ export class OktaCallbackComponent implements OnInit {
 
   constructor(
     @Inject(OKTA_CONFIG) private config: OktaConfig,
-    private oktaAuth: OktaAuth,
+    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     @Optional() private injector?: Injector
   ) {}
 

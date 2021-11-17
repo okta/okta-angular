@@ -17,8 +17,8 @@ import { OktaCallbackComponent } from './components/callback.component';
 import { OktaAuthGuard } from './okta.guard';
 import { OktaAuthStateService } from './services/auth-state.service';
 import { OktaHasAnyGroupDirective } from './has-any-group.directive';
-import { OktaConfig, OKTA_CONFIG } from './models/okta.config';
-import { OktaAuth, AuthSdkError, toRelativeUrl } from '@okta/okta-auth-js';
+import { OktaConfig, OKTA_AUTH, OKTA_CONFIG } from './models/okta.config';
+import { AuthSdkError, toRelativeUrl } from '@okta/okta-auth-js';
 import packageInfo from './packageInfo';
 
 @NgModule({
@@ -34,7 +34,7 @@ import packageInfo from './packageInfo';
     OktaAuthGuard,
     OktaAuthStateService,
     {
-      provide: OktaAuth,
+      provide: OKTA_AUTH,
       useFactory(config: OktaConfig) {
         return config.oktaAuth;
       },
