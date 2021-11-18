@@ -27,7 +27,7 @@ import { filter } from 'rxjs/operators';
 
 import { OktaAuth, AuthState } from '@okta/okta-auth-js';
 
-import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG } from './models/okta.config';
+import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
@@ -37,7 +37,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
   constructor(
     @Inject(OKTA_CONFIG) private config: OktaConfig, 
-    private oktaAuth: OktaAuth, 
+    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, 
     private injector: Injector
   ) { 
     this.onAuthRequired = this.config.onAuthRequired;

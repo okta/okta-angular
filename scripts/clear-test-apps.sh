@@ -1,0 +1,1 @@
+npx lerna exec -- npx yalc remove --all
