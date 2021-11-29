@@ -1,3 +1,9 @@
+# 5.0.0
+
+### Breaking Changes
+
+- [#79](https://github.com/okta/okta-angular/pull/79) Uses `OKTA_AUTH` injection token instead of `OktaAuth` type to inject `oktaAuth` instance. This change is introduced to fix production build [issue](https://github.com/okta/okta-angular/issues/72) for Angular v7 & 8. See [MIGRATING](MIGRATING.md) for detailed information.
+
 # 4.1.1
 
 ### Fixes
