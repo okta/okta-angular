@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "4.2.0",
+  "version": "5.0.0",
   "description": "Angular support for Okta",
   "main": "./dist/bundles/okta-angular.umd.js",
   "module": "./dist/fesm5/okta-angular.js",
@@ -22,13 +22,17 @@
     "prepare": "yarn build",
     "start": "yarn --cwd test/e2e/harness/ start",
     "test": "yarn lint && yarn test:e2e && yarn test:unit",
-    "test:e2e": "yarn --cwd test/e2e/harness/ e2e",
+    "pretest:e2e": "yarn test:apps:prepare",
+    "test:e2e": "yarn workspace @okta/test.e2e start",
     "test:unit": "jest",
     "pack:lib": "npm run build && npm pack ./dist",
     "publish:lib": "npm run build && npm publish ./dist",
     "publish:lib:next": "npm run build && npm publish --tag next ./dist",
     "compodoc": "compodoc -p tsconfig.json",
-    "compodoc:serve": "compodoc -s"
+    "compodoc:serve": "compodoc -s",
+    "test:apps:prepare": "sh ./scripts/prepare-test-apps.sh",
+    "test:apps:clear": "sh ./scripts/clear-test-apps.sh",
+    "lerna": "lerna"
   },
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",
@@ -55,6 +59,7 @@
     "@angular/platform-server": "7.2.16",
     "@angular/router": "7.2.16",
     "@compodoc/compodoc": "1.1.9",
+    "@okta/okta-auth-js": "^5.8.0",
     "@rollup/plugin-commonjs": "11.0.1",
     "@rollup/plugin-node-resolve": "7.0.0",
     "@types/jest": "^26.0.14",
@@ -73,9 +78,11 @@
     "eslint-plugin-jest": "^24.0.2",
     "eslint-plugin-node": "^11.1.0",
     "globby": "^11.0.1",
+    "husky": "^7.0.4",
     "jest": "^26.4.2",
     "jest-junit": "^11.1.0",
     "jest-preset-angular": "^8.3.1",
+    "lerna": "^4.0.0",
     "prettier": "^2.1.2",
     "raw-loader": "1.0.0",
     "reflect-metadata": "0.1.13",
@@ -95,6 +102,7 @@
     "uglify-js": "3.13.5",
     "webpack": "^4.32.2",
     "webpack-filter-warnings-plugin": "1.2.1",
+    "yalc": "^1.0.0-pre.53",
     "zone.js": "~0.8.26"
   },
   "peerDependencies": {
@@ -140,8 +148,13 @@
     "outputName": "junit-result.xml"
   },
   "sideEffects": false,
-  "workspaces": [
-    "./",
-    "test/e2e/harness"
-  ]
+  "workspaces": {
+    "packages": [
+      "./",
+      "test/e2e"
+    ],
+    "nohoist": [
+      "test/apps/*"
+    ]
+  }
 }

@@ -27,3 +27,4 @@ export interface OktaConfig {
 }
 
 export const OKTA_CONFIG = new InjectionToken<OktaConfig>('okta.config.angular');
+export const OKTA_AUTH = new InjectionToken<OktaAuth>('okta.auth');

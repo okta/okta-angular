@@ -5,6 +5,7 @@ import { AuthSdkError, OktaAuth } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
   OKTA_CONFIG, 
+  OKTA_AUTH,
   OktaAuthStateService, 
   OktaAuthGuard 
 } from '../../src/okta-angular';
@@ -94,7 +95,7 @@ describe('Okta Module', () => {
     describe('default restoreOriginalUri', () => {
       it('sets default restoreOriginalUri', () => {
         setup(oktaAuth);
-        const injectedOktaAuth = TestBed.get(OktaAuth);
+        const injectedOktaAuth = TestBed.get(OKTA_AUTH);
         expect(injectedOktaAuth.options.restoreOriginalUri).toBeDefined();
       });
     });
@@ -110,7 +111,7 @@ describe('Okta Module', () => {
   describe('DI', () => {
     it('provides OktaAuth', () => {
       setup(oktaAuth);
-      expect(TestBed.get(OktaAuth)).toBeDefined();
+      expect(TestBed.get(OKTA_AUTH)).toBeDefined();
     });
     it('provides AuthStateService', () => {
       setup(oktaAuth);

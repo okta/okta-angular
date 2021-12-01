@@ -4,6 +4,27 @@
 
 # Migrating
 
+## From version 4.x to 5.x
+
+### Adding `OKTA_AUTH` injection token explicitly for `oktaAuth` usage
+
+To fix Angular 7 & 8 production build [issue](https://github.com/okta/okta-angular/issues/72), `oktaAuth` instance is now injected by [injection token](https://angular.io/api/core/InjectionToken) instead of implicit referring by types.
+
+```typescript
+import { Component } from '@angular/core';
+import { OKTA_AUTH } from '@okta/okta-angular';
+
+@Component({
+  selector: 'app-component',
+  template: `
+    <div>page content</div>
+  `,
+})
+export class MyComponent {
+  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
+}
+```
+
 ## From version 3.x to 4.x
 
 ### Updating `OktaConfig`
