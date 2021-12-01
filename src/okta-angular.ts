@@ -12,7 +12,7 @@
 
 export { OktaAuthModule } from './okta/okta.module';
 export { OktaAuthGuard } from './okta/okta.guard';
-export { OktaConfig, OKTA_CONFIG } from './okta/models/okta.config';
+export { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './okta/models/okta.config';
 export { OktaAuthStateService } from './okta/services/auth-state.service';
 
 // Okta View Components

@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { OktaAuth } from '@okta/okta-auth-js';
 import {
   OKTA_CONFIG,
+  OKTA_AUTH,
   OktaCallbackComponent
 } from '../../src/okta-angular';
 
@@ -45,7 +46,7 @@ describe('OktaCallbackComponent', () => {
           useValue: config
         },
         {
-          provide: OktaAuth,
+          provide: OKTA_AUTH,
           useValue: oktaAuth
         },
       ],
