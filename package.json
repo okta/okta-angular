@@ -91,7 +91,7 @@
     "rollup-plugin-license": "^2.3.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rxjs": "6.6.3",
-    "semver": "^7.3.5",
+    "semver-compare": "^1.0.0",
     "shelljs": "0.8.3",
     "source-map-loader": "0.2.4",
     "to-string-loader": "1.1.5",
