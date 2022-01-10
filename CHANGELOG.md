@@ -1,3 +1,9 @@
+# 5.1.0
+
+### Others
+
+- [#81](https://github.com/okta/okta-angular/pull/81) Set okta-auth-js minimum supported version as 5.3.1, `AuthSdkError` will be thrown if oktaAuth instance cannot meet the version requirement
+
 # 5.0.0
 
 ### Breaking Changes
