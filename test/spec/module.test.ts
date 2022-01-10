@@ -13,7 +13,7 @@ import {
 jest.mock('src/okta/packageInfo', () => ({
   __esModule: true,
   default: {
-    authJSMajorVersion: 999,
+    authJSMinSupportedVersion: '5.3.1',
     version: '99.9.9',
     name: '@okta/okta-angular',
   }
@@ -73,7 +73,7 @@ describe('Okta Module', () => {
             getVersion: jest.fn().mockReturnValue('0.9.9')
           }
         } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, okta-auth-js version 999.x is the current supported version.`));
+        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
       });
       
     });
@@ -88,7 +88,7 @@ describe('Okta Module', () => {
           ...oktaAuth,
           _oktaUserAgent: null
         } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError('_oktaUserAgent is not available on auth SDK instance. Please use okta-auth-js@^5.3.1 or higher.'));
+        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
       });
     });
   

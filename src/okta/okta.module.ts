@@ -57,10 +57,7 @@ export class OktaAuthModule {
 
     const isAuthJsSupported = oktaAuth._oktaUserAgent && [0, 1].includes(semverCompare(oktaAuth._oktaUserAgent.getVersion(), packageInfo.authJSMinSupportedVersion));
     if (!isAuthJsSupported) {
-      throw new AuthSdkError(`
-      Passed in oktaAuth is not compatible with the SDK,
-      minimum supported okta-auth-js version is ${packageInfo.authJSMinSupportedVersion}.
-    `);
+      throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is ${packageInfo.authJSMinSupportedVersion}.`);
     }
 
     // Add Okta UA
