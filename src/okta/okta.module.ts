@@ -19,9 +19,7 @@ import { OktaAuthStateService } from './services/auth-state.service';
 import { OktaHasAnyGroupDirective } from './has-any-group.directive';
 import { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
 import { AuthSdkError, OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import semverCompare from 'semver-compare';
+import { compare } from 'compare-versions';
 import packageInfo from './packageInfo';
 
 export function oktaAuthFactory(config: OktaConfig): OktaAuth {
@@ -55,7 +53,7 @@ export class OktaAuthModule {
   ) {
     const { oktaAuth } = config;
 
-    const isAuthJsSupported = oktaAuth._oktaUserAgent && [0, 1].includes(semverCompare(oktaAuth._oktaUserAgent.getVersion(), packageInfo.authJSMinSupportedVersion));
+    const isAuthJsSupported = oktaAuth._oktaUserAgent && compare(oktaAuth._oktaUserAgent.getVersion(), packageInfo.authJSMinSupportedVersion, '>=');
     if (!isAuthJsSupported) {
       throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is ${packageInfo.authJSMinSupportedVersion}.`);
     }

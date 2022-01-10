@@ -3,7 +3,7 @@
         "baseUrl": ".",
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
-        "esModuleInterop": true,
+        "esModuleInterop": false,
         "experimentalDecorators": true,
         "strict": true,
         "strictPropertyInitialization": false,
