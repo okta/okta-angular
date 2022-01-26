@@ -30,7 +30,9 @@ describe('OktaCallbackComponent', () => {
   function bootstrap(config = {}) {
     oktaAuth = {
       handleLoginRedirect: jest.fn(),
-      isInteractionRequiredError: jest.fn()
+      idx: {
+        isInteractionRequiredError: jest.fn()
+      }
     } as unknown as OktaAuth;
 
     TestBed.configureTestingModule({
@@ -84,10 +86,10 @@ describe('OktaCallbackComponent', () => {
       bootstrap({ onAuthResume });
       const error = new Error('my fake error');
       jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth.idx, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(oktaAuth.idx.isInteractionRequiredError).toHaveBeenCalledWith(error);
         expect(onAuthResume).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
         expect(component.error).toBe(undefined);
       });
@@ -98,10 +100,10 @@ describe('OktaCallbackComponent', () => {
       bootstrap({ onAuthRequired });
       const error = new Error('my fake error');
       jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth.idx, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(oktaAuth.idx.isInteractionRequiredError).toHaveBeenCalledWith(error);
         expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
         expect(component.error).toBe(undefined);
       });
@@ -111,10 +113,10 @@ describe('OktaCallbackComponent', () => {
       bootstrap();
       const error = new Error('my fake error');
       jest.spyOn(oktaAuth, 'handleLoginRedirect').mockReturnValue(Promise.reject(error));
-      jest.spyOn(oktaAuth, 'isInteractionRequiredError').mockReturnValue(true);
+      jest.spyOn(oktaAuth.idx, 'isInteractionRequiredError').mockReturnValue(true);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(oktaAuth.isInteractionRequiredError).toHaveBeenCalledWith(error);
+        expect(oktaAuth.idx.isInteractionRequiredError).toHaveBeenCalledWith(error);
         expect(component.error).toBe('Error: my fake error');
       });
     }));
