@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { AuthState, OktaAuth } from '@okta/okta-auth-js';
+import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { OKTA_AUTH } from '../models/okta.config';
@@ -49,12 +49,12 @@ export class OktaAuthStateService implements OnDestroy {
           groups = { groups };
         }
 
-        const key = Object.keys(groups)[0];
+        const key = Object.keys(groups)[0] as keyof UserClaims;
         const value = groups[key];
 
         // groups or custom claims is available in idToken
         if (idToken.claims[key]) {
-          return value.some((authority: string) => idToken.claims[key].includes(authority));
+          return value.some((authority: string) => (idToken.claims[key] as unknown as string[]).includes(authority));
         }
 
         // try /userinfo endpoint when thin idToken (no groups claim) is returned
@@ -63,7 +63,7 @@ export class OktaAuthStateService implements OnDestroy {
         if (!userInfo[key]) {
           return false;
         }
-        return value.some((authority: string) => userInfo[key].includes(authority));
+        return value.some((authority: string) => (userInfo[key] as unknown as string[]).includes(authority));
       })
     );
   }

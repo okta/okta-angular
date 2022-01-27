@@ -63,7 +63,7 @@ export class OktaAuthModule {
 
     // Provide a default implementation of `restoreOriginalUri`
     if (!oktaAuth.options.restoreOriginalUri && router && location) {
-      oktaAuth.options.restoreOriginalUri = async (_, originalUri: string) => {
+      oktaAuth.options.restoreOriginalUri = async (_, originalUri: string | undefined) => {
         const baseUrl = window.location.origin + location.prepareExternalUrl('');
         const routePath = toRelativeUrl(originalUri || '/', baseUrl);
         router.navigateByUrl(routePath);

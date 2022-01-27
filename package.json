@@ -60,7 +60,7 @@
     "@angular/platform-server": "7.2.16",
     "@angular/router": "7.2.16",
     "@compodoc/compodoc": "1.1.9",
-    "@okta/okta-auth-js": "^5.8.0",
+    "@okta/okta-auth-js": "^6.0.0",
     "@rollup/plugin-commonjs": "11.0.1",
     "@rollup/plugin-node-resolve": "7.0.0",
     "@types/jest": "^26.0.14",
@@ -108,7 +108,7 @@
     "zone.js": "~0.8.26"
   },
   "peerDependencies": {
-    "@okta/okta-auth-js": "^5.4.3"
+    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0"
   },
   "jest": {
     "coverageDirectory": "<rootDir>/test-reports/coverage",

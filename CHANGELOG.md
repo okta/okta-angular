@@ -1,3 +1,11 @@
+# 5.1.1
+
+### Fixes
+
+- [#83](https://github.com/okta/okta-angular/pull/83) Fixes okta-auth-js v6 compatibility issues:
+  - allows okta-auth-js v6 in peerDependencies
+  - uses available `isInteractionRequiredError` method in `callback.component`
+
 # 5.1.0
 
 ### Others
