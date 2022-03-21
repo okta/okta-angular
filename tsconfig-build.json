@@ -24,7 +24,7 @@
         "typeRoots": [
             "node_modules/@types/"
         ],
-        "types": ["node"],
+        "types": ["node", "webappsec-credential-management"],
         "esModuleInterop": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
