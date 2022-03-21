@@ -1142,6 +1142,11 @@
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
+"@types/webappsec-credential-management@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@types/webappsec-credential-management/-/webappsec-credential-management-0.5.1.tgz#a739d039a3a122486304c3d64fd58adcc2b1344a"
+  integrity sha512-ZIl4fCJm3mo0jzivFnxhA4qYEY/HicVPxLbcqQTZ3JjnhEFJwYAEPEZft7AJo/MVxHU4mFdAauX+jo+a4m1Qkg==
+
 "@types/webpack-sources@^0.1.5":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-0.1.9.tgz#da69b06eb34f6432e6658acb5a6893c55d983920"
