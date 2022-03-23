@@ -14,6 +14,9 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "types": [
+      "webappsec-credential-management"
+    ],
     "lib": [
       "es2018",
       "dom"
