@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { NgModule, Inject, Optional } from '@angular/core';
+import { NgModule, Inject, Optional, VERSION } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
@@ -60,6 +60,7 @@ export class OktaAuthModule {
 
     // Add Okta UA
     oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
+    oktaAuth._oktaUserAgent.addEnvironment(`Angular/${VERSION.full}`);
 
     // Provide a default implementation of `restoreOriginalUri`
     if (!oktaAuth.options.restoreOriginalUri && router && location) {
