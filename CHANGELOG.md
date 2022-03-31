@@ -1,3 +1,10 @@
+# 5.2.0
+
+### Others
+
+- [#89](https://github.com/okta/okta-angular/pull/89) Updates okta-auth-js to 6.2.0 in test apps and SDK
+- [#91](https://github.com/okta/okta-angular/pull/91) Add Angular version in Okta UA. Add Angular to peerDependencies
+
 # 5.1.1
 
 ### Fixes
