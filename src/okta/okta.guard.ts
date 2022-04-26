@@ -17,7 +17,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
-  NavigationStart, 
+  NavigationStart,
   Event,
   CanLoad,
   Route,
@@ -36,10 +36,10 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
 
   constructor(
-    @Inject(OKTA_CONFIG) private config: OktaConfig, 
-    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, 
+    @Inject(OKTA_CONFIG) private config: OktaConfig,
+    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     private injector: Injector
-  ) { 
+  ) {
     this.onAuthRequired = this.config.onAuthRequired;
 
     // Unsubscribe updateAuthStateListener when route change
@@ -59,7 +59,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
       return true;
     }
 
-    const originalUri = segments[0].path;
+    const originalUri = segments.length > 0 ? segments[0].path : '';
     await this.handleLogin(originalUri);
 
     return false;
