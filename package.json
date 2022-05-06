@@ -84,7 +84,7 @@
     "globby": "^11.0.1",
     "husky": "^7.0.4",
     "jest": "^26.4.2",
-    "jest-junit": "^11.1.0",
+    "jest-junit": "^13.2.0",
     "jest-preset-angular": "^8.3.1",
     "lerna": "^4.0.0",
     "prettier": "^2.1.2",
@@ -109,10 +109,10 @@
     "zone.js": "~0.8.26"
   },
   "peerDependencies": {
-    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0",
+    "@angular/common": ">= 7.0.0",
     "@angular/core": ">= 7.0.0",
     "@angular/router": ">= 7.0.0",
-    "@angular/common": ">= 7.0.0",
+    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0",
     "rxjs": "^6.0.0 || ^7.0.0"
   },
   "jest": {
