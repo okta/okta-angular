@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2017-Present, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
@@ -10,11 +10,28 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-export { OktaAuthModule } from './okta/okta.module';
-export { OktaAuthGuard } from './okta/okta.guard';
-export { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './okta/models/okta.config';
-export { OktaAuthStateService } from './okta/services/auth-state.service';
-export { OktaHasAnyGroupDirective } from './okta/has-any-group.directive';
+import { Component, Inject, OnInit } from '@angular/core';
+import { OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
 
-// Okta View Components
-export { OktaCallbackComponent } from './okta/components/callback.component';
+@Component({
+  selector: 'app-secure',
+  template: `
+  <div>
+  {{ message }}<br/>
+  <pre id="userinfo-container">{{ user }}</pre>
+  </div>`
+})
+export class ProtectedComponent implements OnInit {
+  message;
+  user: string = '';
+
+  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
+    this.message = 'Protected!';
+  }
+
+  async ngOnInit() {
+    const user = await this.oktaAuth.getUser();
+    this.user = JSON.stringify(user, null, 4);
+  }
+}

@@ -43,7 +43,7 @@ export class OktaCallbackComponent implements OnInit {
           return;
         }
       }
-      this.error = e.toString();
+      this.error = (e as Error).toString();
     }
   }
 }
