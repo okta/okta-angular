@@ -8,6 +8,7 @@
     "start:prod": "lite-server",
     "prebuild": "node ./prebuild.js",
     "build": "ng build",
+    "build:prod": "ng build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
