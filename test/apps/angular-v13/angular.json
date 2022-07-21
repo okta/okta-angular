@@ -17,6 +17,18 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "detect-node",
+              "@babel/runtime-corejs3/regenerator",
+              "q",
+              "parse-ms",
+              "@sindresorhus/to-milliseconds",
+              "clipboard",
+              "cross-fetch",
+              "tiny-emitter",
+              "p-cancelable",
+              "core-js-pure"
+            ],
             "outputPath": "dist/angular-v13",
             "index": "src/index.html",
             "main": "src/main.ts",
