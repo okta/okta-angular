@@ -8,6 +8,7 @@
     "start:prod": "lite-server",
     "prebuild": "node ./prebuild.js",
     "build": "ng build",
+    "build:prod": "yarn prebuild && ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -48,7 +49,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.8.0"
   },
   "workspaces": {
     "nohoist": ["**"]

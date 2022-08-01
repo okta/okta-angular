@@ -54,6 +54,7 @@ const tasks = [
   'angular-v11',
   'angular-v12',
   'angular-v13',
+  'angular-v14',
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);

@@ -1,5 +1,5 @@
 {
-  "name": "angular-v13",
+  "name": "angular-v14",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,29 +8,29 @@
     "start:prod": "lite-server",
     "prebuild": "node ./prebuild.js",
     "build": "ng build",
-    "build:prod": "yarn prebuild && ng build --prod",
+    "build:prod": "yarn prebuild && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~13.0.0",
-    "@angular/common": "~13.0.0",
-    "@angular/compiler": "~13.0.0",
-    "@angular/core": "~13.0.0",
-    "@angular/forms": "~13.0.0",
-    "@angular/platform-browser": "~13.0.0",
-    "@angular/platform-browser-dynamic": "~13.0.0",
-    "@angular/router": "~13.0.0",
+    "@angular/animations": "~14.0.6",
+    "@angular/common": "~14.0.6",
+    "@angular/compiler": "~14.0.6",
+    "@angular/core": "~14.0.6",
+    "@angular/forms": "~14.0.6",
+    "@angular/platform-browser": "~14.0.6",
+    "@angular/platform-browser-dynamic": "~14.0.6",
+    "@angular/router": "~14.0.6",
     "@okta/okta-auth-js": "^6.2.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.0.3",
-    "@angular/cli": "~13.0.3",
-    "@angular/compiler-cli": "~13.0.0",
+    "@angular-devkit/build-angular": "~14.0.6",
+    "@angular/cli": "~14.0.6",
+    "@angular/compiler-cli": "~14.0.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.10.0",
@@ -40,9 +40,11 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "lite-server": "^2.6.1",
-    "typescript": "~4.4.3"
+    "typescript": "~4.7.4"
   },
   "workspaces": {
-    "nohoist": ["**"]
+    "nohoist": [
+      "**"
+    ]
   }
 }
