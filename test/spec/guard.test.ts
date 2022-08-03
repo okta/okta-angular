@@ -7,13 +7,13 @@ import {
   OKTA_CONFIG,
 } from '../../src/okta-angular';
 import { AuthRequiredFunction } from '../../src/okta/models/okta.config';
-import { 
-  ActivatedRouteSnapshot, 
-  RouterStateSnapshot, 
-  Router, 
-  RouterState, 
-  Route, 
-  UrlSegment 
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+  RouterState,
+  Route,
+  UrlSegment
 } from '@angular/router';
 import { Injector } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
@@ -100,6 +100,11 @@ describe('Angular auth guard', () => {
         segments[0].path = `${baseUrl}${query}${hash}`;
         await guard.canLoad(route, segments);
         expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('http://fake.url/path?query=foo&bar=baz#hash=foo');
+      });
+
+      it('calls "setOriginalUri" without route segments', async () => {
+        await guard.canLoad(route, []);
+        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('');
       });
 
       it('onAuthRequired can be set on route', async () => {
