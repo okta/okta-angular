@@ -20,8 +20,7 @@ import {
   NavigationStart, 
   Event,
   CanLoad,
-  Route,
-  UrlSegment
+  Route
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -51,7 +50,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     });
   }
 
-  async canLoad(route: Route, _segments: UrlSegment[]): Promise<boolean> {
+  async canLoad(route: Route): Promise<boolean> {
     this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
 
     const isAuthenticated = await this.oktaAuth.isAuthenticated();
