@@ -1,7 +1,8 @@
 import { AppPage } from './app.page';
+import { waitForLoad } from '../util/waitUtil';
 
 class LazyPage extends AppPage {
-  get appLazyLoad() { return $('app-lazy-load') }
+  get lazyArea() { return $('app-lazy-load') }
 
   async navigateTo(query) {
     query = query || '';
@@ -9,10 +10,7 @@ class LazyPage extends AppPage {
   }
 
   async waitForLoad() {
-    return browser.waitUntil(async () => 
-      this.appLazyLoad
-        .then(el => el.getText())
-        .then(txt => txt.indexOf('Lazy Load') != -1), 5000, 'wait for lazy load');
+    await waitForLoad(this.lazyArea);
   }
 
   async assertQueryParams(query) {
