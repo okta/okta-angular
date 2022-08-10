@@ -65,6 +65,7 @@ describe('Angular auth guard', () => {
       let oktaAuth: OktaAuth;
       let guard: OktaAuthGuard;
       let route: Route;
+      let router: Router;
       let segments: UrlSegment[];
       let injector: Injector;
       let onAuthRequired: AuthRequiredFunction;
@@ -94,12 +95,25 @@ describe('Angular auth guard', () => {
       });
 
       it('calls "setOriginalUri" with state url', async () => {
-        const baseUrl = 'http://fake.url/path';
+        const baseUrl = 'http://fake.url';
+        const path = '/path';
         const query = '?query=foo&bar=baz';
         const hash = '#hash=foo';
-        segments[0].path = `${baseUrl}${query}${hash}`;
+        const routerUrl = `${path}${query}${hash}`;
+        const fullUrl = `${baseUrl}${path}${query}${hash}`;
+        segments[0].path = fullUrl;
+        router = TestBed.get(Router);
+        jest.spyOn(router, 'getCurrentNavigation').mockReturnValue({
+          extractedUrl: router.parseUrl(routerUrl),
+          extras: {},
+          id: 1,
+          initialUrl: router.parseUrl('fakepath'),
+          previousNavigation: null,
+          trigger: 'imperative',
+        });
+
         await guard.canLoad(route, segments);
-        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('http://fake.url/path?query=foo&bar=baz#hash=foo');
+        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('/path?query=foo&bar=baz#hash=foo');
       });
 
       it('onAuthRequired can be set on route', async () => {

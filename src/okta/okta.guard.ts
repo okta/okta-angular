@@ -51,7 +51,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     });
   }
 
-  async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
+  async canLoad(route: Route, _segments: UrlSegment[]): Promise<boolean> {
     this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
 
     const isAuthenticated = await this.oktaAuth.isAuthenticated();
@@ -59,7 +59,9 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
       return true;
     }
 
-    const originalUri = segments[0].path;
+    const router = this.injector.get(Router);
+    const nav = router.getCurrentNavigation();
+    const originalUri = nav ? nav.extractedUrl.toString() : undefined;
     await this.handleLogin(originalUri);
 
     return false;
