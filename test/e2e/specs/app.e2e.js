@@ -51,6 +51,7 @@ describe('Angular + Okta App', () => {
         username: process.env.USERNAME,
         password: process.env.PASSWORD
       });
+      await AppPage.waitUntilLoggedIn();
       await LazyPage.assertQueryParams('?state=bar');
       await LazyPage.logout();
     });
@@ -63,7 +64,7 @@ describe('Angular + Okta App', () => {
         username: process.env.USERNAME,
         password: process.env.PASSWORD
       });
-      await waitForLoad(AppPage.logoutButton);
+      await waitForLoad(AppPage.logoutButton, 'logout button');
       await AppPage.logout();
     });
 

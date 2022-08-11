@@ -48,13 +48,13 @@ const getTask = (app) => () => {
 const codes = [];
 const tasks = [
   'angular-v7',
-  // 'angular-v8',
-  // 'angular-v9',
-  // 'angular-v10',
-  // 'angular-v11',
-  // 'angular-v12',
-  // 'angular-v13',
-  // 'angular-v14',
+  'angular-v8',
+  'angular-v9',
+  'angular-v10',
+  'angular-v11',
+  'angular-v12',
+  'angular-v13',
+  'angular-v14',
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);

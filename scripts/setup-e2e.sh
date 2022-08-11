@@ -45,6 +45,7 @@ if ! yarn install --frozen-lockfile; then
   echo "yarn install failed! Exiting..."
   exit ${FAILED_SETUP}
 fi
+
 for app in test/apps/*
 do
   pushd $app

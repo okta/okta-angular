@@ -10,7 +10,7 @@ class LazyPage extends AppPage {
   }
 
   async waitForLoad() {
-    await waitForLoad(this.lazyArea);
+    await waitForLoad(this.lazyArea, 'lazy load container');
   }
 
   async assertQueryParams(query) {

@@ -11,7 +11,7 @@ class PublicPage extends AppPage {
   }
 
   async waitForLoad() {
-    await waitForLoad(this.publicArea);
+    await waitForLoad(this.publicArea, 'public area');
   }
 }
 
