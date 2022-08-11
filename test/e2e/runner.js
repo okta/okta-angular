@@ -53,7 +53,7 @@ const tasks = [
   // 'angular-v10',
   // 'angular-v11',
   // 'angular-v12',
-  // 'angular-v13',
+  'angular-v13',
   'angular-v14',
 ]
   .reduce((tasks, app) => {
