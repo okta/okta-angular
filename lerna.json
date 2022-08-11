@@ -1,7 +1,6 @@
 {
   "packages": [
-    "test/apps/angular-v13",
-    "test/apps/angular-v14"
+    "test/apps/angular-v7"
   ],
   "version": "0.0.0"
 }
