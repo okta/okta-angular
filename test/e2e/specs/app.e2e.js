@@ -13,6 +13,7 @@
 import AppPage from '../pageobjects/app.page';
 import OktaSignInPage from '../pageobjects/okta-signin.page';
 import ProtectedPage from '../pageobjects/protected.page';
+import LazyPage from '../pageobjects/lazy.page';
 import SessionTokenSignInPage from '../pageobjects/sessiontoken-signin.page';
 import PublicPage from '../pageobjects/public.page';
 import HasGroupPage from '../pageobjects/has-group.page';
@@ -32,7 +33,7 @@ describe('Angular + Okta App', () => {
       await ProtectedPage.logout();
     });
 
-    it('should preserve query paramaters after redirecting to Okta', async () => {
+    it('should preserve query paramaters after redirecting to Okta with canActivate guard', async () => {
       await ProtectedPage.navigateTo('/foo?state=bar');
       await OktaSignInPage.waitForLoad();
       await OktaSignInPage.signIn({
@@ -43,6 +44,18 @@ describe('Angular + Okta App', () => {
       await ProtectedPage.logout();
     });
 
+    it('should preserve query paramaters after redirecting to Okta with canLoad guard', async () => {
+      await LazyPage.navigateTo('?state=bar');
+      await OktaSignInPage.waitForLoad();
+      await OktaSignInPage.signIn({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
+      });
+      await AppPage.waitUntilLoggedIn();
+      await LazyPage.assertQueryParams('?state=bar');
+      await LazyPage.logout();
+    });
+
     it('should redirect to Okta for login', async () => {
       await AppPage.navigateTo();
       await AppPage.login();
@@ -51,7 +64,7 @@ describe('Angular + Okta App', () => {
         username: process.env.USERNAME,
         password: process.env.PASSWORD
       });
-      await waitForLoad(AppPage.logoutButton);
+      await waitForLoad(AppPage.logoutButton, 'logout button');
       await AppPage.logout();
     });
 

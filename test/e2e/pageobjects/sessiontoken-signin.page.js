@@ -10,7 +10,7 @@ class SessionTokenSignInPage {
   }
 
   async waitForLoad() {
-    await waitForLoad(this.submit);
+    await waitForLoad(this.submit, 'submit button');
   }
 
   async signIn({ username, password }) {

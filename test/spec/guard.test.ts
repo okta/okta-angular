@@ -12,8 +12,7 @@ import {
   RouterStateSnapshot, 
   Router, 
   RouterState, 
-  Route, 
-  UrlSegment 
+  Route
 } from '@angular/router';
 import { Injector } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
@@ -55,8 +54,7 @@ describe('Angular auth guard', () => {
         const injector: Injector = TestBed.get(Injector);
         const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
         const route: unknown = {};
-        const segments: unknown = [{} as unknown];
-        const res = await guard.canLoad(route as Route, segments as UrlSegment[]);
+        const res = await guard.canLoad(route as Route);
         expect(res).toBe(true);
       });
     });
@@ -65,7 +63,7 @@ describe('Angular auth guard', () => {
       let oktaAuth: OktaAuth;
       let guard: OktaAuthGuard;
       let route: Route;
-      let segments: UrlSegment[];
+      let router: Router;
       let injector: Injector;
       let onAuthRequired: AuthRequiredFunction;
       beforeEach(() => {
@@ -80,26 +78,35 @@ describe('Angular auth guard', () => {
         injector = TestBed.get(Injector);
         guard = new OktaAuthGuard(config, oktaAuth, injector);
         route = {} as unknown as Route;
-        segments = [{ path: 'fakepath' } as unknown as UrlSegment];
       });
 
       it('returns false', async () => {
-        const res = await guard.canLoad(route, segments);
+        const res = await guard.canLoad(route);
         expect(res).toBe(false);
       });
 
       it('by default, calls "signInWithRedirect()"', async () => {
-        await guard.canLoad(route, segments);
+        await guard.canLoad(route);
         expect(oktaAuth.signInWithRedirect).toHaveBeenCalled();
       });
 
       it('calls "setOriginalUri" with state url', async () => {
-        const baseUrl = 'http://fake.url/path';
+        const path = '/path';
         const query = '?query=foo&bar=baz';
         const hash = '#hash=foo';
-        segments[0].path = `${baseUrl}${query}${hash}`;
-        await guard.canLoad(route, segments);
-        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('http://fake.url/path?query=foo&bar=baz#hash=foo');
+        const routerUrl = `${path}${query}${hash}`;
+        router = TestBed.get(Router);
+        jest.spyOn(router, 'getCurrentNavigation').mockReturnValue({
+          extractedUrl: router.parseUrl(routerUrl),
+          extras: {},
+          id: 1,
+          initialUrl: router.parseUrl('fakepath'),
+          previousNavigation: null,
+          trigger: 'imperative',
+        });
+
+        await guard.canLoad(route);
+        expect(oktaAuth.setOriginalUri).toHaveBeenCalledWith('/path?query=foo&bar=baz#hash=foo');
       });
 
       it('onAuthRequired can be set on route', async () => {
@@ -107,13 +114,13 @@ describe('Angular auth guard', () => {
         route.data = {
           onAuthRequired: mockFn
         };
-        await guard.canLoad(route, segments);
+        await guard.canLoad(route);
         expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector);
       });
 
       it('onAuthRequired can be set on config', async () => {
         guard = new OktaAuthGuard({ oktaAuth, onAuthRequired }, oktaAuth, injector);
-        await guard.canLoad(route, segments);
+        await guard.canLoad(route);
         expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
       });
     });

@@ -83,7 +83,10 @@ const appRoutes: Routes = [
   },
   {
     path: 'lazy',
-    loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule),
+    // Passing function produces 'Error: Runtime compiler is not loaded' for prod build. Passing string fixes the issue.
+    // See https://github.com/angular/angular-cli/issues/10582
+    // loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule),
+    loadChildren: './lazy-load/lazy-load.module#LazyLoadModule',
     canLoad: [ OktaAuthGuard ]
   },
   {
