@@ -37,6 +37,18 @@ This library currently supports:
 > This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14
 > :warning: Angular versions older than 7 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
 
+## Release Status
+
+:heavy_check_mark: The current stable major version series is: `5.x`
+
+| Version   | Status                           |
+| -------   | -------------------------------- |
+| `5.x`     | :heavy_check_mark: Stable        |
+| `4.x`     | :heavy_check_mark: Stable        |
+| `3.x`     | :x: Retired                      |
+| `2.x`     | :x: Retired                      |
+| `1.x`     | :x: Retired                      |
+
 ## Getting Started
 
 - If you do not already have a **Developer Edition Account**, you can create one at [https://developer.okta.com/signup/](https://developer.okta.com/signup/).
