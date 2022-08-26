@@ -1,9 +1,39 @@
 #!/bin/bash -xe
 
-# Install yarn
-setup_service yarn 1.21.1
+# Can be used to run a canary build against a beta AuthJS version that has been published to artifactory.
+# This is available from the "downstream artifact" menu on any okta-auth-js build in Bacon.
+# DO NOT MERGE ANY CHANGES TO THIS LINE!!
+export AUTHJS_VERSION=""
 
-yarn global add yalc
+# Install a specific version of auth-js, used by downstream artifact builds
+install_auth_js () {
+  if [ ! -z "$AUTHJS_VERSION" ]; then
+    echo "Installing AUTHJS_VERSION: ${AUTHJS_VERSION}"
+    npm config set strict-ssl false
+
+    AUTHJS_URI=https://artifacts.aue1d.saasure.com/artifactory/npm-topic/@okta/okta-auth-js/-/@okta/okta-auth-js-${AUTHJS_VERSION}.tgz
+    if ! yarn add -DW --ignore-scripts ${AUTHJS_URI}; then
+      echo "AUTHJS_VERSION could not be installed: ${AUTHJS_VERSION}"
+      exit ${FAILED_SETUP}
+    fi
+
+    npm config set strict-ssl true
+    echo "AUTHJS_VERSION installed: ${AUTHJS_VERSION}"
+
+    # verify single version of auth-js is installed
+    # NOTE: okta-signin-widget will install it's own version of auth-js, filtered out
+    AUTHJS_INSTALLS=$(find . -type d -path "*/node_modules/@okta/okta-auth-js" -not -path "*/okta-signin-widget/*" | wc -l)
+    if [ $AUTHJS_INSTALLS -gt 1 ]; then
+      echo "ADDITIONAL AUTH JS INSTALL DETECTED"
+      yarn why @okta/okta-auth-js
+      exit ${FAILED_SETUP}
+    fi
+  fi
+}
+
+# Install yarn
+# Use the cacert bundled with centos as okta root CA is self-signed and cause issues downloading from yarn
+setup_service yarn 1.21.1 /etc/pki/tls/certs/ca-bundle.crt
 
 # Add yarn to the $PATH so npm cli commands do not fail
 export PATH="${PATH}:$(yarn global bin)"
@@ -11,6 +41,8 @@ export PATH="${PATH}:$(yarn global bin)"
 # Install required node version
 export NVM_DIR="/root/.nvm"
 setup_service node v14.19.3
+
+yarn global add yalc
 
 cd ${OKTA_HOME}/${REPO}
 
@@ -41,15 +73,27 @@ OKTA_REGISTRY=${ARTIFACTORY_URL}/api/npm/npm-okta-master
 echo "Replacing $YARN_REGISTRY with $OKTA_REGISTRY within yarn.lock files..."
 find . -type d -name node_modules -prune -o -name 'yarn.lock' -print -exec sed -i "s#${YARN_REGISTRY}#${OKTA_REGISTRY}#" {} +
 
-if ! yarn install --frozen-lockfile; then
+# Install dependencies but do not build
+if ! yarn install --frozen-lockfile --ignore-scripts; then
   echo "yarn install failed! Exiting..."
   exit ${FAILED_SETUP}
 fi
 
-for app in test/apps/*
+# Install a specific version of auth-js
+install_auth_js
+
+# Build
+if ! yarn build; then
+  echo "yarn build failed! Exiting..."
+  exit ${FAILED_SETUP}
+fi
+
+# Install dependencies for test apps
+for app in test/apps/angular-*
 do
   pushd $app
     yarn install
+    install_auth_js
   popd
 done
 

@@ -137,5 +137,10 @@
       }
     }
   },
-  "defaultProject": "angular-v7"
+  "defaultProject": "angular-v7",
+  "cli": {
+    "warnings": {
+      "typescriptMismatch": false
+    }
+  }
 }
