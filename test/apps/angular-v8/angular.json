@@ -121,5 +121,10 @@
         }
       }
     }},
-  "defaultProject": "angular-v8"
+  "defaultProject": "angular-v8",
+  "cli": {
+    "warnings": {
+      "typescriptMismatch": false
+    }
+  }
 }

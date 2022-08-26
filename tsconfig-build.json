@@ -42,6 +42,7 @@
         "annotateForClosureCompiler": false,
         "strictMetadataEmit": true,
         "flatModuleOutFile": "okta-angular.js",
-        "flatModuleId": "@okta/okta-angular"
+        "flatModuleId": "@okta/okta-angular",
+        "disableTypeScriptVersionCheck": true
     }
 }
