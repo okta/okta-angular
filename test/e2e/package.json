@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "devDependencies": {
-        "@babel/preset-env": "^7.16.4",
+        "@babel/core": "^7.19.0",
+        "@babel/preset-env": "^7.19.0",
         "@babel/register": "^7.16.0",
         "@wdio/cli": "^7.20.1",
         "@wdio/jasmine-framework": "^7.20.0",
