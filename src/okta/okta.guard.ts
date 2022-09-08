@@ -96,9 +96,11 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     return this.canActivate(route, state);
   }
 
-  private async handleLogin(originalUri: string): Promise<void> {
+  private async handleLogin(originalUri?: string): Promise<void> {
     // Store the current path
-    this.oktaAuth.setOriginalUri(originalUri);
+    if (originalUri) {
+      this.oktaAuth.setOriginalUri(originalUri);
+    }
 
     if (this.onAuthRequired) {
       this.onAuthRequired(this.oktaAuth, this.injector);
