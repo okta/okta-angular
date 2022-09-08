@@ -60,7 +60,7 @@
     "@angular/platform-server": "12.2.0",
     "@angular/router": "12.2.0",
     "@compodoc/compodoc": "1.1.9",
-    "@okta/okta-auth-js": "^6.2.0",
+    "@okta/okta-auth-js": "^6.8.0",
     "@rollup/plugin-commonjs": "11.0.1",
     "@rollup/plugin-node-resolve": "7.0.0",
     "@types/jest": "^26.0.14",
@@ -116,7 +116,7 @@
     "@okta/okta-auth-js": "^5.4.3 || ^6.0.0",
     "@angular/core": ">= 12.0.0",
     "@angular/router": ">= 12.0.0",
-    "@angular/common": ">= 12.0.0"
+    "@angular/common": ">= 12.0.0",
     "rxjs": "^6.0.0 || ^7.0.0"
   },
   "jest": {
