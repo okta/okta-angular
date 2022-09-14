@@ -1,10 +1,13 @@
 "use strict";
 
-const shell = require('shelljs');
-const chalk = require('chalk');
-const fs = require('fs');
-const path = require('path');
+import shell from 'shelljs';
+import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const PACKAGE = `okta-angular`;
 const NPM_DIR = `dist`;
 const ESM2015_DIR = `${NPM_DIR}/esm2015`;

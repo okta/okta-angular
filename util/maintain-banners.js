@@ -1,6 +1,10 @@
-const fs = require('fs');
-const globby = require('globby');
-const path = require('path');
+import fs from 'fs';
+import globby from 'globby';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const bannerSourcePath = path.join(__dirname, 'license-template.txt');
 const files = globby.sync(path.join(__dirname, '..','packages/*/{index.js,index.ts,lib.js,src/**/*.{js,ts},test/integration-test/*.{js,ts},test/e2e/**/*.{js,ts}}'));
