@@ -11,6 +11,7 @@
   "fesm5": "./dist/fesm5/okta-angular.js",
   "fesm2015": "./dist/fesm2015/okta-angular.js",
   "types": "./dist/okta-angular.d.ts",
+  "type": "module",
   "scripts": {
     "banners": "node util/maintain-banners.js",
     "build:package-info": "node ./util/write-package-info.js . src/okta/packageInfo.ts",
@@ -33,6 +34,10 @@
     "test:apps:prepare": "sh ./scripts/prepare-test-apps.sh",
     "test:apps:clear": "sh ./scripts/clear-test-apps.sh",
     "lerna": "lerna"
+  },
+  "engines": {
+    "node": ">=14.0",
+    "yarn": "^1.7.0"
   },
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",

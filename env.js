@@ -1,6 +1,12 @@
-const path = require('path');
-const dotenv = require('dotenv');
-const fs = require('fs');
+import path from 'path';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Read information from package.json and expose as environment variables
 const PACKAGE = require('./package.json');

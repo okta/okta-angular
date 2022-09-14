@@ -19,6 +19,10 @@ module.exports = {
       tryExtensions: ['.js', '.ts']
     }
   },
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 2020
+  },
   overrides: [
     {
       // ES6/browser processed by Babel
@@ -45,7 +49,8 @@ module.exports = {
       // NodeJS build tools
       files: ['build.js', 'env.js', 'util/**/*'],
       rules: {
-        'node/no-unpublished-require': ['error', {
+        'node/no-unsupported-features/es-syntax': 0,
+        'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies
         }]    
       }
@@ -53,9 +58,6 @@ module.exports = {
     {
       // Rollup configs
       files: ['rollup*.js'],
-      parserOptions: {
-        sourceType: 'module'
-      },
       rules: {
         'node/no-unsupported-features/es-syntax': 0,
         'node/no-unpublished-import': ['error', {
