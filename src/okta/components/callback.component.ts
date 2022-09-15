@@ -18,7 +18,7 @@ import { OKTA_CONFIG, OktaConfig, OKTA_AUTH } from '../models/okta.config';
   template: `<div>{{error}}</div>`
 })
 export class OktaCallbackComponent implements OnInit {
-  error: string;
+  error?: string;
 
   constructor(
     @Inject(OKTA_CONFIG) private config: OktaConfig,
