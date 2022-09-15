@@ -109,7 +109,6 @@
     "typescript": "~4.7.3",
     "uglify-js": "3.13.5",
     "webpack": "^5.62.1",
-    "webpack-filter-warnings-plugin": "1.2.1",
     "yalc": "^1.0.0-pre.53",
     "zone.js": "~0.11.4"
   },

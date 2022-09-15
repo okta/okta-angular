@@ -33,7 +33,7 @@ export class OktaCallbackComponent implements OnInit {
     } catch (e) {
       // Callback from social IDP. Show custom login page to continue.
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore Supports auth-js v5 & v6
+      // @ts-ignore Supports auth-js v5 & v6-7
       const isInteractionRequiredError = this.oktaAuth.isInteractionRequiredError || this.oktaAuth.idx.isInteractionRequiredError;
       if (isInteractionRequiredError(e) && this.injector) {
         const { onAuthResume, onAuthRequired } = this.config;

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-// eslint-disable-next-line node/no-unpublished-require
+// eslint-disable-next-line node/no-unpublished-import
 import '../../../env.js'; // set environment variables
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
