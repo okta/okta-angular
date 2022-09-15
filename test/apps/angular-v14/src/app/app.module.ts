@@ -17,7 +17,7 @@ import { Routes, RouterModule, Router } from '@angular/router';
 /**
  * Okta Library
  */
-import { OktaAuth } from '@okta/okta-auth-js/authn';
+import { OktaAuth } from '@okta/okta-auth-js';
 import {
   OktaAuthGuard,
   OktaAuthModule,
