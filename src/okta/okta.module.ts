@@ -18,7 +18,7 @@ import { OktaAuthGuard } from './okta.guard';
 import { OktaAuthStateService } from './services/auth-state.service';
 import { OktaHasAnyGroupDirective } from './has-any-group.directive';
 import { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
-import { AuthSdkError, OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import { AuthSdkError, OktaAuth, toRelativeUrl } from '@okta/okta-auth-js/core';
 import { compare } from 'compare-versions';
 import packageInfo from './packageInfo';
 
