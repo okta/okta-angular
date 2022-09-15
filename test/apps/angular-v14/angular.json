@@ -76,8 +76,7 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "angular-v14:build"
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
