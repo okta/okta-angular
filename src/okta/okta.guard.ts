@@ -24,7 +24,7 @@ import {
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-import { OktaAuth, AuthState } from '@okta/okta-auth-js/core';
+import { OktaAuth, AuthState } from '@okta/okta-auth-js';
 
 import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
 
