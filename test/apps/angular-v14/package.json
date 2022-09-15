@@ -1,6 +1,7 @@
 {
   "name": "angular-v14",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "prestart": "node ./prebuild.js",
@@ -11,6 +12,10 @@
     "build:prod": "yarn prebuild && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
+  },
+  "engines": {
+    "node": ">=14.0",
+    "yarn": "^1.7.0"
   },
   "private": true,
   "dependencies": {
