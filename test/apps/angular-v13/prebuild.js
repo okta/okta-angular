@@ -1,7 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-// eslint-disable-next-line node/no-unpublished-require
-require('../../../env'); // set environment variables
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
+// eslint-disable-next-line node/no-unpublished-import
+import '../../../env.js'; // set environment variables
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const getContent = (env, isProd) => {
   return `
