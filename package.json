@@ -67,7 +67,6 @@
     "@angular/platform-server": "12.2.0",
     "@angular/router": "12.2.0",
     "@compodoc/compodoc": "1.1.9",
-    "@rollup/plugin-node-resolve": "7.0.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
     "@types/node": "10.14.0",
@@ -134,9 +133,6 @@
       "default",
       "jest-junit"
     ],
-    "moduleNameMapper": {
-      "@okta/okta-auth-js": "<rootDir>/node_modules/@okta/okta-auth-js/umd/default.js"
-    },
     "restoreMocks": true,
     "transform": {
       "^.+\\.(ts|html)$": "ts-jest"

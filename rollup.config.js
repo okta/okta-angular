@@ -1,4 +1,3 @@
-import resolve from '@rollup/plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 
 /**
@@ -41,9 +40,6 @@ const globals = {
 export default {
     external: Object.keys(globals),
     plugins: [
-        resolve({
-            browser: true
-        }),
         sourcemaps()
     ],
     onwarn: () => { return; },
