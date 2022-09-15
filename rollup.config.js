@@ -1,5 +1,4 @@
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 
 /**
@@ -44,17 +43,6 @@ export default {
     plugins: [
         resolve({
             browser: true
-        }),
-        commonjs({
-            namedExports: {
-                // TODO: why is this necessary?
-                'node_modules/@okta/okta-auth-js/dist/okta-auth-js.umd.js': [
-                  'toRelativeUrl',
-                  'isAbsoluteUrl',
-                  'toAbsoluteUrl',
-                  'AuthSdkError'
-                ]
-            }
         }),
         sourcemaps()
     ],

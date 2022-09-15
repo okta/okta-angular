@@ -14,8 +14,8 @@
         "declaration": true,
         "strict": true,
         "strictPropertyInitialization": false,
-        "moduleResolution": "node",
-        "module": "es2015",
+        "module": "esnext",
+        "moduleResolution": "NodeNext",
         "target": "es2015",
         "lib": [
             "es2015",

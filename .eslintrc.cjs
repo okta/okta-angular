@@ -42,7 +42,19 @@ module.exports = {
         'node/no-unsupported-features/node-builtins': 0,
         'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies
-        }]
+        }],
+        // To allow @okta/okta-auth-js/*
+        'node/no-missing-import': ['error', {
+          'allowModules': [
+            '@okta/okta-auth-js'
+          ]
+        }],
+      }
+    },
+    {
+      files: ['test/apps/**/*'],
+      rules: {
+        'node/no-unsupported-features/es-syntax': 0
       }
     },
     {
@@ -52,7 +64,7 @@ module.exports = {
         'node/no-unsupported-features/es-syntax': 0,
         'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies
-        }]    
+        }]
       }
     },
     {
