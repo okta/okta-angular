@@ -3,6 +3,7 @@
 module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended'
   ],
   plugins: [
     '@typescript-eslint',
@@ -18,6 +19,10 @@ module.exports = {
     // https://github.com/import-js/eslint-plugin-import#typescript
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts']
+    },
+    'import/resolver': {
+      'typescript': true,
+      'node': true
     },
     // https://github.com/import-js/eslint-plugin-import#importcore-modules
     'import/core-modules': [
