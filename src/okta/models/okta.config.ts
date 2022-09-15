@@ -11,7 +11,7 @@
  */
 
 import { InjectionToken, Injector } from '@angular/core';
-import { OktaAuth } from '@okta/okta-auth-js/core';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 export type AuthRequiredFunction = (oktaAuth: OktaAuth, injector: Injector) => void;
 

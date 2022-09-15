@@ -11,7 +11,7 @@
  */
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
-import { OktaAuth } from '@okta/okta-auth-js/core';
+import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_CONFIG, OktaConfig, OKTA_AUTH } from '../models/okta.config';
 
 @Component({

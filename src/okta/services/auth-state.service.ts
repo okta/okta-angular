@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js/core';
+import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { OKTA_AUTH } from '../models/okta.config';
