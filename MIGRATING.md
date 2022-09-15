@@ -4,6 +4,13 @@
 
 # Migrating
 
+## From version 5.x to 6.x
+
+`@okta/okta-angular` 6.0 uses [Ivy engine](https://docs.angular.lat/guide/ivy) and drops support of Angular versions prior to 12.  
+Please upgrade your Angular project to Angular 12+ (having enabled Ivy by default and no support for View Engine compiler) in order to use newer version of `@okta/okta-angular`.  
+No specific code changes are required to upgrade to `@okta/okta-angular` 6.0.  
+If you project can't be upgraded to Angular 12+, please use `@okta/okta-angular` 5.x
+
 ## From version 4.x to 5.x
 
 ### Adding `OKTA_AUTH` injection token explicitly for `oktaAuth` usage
