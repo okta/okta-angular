@@ -19,7 +19,7 @@
         "babel-eslint": "^10.1.0"
     },
     "scripts": {
-        "wdio": "wdio run wdio.conf.js",
-        "start": "node ./runner.js"
+        "wdio": "wdio run wdio.conf.cjs",
+        "start": "node ./runner.cjs"
     }
 }

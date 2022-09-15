@@ -16,7 +16,7 @@ const getTask = (app) => () => {
         'http-get://localhost:8080'
       ]
     }).then(() => {
-      const wdioConfig = path.resolve(__dirname, 'wdio.conf.js');
+      const wdioConfig = path.resolve(__dirname, 'wdio.conf.cjs');
       const runner = spawn(
         'npx', [
           'wdio',

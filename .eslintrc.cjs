@@ -59,7 +59,7 @@ module.exports = {
     },
     {
       // NodeJS build tools
-      files: ['build.js', 'env.js', 'util/**/*'],
+      files: ['build.js', 'env.cjs', 'util/**/*'],
       rules: {
         'node/no-unsupported-features/es-syntax': 0,
         'node/no-unpublished-import': ['error', {
