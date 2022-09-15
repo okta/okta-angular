@@ -6,7 +6,7 @@
     "ng": "ng",
     "prestart": "node ./prebuild.js",
     "start": "ng serve --port 8080",
-    "start:prod": "lite-server",
+    "start:prod": "lite-server -c bs-config.cjs",
     "prebuild": "node ./prebuild.js",
     "build": "ng build",
     "build:prod": "yarn prebuild && ng build",
