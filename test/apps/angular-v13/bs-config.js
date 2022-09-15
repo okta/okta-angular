@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   port: 8080,
   logLevel: 'silent',
   files: ['./dist/**/*.{html,htm,css,js}'],
