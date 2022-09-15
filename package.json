@@ -55,8 +55,6 @@
     "tslib": "^1.9.0"
   },
   "devDependencies": {
-    "webpack-cli": "^4.10.0",
-    "@okta/okta-auth-js": "file:../okta-auth-js/build",
     "@angular/animations": "12.2.0",
     "@angular/common": "12.2.0",
     "@angular/compiler": "12.2.0",
@@ -67,6 +65,7 @@
     "@angular/platform-server": "12.2.0",
     "@angular/router": "12.2.0",
     "@compodoc/compodoc": "1.1.9",
+    "@okta/okta-auth-js": "^6.8.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
     "@types/node": "10.14.0",
