@@ -229,8 +229,9 @@ The example below shows connecting two buttons to handle **login** and **logout*
 ```typescript
 // sample.component.ts
 
-import { Component } from '@angular/core';
-import { OktaAuthStateService } from '@okta/okta-angular';
+import { Component, Inject } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-component',
@@ -241,7 +242,10 @@ import { OktaAuthStateService } from '@okta/okta-angular';
   `,
 })
 export class MyComponent {
-  constructor(private authStateService: OktaAuthStateService) {}
+  constructor(
+    @Inject(OKTA_AUTH) public oktaAuth: OktaAuth, 
+    private authStateService: OktaAuthStateService
+  ) {}
 
   async login() {
     await this.oktaAuth.signInWithRedirect();
