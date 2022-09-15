@@ -36,7 +36,7 @@
     "lerna": "lerna"
   },
   "engines": {
-    "node": ">=14.0",
+    "node": ">=14.14",
     "yarn": "^1.7.0"
   },
   "repository": "https://github.com/okta/okta-angular",
