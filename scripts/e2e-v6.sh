@@ -23,6 +23,15 @@ if ! yarn add -DW --ignore-scripts @okta/okta-auth-js@^6; then
   exit ${FAILED_SETUP}
 fi
 
+# Install dependencies for test apps
+for app in test/apps/angular-*
+do
+  pushd $app
+    if ! yarn add --ignore-scripts @okta/okta-auth-js@^6; then
+      echo "auth-js v6.x could be installed in test app ${app}"
+  popd
+done
+
 if ! yarn test:e2e; then
   echo "unit failed! Exiting..."
   exit ${TEST_FAILURE}
