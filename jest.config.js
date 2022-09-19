@@ -32,4 +32,4 @@ module.exports = {
   setupFilesAfterEnv: [
     "<rootDir>/test/support/setupJest.ts"
   ]
-}
+};
