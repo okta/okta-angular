@@ -88,18 +88,18 @@ delete packageJSON.workspaces; // remove yarn workspace section
     packageJSON[key] = packageJSON[key].replace(`${NPM_DIR}/`, '');
   }
 });
-const patchPaths = (exports) => {
+const removeDistFromPaths = (exports) => {
   if (exports) {
     for (const [key, value] of Object.entries(exports)) {
       if (typeof value === 'object') {
-        patchPaths(value);
+        removeDistFromPaths(value);
       } else {
         exports[key] = value.replace(`${NPM_DIR}/`, '');
       }
     }
   }
 };
-patchPaths(packageJSON.exports);
+removeDistFromPaths(packageJSON.exports);
 
 fs.writeFileSync(`./${NPM_DIR}/package.json`, JSON.stringify(packageJSON, null, 4));
 
