@@ -1,3 +1,9 @@
+# 5.3.0
+
+### Fixes
+
+- [#99](https://github.com/okta/okta-angular/pull/99) query parameters are now passed through the `canLoad` guard
+
 # 5.2.0
 
 ### Others
