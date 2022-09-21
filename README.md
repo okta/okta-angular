@@ -119,6 +119,32 @@ An Angular InjectionToken used to configure the OktaAuthModule. This value must 
 - `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication. Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
 - `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
 
+### `OKTA_AUTH`
+
+An Angular InjectionToken added in `okta-angular 5.0` explicitly for [OktaAuth][@okta/okta-auth-js] instance usage.
+
+```typescript
+import { Component, Inject, OnInit } from '@angular/core';
+import { OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+@Component({
+  selector: 'app-component',
+  template: `
+    <pre id="userinfo-container">{{ user }}</pre>
+  `,
+})
+export class MyProtectedComponent implements OnInit {
+  user: string = '';
+  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
+  
+  async ngOnInit() {
+    const user = await this.oktaAuth.getUser();
+    this.user = JSON.stringify(user, null, 4);
+  }
+}
+```
+
 ### `OktaAuthModule`
 
 The top-level Angular module which provides these components and services:
@@ -236,8 +262,8 @@ import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 @Component({
   selector: 'app-component',
   template: `
-    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated" (click)="login()">Login</button>
-    <button *ngIf="(authStateService.authState$ | async).isAuthenticated" (click)="logout()">Logout</button>
+    <button *ngIf="!(authStateService.authState$ | async)?.isAuthenticated" (click)="login()">Login</button>
+    <button *ngIf="(authStateService.authState$ | async)?.isAuthenticated" (click)="logout()">Logout</button>
     <router-outlet></router-outlet>
   `,
 })
