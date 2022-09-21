@@ -29,6 +29,8 @@ do
   pushd $app
     if ! yarn add --ignore-scripts @okta/okta-auth-js@^6; then
       echo "auth-js v6.x could be installed in test app ${app}"
+      exit ${FAILED_SETUP}
+    fi
   popd
 done
 
