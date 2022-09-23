@@ -1,3 +1,9 @@
+# 6.0.0
+
+### Breaking Changes
+
+- [#90](https://github.com/okta/okta-angular/pull/90) Enables Ivy engine and partial compiling. Updates library to ESM. Minimum supported version of Angular is 12.
+
 # 5.3.0
 
 ### Fixes

@@ -1,3 +1,4 @@
+/* eslint-disable */
 var webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 var chromeCapabilities = webdriver.Capabilities.chrome();

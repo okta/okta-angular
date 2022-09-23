@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
+// eslint-disable-next-line node/no-missing-import
 import { environment } from '../environments/environment';
 
 import { OktaAuth } from '@okta/okta-auth-js';
@@ -20,7 +21,7 @@ const config = {
   redirectUri: 'http://localhost:8080/login/callback',
   clientId: environment.clientId,
   pkce: true
-}
+};
 const oktaAuth = new OktaAuth(config);
 
 export function onAuthRequired(oktaAuth, injector) {
@@ -47,7 +48,7 @@ const appRoutes: Routes = [
       onAuthRequired
     }
   }
-]
+];
 @NgModule({
   declarations: [
     AppComponent,

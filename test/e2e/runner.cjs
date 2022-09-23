@@ -16,7 +16,7 @@ const getTask = (app) => () => {
         'http-get://localhost:8080'
       ]
     }).then(() => {
-      const wdioConfig = path.resolve(__dirname, 'wdio.conf.js');
+      const wdioConfig = path.resolve(__dirname, 'wdio.conf.cjs');
       const runner = spawn(
         'npx', [
           'wdio',
@@ -47,11 +47,6 @@ const getTask = (app) => () => {
 // track process returnCode for each task
 const codes = [];
 const tasks = [
-  'angular-v7',
-  'angular-v8',
-  'angular-v9',
-  'angular-v10',
-  'angular-v11',
   'angular-v12',
   'angular-v13',
   'angular-v14',

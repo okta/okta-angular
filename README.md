@@ -35,14 +35,16 @@ This library currently supports:
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
 > This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14
+> :warning: `okta-angular` 6.0+ supports Angular 12+. For Angular 7 to 11 please use `okta-angular` 5.x
 > :warning: Angular versions older than 7 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
 
 ## Release Status
 
-:heavy_check_mark: The current stable major version series is: `5.x`
+:heavy_check_mark: The current stable major version series is: `6.x`
 
 | Version   | Status                           |
 | -------   | -------------------------------- |
+| `6.x`     | :heavy_check_mark: Stable        |
 | `5.x`     | :heavy_check_mark: Stable        |
 | `4.x`     | :heavy_check_mark: Stable        |
 | `3.x`     | :x: Retired                      |
@@ -116,6 +118,32 @@ An Angular InjectionToken used to configure the OktaAuthModule. This value must 
 - `oktaAuth` *(required)*: - [OktaAuth][@okta/okta-auth-js] instance. The instance that can be shared cross different components of the application. One popular use case is to share one single instance cross the application and [Okta Sign-In Widget](https://github.com/okta/okta-signin-widget).
 - `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication. Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
 - `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
+
+### `OKTA_AUTH`
+
+An Angular InjectionToken added in `okta-angular 5.0` explicitly for [OktaAuth][@okta/okta-auth-js] instance usage.
+
+```typescript
+import { Component, Inject, OnInit } from '@angular/core';
+import { OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+@Component({
+  selector: 'app-component',
+  template: `
+    <pre id="userinfo-container">{{ user }}</pre>
+  `,
+})
+export class MyProtectedComponent implements OnInit {
+  user: string = '';
+  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
+  
+  async ngOnInit() {
+    const user = await this.oktaAuth.getUser();
+    this.user = JSON.stringify(user, null, 4);
+  }
+}
+```
 
 ### `OktaAuthModule`
 
@@ -227,19 +255,23 @@ The example below shows connecting two buttons to handle **login** and **logout*
 ```typescript
 // sample.component.ts
 
-import { Component } from '@angular/core';
-import { OktaAuthStateService } from '@okta/okta-angular';
+import { Component, Inject } from '@angular/core';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-component',
   template: `
-    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated" (click)="login()">Login</button>
-    <button *ngIf="(authStateService.authState$ | async).isAuthenticated" (click)="logout()">Logout</button>
+    <button *ngIf="!(authStateService.authState$ | async)?.isAuthenticated" (click)="login()">Login</button>
+    <button *ngIf="(authStateService.authState$ | async)?.isAuthenticated" (click)="logout()">Logout</button>
     <router-outlet></router-outlet>
   `,
 })
 export class MyComponent {
-  constructor(private authStateService: OktaAuthStateService) {}
+  constructor(
+    @Inject(OKTA_AUTH) public oktaAuth: OktaAuth, 
+    private authStateService: OktaAuthStateService
+  ) {}
 
   async login() {
     await this.oktaAuth.signInWithRedirect();
