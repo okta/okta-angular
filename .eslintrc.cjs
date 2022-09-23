@@ -75,6 +75,11 @@ module.exports = {
           'allowModules': [
             '@okta/okta-angular'
           ]
+        }],
+        'import/no-unresolved': ['error', {
+          ignore: [
+            'environments/environment'
+          ]
         }]
       }
     },
