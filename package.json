@@ -78,7 +78,7 @@
     "@angular/platform-server": "12.2.0",
     "@angular/router": "12.2.0",
     "@compodoc/compodoc": "1.1.19",
-    "@okta/okta-auth-js": "^6.8.0",
+    "@okta/okta-auth-js": "^7.0.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
     "@types/node": "10.14.0",
