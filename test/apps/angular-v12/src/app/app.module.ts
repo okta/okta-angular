@@ -34,7 +34,8 @@ import { SessionTokenLoginComponent } from './sessionToken-login.component';
 import { PublicComponent } from './public.component';
 import { HasGroupComponent } from './has-group.component';
 
-import { environment } from 'src/environments/environment';
+// eslint-disable-next-line node/no-unpublished-import
+import { environment } from '../environments/environment';
 
 export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injector) {
   const router = injector.get(Router);

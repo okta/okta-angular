@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import * as OktaSignIn from '@okta/okta-signin-widget';
+// eslint-disable-next-line node/no-missing-import
 import { environment } from '../environments/environment';
 
 @Component({

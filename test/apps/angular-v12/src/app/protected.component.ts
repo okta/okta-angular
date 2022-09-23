@@ -24,7 +24,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 })
 export class ProtectedComponent implements OnInit {
   message;
-  user: string = '';
+  user = '';
 
   constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
     this.message = 'Protected!';

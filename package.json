@@ -29,7 +29,7 @@
     "banners": "node util/maintain-banners.js",
     "build:package-info": "node ./util/write-package-info.js . src/okta/packageInfo.ts",
     "clean": "rimraf dist/ && rimraf test-reports/",
-    "lint": "eslint .",
+    "lint": "eslint --ext .js,.ts  .",
     "lint:report": "eslint -f checkstyle -o ./test-reports/lint/eslint-checkstyle-result.xml .",
     "prebuild": "yarn build:package-info",
     "build": "node build.js",
