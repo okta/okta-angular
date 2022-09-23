@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular",
   "private": true,
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Angular support for Okta",
   "module": "./dist/fesm2015/okta-angular.js",
   "fesm2015": "./dist/fesm2015/okta-angular.js",
