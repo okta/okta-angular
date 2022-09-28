@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   coverageDirectory: "<rootDir>/test-reports/coverage",
   collectCoverage: true,
   collectCoverageFrom: [
