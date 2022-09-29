@@ -130,42 +130,6 @@
     "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0",
     "rxjs": "^6.0.0 || ^7.0.0"
   },
-  "jest": {
-    "coverageDirectory": "<rootDir>/test-reports/coverage",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "./src/**",
-      "!./test/**"
-    ],
-    "reporters": [
-      "default",
-      "jest-junit"
-    ],
-    "restoreMocks": true,
-    "transform": {
-      "^.+\\.(ts|html)$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules",
-      "packages/(?!okta-angular)"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "<rootDir>/test/spec/tsconfig.spec.json"
-      }
-    },
-    "preset": "jest-preset-angular",
-    "roots": [
-      "./test/spec"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/test/support/setupJest.ts"
-    ]
-  },
-  "jest-junit": {
-    "outputDirectory": "./test-reports/unit/",
-    "outputName": "junit-result.xml"
-  },
   "sideEffects": false,
   "workspaces": {
     "packages": [
