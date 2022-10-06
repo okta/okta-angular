@@ -1,6 +1,6 @@
 pushd ./dist
-yarn yalc publish
+npx yalc publish
 popd
 
-yarn lerna exec -- yarn yalc add @okta/okta-angular
-yarn lerna exec -- yarn build:prod
+npx lerna exec -- npx yalc add @okta/okta-angular
+npx lerna exec -- yarn build:prod

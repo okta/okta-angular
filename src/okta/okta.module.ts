@@ -20,12 +20,7 @@ import { OktaHasAnyGroupDirective } from './has-any-group.directive';
 import { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
 import { AuthSdkError, OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { compare } from 'compare-versions';
-
-declare const AUTH_JS: {
-  minSupportedVersion: string;
-};
-declare const PACKAGE_NAME: string;
-declare const PACKAGE_VERSION: string;
+import packageInfo from './packageInfo';
 
 export function oktaAuthFactory(config: OktaConfig): OktaAuth {
   return config.oktaAuth;
@@ -58,13 +53,13 @@ export class OktaAuthModule {
   ) {
     const { oktaAuth } = config;
 
-    const isAuthJsSupported = oktaAuth._oktaUserAgent && compare(oktaAuth._oktaUserAgent.getVersion(), AUTH_JS.minSupportedVersion, '>=');
+    const isAuthJsSupported = oktaAuth._oktaUserAgent && compare(oktaAuth._oktaUserAgent.getVersion(), packageInfo.authJSMinSupportedVersion, '>=');
     if (!isAuthJsSupported) {
-      throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is ${AUTH_JS.minSupportedVersion}.`);
+      throw new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is ${packageInfo.authJSMinSupportedVersion}.`);
     }
 
     // Add Okta UA
-    oktaAuth._oktaUserAgent.addEnvironment(`${PACKAGE_NAME}/${PACKAGE_VERSION}`);
+    oktaAuth._oktaUserAgent.addEnvironment(`${packageInfo.name}/${packageInfo.version}`);
     oktaAuth._oktaUserAgent.addEnvironment(`Angular/${VERSION.full}`);
 
     // Provide a default implementation of `restoreOriginalUri`

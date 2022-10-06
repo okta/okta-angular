@@ -36,6 +36,8 @@
     "typescript": "~4.3.5"
   },
   "workspaces": {
-    "nohoist": ["**"]
+    "nohoist": [
+      "**"
+    ]
   }
 }

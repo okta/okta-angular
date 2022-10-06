@@ -8,9 +8,9 @@ const getTask = (taskConfig) => () => {
     console.log(`Start server for ${app}`);
     // 1. start the sample's web server
     const server = spawn('yarn', [
-      'workspace',
-      name,
-      'start'
+      '--cwd',
+      `../apps/${app}`,
+      'start:prod'
     ], { stdio: 'inherit' });
 
     waitOn({
