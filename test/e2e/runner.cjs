@@ -19,7 +19,7 @@ const getTask = (taskConfig) => () => {
       ]
     }).then(() => {
       const wdioConfig = path.resolve(__dirname, 'wdio.conf.cjs');
-      const args = ['wdio', 'run', wdioConfig, ...specs];
+      const args = ['wdio', 'run', wdioConfig];
       const env = Object.assign({}, process.env);
       const runner = spawn('yarn', args, { stdio: 'inherit', env });
 
