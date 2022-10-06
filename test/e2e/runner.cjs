@@ -50,11 +50,11 @@ const tasks = [
   },
   {
     name: '@okta/test.app.ng13',
-    path: 'angular-v13'
+    app: 'angular-v13'
   },
   {
     name: '@okta/test.app.ng14',
-    path: 'angular-v14'
+    app: 'angular-v14'
   },
 ]
   .reduce((tasks, app) => {
