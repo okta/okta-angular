@@ -1,1 +1,1 @@
-npx lerna exec -- npx yalc remove --all
+yarn lerna exec -- yarn yalc remove --all

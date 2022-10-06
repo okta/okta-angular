@@ -27,11 +27,9 @@
   },
   "scripts": {
     "banners": "node util/maintain-banners.js",
-    "build:package-info": "node ./util/write-package-info.js . src/okta/packageInfo.ts",
     "clean": "rimraf dist/ && rimraf test-reports/",
     "lint": "eslint --ext .js,.ts  .",
     "lint:report": "eslint -f checkstyle -o ./test-reports/lint/eslint-checkstyle-result.xml .",
-    "prebuild": "yarn build:package-info",
     "build": "node build.js",
     "prepare": "yarn build",
     "start": "yarn --cwd test/e2e/harness/ start",
@@ -39,9 +37,6 @@
     "pretest:e2e": "yarn test:apps:prepare",
     "test:e2e": "yarn workspace @okta/test.e2e start",
     "test:unit": "jest",
-    "pack:lib": "npm run build && npm pack ./dist",
-    "publish:lib": "npm run build && npm publish ./dist",
-    "publish:lib:next": "npm run build && npm publish --tag next ./dist",
     "compodoc": "compodoc -p tsconfig.json",
     "compodoc:serve": "compodoc -s",
     "test:apps:prepare": "sh ./scripts/prepare-test-apps.sh",
@@ -79,6 +74,7 @@
     "@angular/router": "12.2.0",
     "@compodoc/compodoc": "1.1.19",
     "@okta/okta-auth-js": "^7.0.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
     "@types/node": "10.14.0",
@@ -137,7 +133,9 @@
       "test/e2e"
     ],
     "nohoist": [
-      "test/apps/*"
+      "test/apps/*",
+      "**/@wdio/**",
+      "**/@angular/**"
     ]
   }
 }
