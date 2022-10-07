@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
+/*eslint import/no-unresolved: [2, { ignore: ['@okta/okta-angular$'] }]*/
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';

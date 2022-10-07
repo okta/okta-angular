@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
+/*eslint import/no-unresolved: [2, { ignore: ['@okta/okta-angular$'] }]*/
 import { Component, Inject } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
