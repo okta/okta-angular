@@ -2,9 +2,11 @@ const path = require('path');
 const spawn = require('cross-spawn-with-kill');
 const waitOn = require('wait-on');
 
-const getTask = (app) => () => {
+const getTask = (taskConfig) => () => {
   return new Promise(resolve => {
+    const { app, name } = taskConfig;
     console.log(`Start server for ${app}`);
+    // 1. start the sample's web server
     const server = spawn('yarn', [
       '--cwd',
       `../apps/${app}`,
@@ -17,14 +19,9 @@ const getTask = (app) => () => {
       ]
     }).then(() => {
       const wdioConfig = path.resolve(__dirname, 'wdio.conf.cjs');
-      const runner = spawn(
-        'npx', [
-          'wdio',
-          'run',
-          wdioConfig
-        ],
-        { stdio: 'inherit' }
-      );
+      const args = ['wdio', 'run', wdioConfig];
+      const env = Object.assign({}, process.env);
+      const runner = spawn('yarn', args, { stdio: 'inherit', env });
 
       let returnCode = 1;
       runner.on('exit', function(code) {
@@ -47,9 +44,18 @@ const getTask = (app) => () => {
 // track process returnCode for each task
 const codes = [];
 const tasks = [
-  'angular-v12',
-  'angular-v13',
-  'angular-v14',
+  {
+    name: '@okta/test.app.ng12',
+    app: 'angular-v12'
+  },
+  {
+    name: '@okta/test.app.ng13',
+    app: 'angular-v13'
+  },
+  {
+    name: '@okta/test.app.ng14',
+    app: 'angular-v14'
+  },
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);

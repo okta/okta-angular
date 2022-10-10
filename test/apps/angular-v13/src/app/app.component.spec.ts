@@ -1,3 +1,4 @@
+/*eslint import/no-unresolved: [2, { ignore: ['@okta/okta-angular$'] }]*/
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
