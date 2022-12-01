@@ -10,7 +10,8 @@
     "prebuild": "node ./prebuild.js",
     "build": "ng build",
     "build:prod": "yarn prebuild && ng build --prod",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "test:unit": "echo \"No unit tests\" && exit 0"
   },
   "private": true,
   "dependencies": {

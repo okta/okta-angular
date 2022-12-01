@@ -18,6 +18,16 @@ get_secret prod/okta-sdk-vars/password PASSWORD
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
 
+for app in test/apps/angular-*
+do
+  pushd $app
+    if ! yarn test:unit; then
+      echo "unit failed for ${$app}! Exiting..."
+      exit ${TEST_FAILURE}
+    fi
+  popd
+done
+
 if ! yarn test:e2e; then
   echo "unit failed! Exiting..."
   exit ${TEST_FAILURE}
