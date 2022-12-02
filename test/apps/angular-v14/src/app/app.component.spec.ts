@@ -4,8 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import {
   OktaAuthModule, 
-  OKTA_CONFIG,
-  OKTA_AUTH
+  OKTA_CONFIG
 } from '@okta/okta-angular';
 import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 
@@ -118,8 +117,6 @@ describe('Unit Tests', () => {
     const idToken = await component.oktaAuth.getIdToken();
     expect(idToken).toBe(mockIdToken);
   });
-
-  standardIdTokenParsed
 
   it('isAuthenticated() returns true when the TokenManager returns an access token and id token', async () => {
     // Store tokens
