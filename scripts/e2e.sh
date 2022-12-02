@@ -19,13 +19,9 @@ export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
 
 # Run unit tests for e2e apps
-pushd ./dist
-  npx yalc publish
-popd
 for app in test/apps/angular-*
 do
   pushd $app
-    npx yalc add @okta/okta-angular
     if ! yarn test:unit; then
       echo "unit failed for ${app}! Exiting..."
       exit ${TEST_FAILURE}

@@ -88,10 +88,15 @@ if ! yarn build; then
   exit ${FAILED_SETUP}
 fi
 
+pushd ./dist
+  npx yalc publish
+popd
+
 # Install dependencies for test apps
 for app in test/apps/angular-*
 do
   pushd $app
+    npx yalc add @okta/okta-angular
     yarn install
     install_auth_js
   popd
