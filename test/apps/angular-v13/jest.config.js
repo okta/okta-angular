@@ -3,7 +3,7 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   globalSetup: 'jest-preset-angular/global-setup',
   transformIgnorePatterns: [
-    'node_modules/(?!.*\\.mjs$|@okta|rxjs|jsonpath-plus)'
+    'node_modules/(?!.*\\.mjs$|rxjs|@okta/okta-auth-js|jsonpath-plus|@okta/okta-angular)'
   ],
   testMatch: [
     '**/*.spec.{js,ts}'
