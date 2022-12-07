@@ -3,13 +3,13 @@
   "private": true,
   "version": "6.1.0",
   "description": "Angular support for Okta",
-  "module": "./dist/fesm2015/okta-angular.js",
-  "fesm2015": "./dist/fesm2015/okta-angular.js",
-  "esm2015": "./dist/esm2015/okta-angular.js",
-  "es2015": "./dist/fesm2015/okta-angular.js",
-  "fesm2020": "./dist/fesm2020/okta-angular.js",
-  "esm2020": "./dist/esm2020/okta-angular.js",
-  "es2020": "./dist/fesm2020/okta-angular.js",
+  "module": "./dist/fesm2015/okta-angular.mjs",
+  "fesm2015": "./dist/fesm2015/okta-angular.mjs",
+  "esm2015": "./dist/esm2015/okta-angular.mjs",
+  "es2015": "./dist/fesm2015/okta-angular.mjs",
+  "fesm2020": "./dist/fesm2020/okta-angular.mjs",
+  "esm2020": "./dist/esm2020/okta-angular.mjs",
+  "es2020": "./dist/fesm2020/okta-angular.mjs",
   "types": "./dist/okta-angular.d.ts",
   "type": "module",
   "exports": {
@@ -18,11 +18,11 @@
     },
     ".": {
       "types": "./dist/okta-angular.d.ts",
-      "esm2020": "./dist/esm2020/okta-angular.js",
-      "es2020": "./dist/fesm2020/okta-angular.js",
-      "es2015": "./dist/fesm2015/okta-angular.js",
-      "node": "./dist/fesm2015/okta-angular.js",
-      "default": "./dist/fesm2020/okta-angular.js"
+      "esm2020": "./dist/esm2020/okta-angular.mjs",
+      "es2020": "./dist/fesm2020/okta-angular.mjs",
+      "es2015": "./dist/fesm2015/okta-angular.mjs",
+      "node": "./dist/fesm2015/okta-angular.mjs",
+      "default": "./dist/fesm2020/okta-angular.mjs"
     }
   },
   "scripts": {
