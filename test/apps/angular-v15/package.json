@@ -1,0 +1,45 @@
+{
+  "name": "@okta/test.app.ng15",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "ng": "ng",
+    "prestart": "node ./prebuild.mjs",
+    "start": "ng serve --port 8080",
+    "start:prod": "lite-server -c bs-config.cjs",
+    "prebuild": "node ./prebuild.mjs",
+    "build": "ng build",
+    "build:prod": "yarn prebuild && ng build",
+    "watch": "ng build --watch --configuration development"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^15.0.0",
+    "@angular/common": "^15.0.0",
+    "@angular/compiler": "^15.0.0",
+    "@angular/core": "^15.0.0",
+    "@angular/forms": "^15.0.0",
+    "@angular/platform-browser": "^15.0.0",
+    "@angular/platform-browser-dynamic": "^15.0.0",
+    "@angular/router": "^15.0.0",
+    "@okta/okta-angular": "^6.0.0",
+    "@okta/okta-auth-js": "^7.1.1",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.0.2",
+    "@angular/cli": "~15.0.2",
+    "@angular/compiler-cli": "^15.0.0",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.5.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "lite-server": "^2.2.0",
+    "typescript": "~4.8.2"
+  }
+}
