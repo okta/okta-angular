@@ -56,6 +56,10 @@ const tasks = [
     name: '@okta/test.app.ng14',
     app: 'angular-v14'
   },
+  {
+    name: '@okta/test.app.ng15',
+    app: 'angular-v15'
+  },
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);
