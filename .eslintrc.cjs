@@ -63,7 +63,7 @@ module.exports = {
         }],
       }
     },
-    // Angular 12-14 test apps
+    // Angular 12-15 test apps
     {
       files: ['test/apps/**/*'],
       extends: [

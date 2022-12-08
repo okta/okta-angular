@@ -34,7 +34,7 @@ This library currently supports:
 - [OAuth 2.0 Implicit Flow](https://tools.ietf.org/html/rfc6749#section-1.3.2)
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
-> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14
+> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14, 15
 > :warning: `okta-angular` 6.0+ supports Angular 12+. For Angular 7 to 11 please use `okta-angular` 5.x
 > :warning: Angular versions older than 7 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
 
