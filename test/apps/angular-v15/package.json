@@ -8,8 +8,8 @@
     "start": "ng serve --port 8080",
     "start:prod": "lite-server -c bs-config.cjs",
     "prebuild": "node ./prebuild.mjs",
-    "build": "npx ng build",
-    "build:prod": "yarn prebuild && yarn build",
+    "build": "ng build",
+    "build:prod": "yarn prebuild && ng build",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
@@ -39,7 +39,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "lite-server": "^2.2.0",
+    "lite-server": "^2.6.1",
     "typescript": "~4.8.2"
   },
   "workspaces": {
