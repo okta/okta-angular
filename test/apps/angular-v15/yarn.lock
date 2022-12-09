@@ -1344,12 +1344,6 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@okta/okta-angular@file:.yalc/@okta/okta-angular":
-  version "5.3.0"
-  dependencies:
-    compare-versions "^4.1.2"
-    tslib "^1.9.0"
-
 "@okta/okta-auth-js@^7.1.1":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-7.1.1.tgz#3e53ac538f957c3c8ac19b4d95a0a895e39d063a"
