@@ -10,7 +10,8 @@
     "prebuild": "node ./prebuild.mjs",
     "build": "ng build",
     "build:prod": "yarn prebuild && ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "test:unit": "jest"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +33,10 @@
     "@angular/cli": "~15.0.2",
     "@angular/compiler-cli": "^15.0.0",
     "@types/jasmine": "~4.3.0",
+    "@types/jest": "^29.2.3",
+    "@types/node": "^12.11.1",
+    "jest": "^29.3.1",
+    "jest-preset-angular": "^12.2.3",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
