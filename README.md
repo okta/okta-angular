@@ -399,6 +399,20 @@ const oktaConfig = {
 };
 ```
 
+## Testing
+
+To run Jest tests for your app using `@okta/okta-angular` please add `@okta/okta-angular` (and some of its dependencies listed below) to `transformIgnorePatterns` in `jest.config.js`:
+```js
+export default {
+  preset: 'jest-preset-angular',
+  transformIgnorePatterns: [
+    'node_modules/(?!.*\\.mjs$|rxjs|@okta/okta-auth-js|jsonpath-plus|@okta/okta-angular)'
+  ],
+  ...
+}
+```
+Jest should transform listed dependencies, because `@okta/okta-angular` version 6 uses `.js` extension for exporing files from the package.
+
 ## Contributing
 
 We welcome contributions to all of our open-source packages. Please see the [contribution guide](https://github.com/okta/okta-oidc-js/blob/master/CONTRIBUTING.md) to understand how to structure a contribution.

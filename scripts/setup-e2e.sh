@@ -88,7 +88,9 @@ if ! yarn build; then
   exit ${FAILED_SETUP}
 fi
 
+
 # Install dependencies for test apps
+yarn test:apps:prepare
 for app in test/apps/angular-*
 do
   pushd $app
