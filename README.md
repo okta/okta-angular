@@ -411,7 +411,7 @@ export default {
   ...
 }
 ```
-Jest should transform listed dependencies, because `@okta/okta-angular` version 6 uses `.js` extension for exporing files from the package.
+Jest should transform listed dependencies, because `@okta/okta-angular` version 6 uses `.js` extension for exporting files from the package.
 
 ## Contributing
 
