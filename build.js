@@ -3,6 +3,7 @@
 import shell from 'shelljs';
 import chalk from 'chalk';
 import fs from 'fs';
+import path from 'path';
 
 const PACKAGE = `okta-angular`;
 const NPM_DIR = `dist`;
@@ -11,6 +12,34 @@ const FESM2015_DIR = `${NPM_DIR}/fesm2015`;
 const ESM2020_DIR = `${NPM_DIR}/esm2020`;
 const FESM2020_DIR = `${NPM_DIR}/fesm2020`;
 const OUT_DIR = `${NPM_DIR}/package`;
+
+const renameRecursively = (dir, extFrom, extTo) => {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      renameRecursively(path.join(dir, file), extFrom, extTo);
+    } else if (file.endsWith('.' + extFrom)) {
+      // rename .js -> .mjs
+      const newName = file.split('.').slice(0, -1).concat([extTo]).join('.');
+      const pathFrom = path.join(dir, file);
+      const pathTo = path.join(dir, newName);
+      fs.renameSync(pathFrom, pathTo);
+    } else if (file.endsWith('.' + extFrom + '.map')) {
+      // rename .js.map -> .mjs.map
+      const origName = file.split('.').slice(0, -2).concat([extFrom]).join('.');
+      const origNameNew = file.split('.').slice(0, -2).concat([extTo]).join('.');
+      const newName = file.split('.').slice(0, -2).concat([extTo, 'map']).join('.');
+      const pathFrom = path.join(dir, file);
+      const pathTo = path.join(dir, newName);
+      fs.renameSync(pathFrom, pathTo);
+      
+      // replace .js -> .mjs in map contents
+      const data = fs.readFileSync(pathTo, 'utf8');
+      const newData = data.replace(`"file":"${origName}"`, `"file":"${origNameNew}"`);
+      fs.writeFileSync(pathTo, newData, 'utf8');
+    }
+  }
+};
 
 shell.echo(`Start building...`);
 
@@ -40,13 +69,14 @@ shell.echo(chalk.green(`AoT compilation completed`));
 
 shell.echo(`Copy ES2015 for package`);
 shell.cp(`-Rf`, [`${NPM_DIR}/src/`, `${NPM_DIR}/*.js`, `${NPM_DIR}/*.js.map`], `${ESM2015_DIR}`);
+renameRecursively(ESM2015_DIR, 'js', 'mjs');
 shell.rm(`-Rf`, `${ESM2015_DIR}/src/**/*.d.ts`);
 
 /* BUNDLING PACKAGE */
 shell.echo(`Start bundling`);
 
 shell.echo(`Produce FESM2015 version`);
-if (shell.exec(`rollup -c rollup.es.config.js -i ${NPM_DIR}/${PACKAGE}.js -o ${FESM2015_DIR}/${PACKAGE}.js`).code !== 0) {
+if (shell.exec(`rollup -c rollup.es.config.js -i ${NPM_DIR}/${PACKAGE}.js -o ${FESM2015_DIR}/${PACKAGE}.mjs`).code !== 0) {
     shell.echo(chalk.red(`Error: FESM2015 version failed`));
     shell.exit(1);
 }
@@ -57,10 +87,11 @@ if (shell.exec(`ngc -p ${OUT_DIR}/tsconfig-build.json --target es2020 -d false -
     shell.exit(1);
 }
 shell.cp(`-Rf`, [`${NPM_DIR}/src/`, `${NPM_DIR}/*.js`, `${NPM_DIR}/*.js.map`], `${ESM2020_DIR}`);
+renameRecursively(ESM2020_DIR, 'js', 'mjs');
 shell.rm(`-Rf`, `${ESM2020_DIR}/src/**/*.d.ts`);
 
 shell.echo(`Produce FESM2020 version`);
-if (shell.exec(`rollup -c rollup.es.config.js -i ${NPM_DIR}/${PACKAGE}.js -o ${FESM2020_DIR}/${PACKAGE}.js`).code !== 0) {
+if (shell.exec(`rollup -c rollup.es.config.js -i ${NPM_DIR}/${PACKAGE}.js -o ${FESM2020_DIR}/${PACKAGE}.mjs`).code !== 0) {
     shell.echo(chalk.red(`Error: FESM2020 version failed`));
     shell.exit(1);
 }
