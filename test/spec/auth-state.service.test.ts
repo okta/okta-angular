@@ -3,19 +3,14 @@ import { Observable } from 'rxjs';
 import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
-  OktaAuthStateService, 
-  OKTA_CONFIG 
+  OktaAuthStateService
 } from '../../src/okta-angular';
 
 function setup(oktaAuth: OktaAuth) {
   TestBed.configureTestingModule({
-    imports: [ OktaAuthModule ],
-    providers: [{
-      provide: OKTA_CONFIG,
-      useValue: {
-        oktaAuth
-      }
-    }]
+    imports: [
+      OktaAuthModule.forRoot({oktaAuth})
+    ]
   });
 }
 

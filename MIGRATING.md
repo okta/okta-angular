@@ -4,6 +4,42 @@
 
 # Migrating
 
+## To version 6.2.0
+
+Starting with `@okta/okta-angular 6.2.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service. 
+
+Before:
+```typescript
+import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
+
+@NgModule({
+  imports: [
+    ...
+    OktaAuthModule
+  ],
+  providers: [
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: { oktaAuth } 
+    }
+  ],
+})
+export class MyAppModule { }
+```
+
+After:
+```typescript
+import { OktaAuthModule } from '@okta/okta-angular';
+
+@NgModule({
+  imports: [
+    ...
+    OktaAuthModule.forRoot({ oktaAuth })
+  ]
+})
+export class MyAppModule { }
+```
+
 ## From version 5.x to 6.x
 
 `@okta/okta-angular` 6.0 uses [Ivy engine](https://docs.angular.lat/guide/ivy) and drops support of Angular versions prior to 12.  
