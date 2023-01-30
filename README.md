@@ -80,6 +80,37 @@ npm install @okta/okta-angular @okta/okta-auth-js
 Add [`OktaAuthModule`](#oktaauthmodule) to your module's imports.
 Create a configuration object and provide this as [`OKTA_CONFIG`](#okta_config).
 
+```typescript
+// myApp.module.ts
+
+import {
+  OKTA_CONFIG,
+  OktaAuthModule
+} from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+const authConfig = {
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  clientId: '{clientId}',
+  redirectUri: window.location.origin + '/login/callback'
+}
+const oktaAuth = new OktaAuth(authConfig);
+
+@NgModule({
+  imports: [
+    ...
+    OktaAuthModule
+  ],
+  providers: [
+    { 
+      provide: OKTA_CONFIG, 
+      useValue: { oktaAuth } 
+    }
+  ],
+})
+export class MyAppModule { }
+```
+
 Starting with `okta-angular 6.2.0`, the preferred way to import `OktaAuthModule` is by using [`forRoot()` static method](https://angular.io/guide/singleton-services#the-forroot-pattern) to create a singleton service. Pass your configuration object of type `OktaConfig` as the only parameter to `OktaAuthModule.forRoot()`. It will provide [`OKTA_CONFIG`](#okta_config) for you.
 
 ```typescript
