@@ -39,6 +39,17 @@ function setup(oktaAuth: OktaAuth) {
   return TestBed.createComponent(MockComponent);
 }
 
+function setupForRoot(oktaAuth: OktaAuth) {
+  TestBed.configureTestingModule({
+    imports: [
+      RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
+      OktaAuthModule.forRoot({ oktaAuth })
+    ],
+    declarations: [ MockComponent ],
+  });
+  return TestBed.createComponent(MockComponent);
+}
+
 describe('Okta Module', () => {
   let oktaAuth: OktaAuth;
 
@@ -105,7 +116,7 @@ describe('Okta Module', () => {
         setup(oktaAuth);
         expect(oktaAuth.start).toHaveBeenCalled();
       });
-    });  
+    });
   });
 
   describe('DI', () => {
@@ -119,6 +130,28 @@ describe('Okta Module', () => {
     });
     it('provides OktaAuthGuard', () => {
       setup(oktaAuth);
+      expect(TestBed.get(OktaAuthGuard)).toBeDefined();
+    });
+  });
+
+  describe('forRoot', () => {
+    it('should not throw', () => {
+      expect(() => setupForRoot(oktaAuth)).not.toThrow();
+    });
+
+    it('should provide OktaAuth', () => {
+      setupForRoot(oktaAuth);
+      expect(TestBed.get(OKTA_CONFIG)).toBeDefined();
+      expect(TestBed.get(OKTA_AUTH)).toBeDefined();
+    });
+
+    it('should provide OktaAuthStateService', () => {
+      setupForRoot(oktaAuth);
+      expect(TestBed.get(OktaAuthStateService)).toBeDefined();
+    });
+
+    it('should provide OktaAuthGuard', () => {
+      setupForRoot(oktaAuth);
       expect(TestBed.get(OktaAuthGuard)).toBeDefined();
     });
   });

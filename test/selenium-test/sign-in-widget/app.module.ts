@@ -6,7 +6,6 @@ import { environment } from '../environments/environment';
 
 import { OktaAuth } from '@okta/okta-auth-js';
 import {
-  OKTA_CONFIG,
   OktaAuthModule,
   OktaCallbackComponent,
   OktaAuthGuard
@@ -58,13 +57,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    OktaAuthModule
-  ],
-  providers: [
-    { 
-      provide: OKTA_CONFIG, 
-      useValue: { oktaAuth } 
-    },
+    OktaAuthModule.forRoot({oktaAuth})
   ],
   bootstrap: [AppComponent]
 })

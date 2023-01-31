@@ -3,8 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import {
-  OktaAuthModule, 
-  OKTA_CONFIG
+  OktaAuthModule,
 } from '@okta/okta-angular';
 import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 
@@ -81,17 +80,11 @@ describe('Unit Tests', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
-        OktaAuthModule
+        OktaAuthModule.forRoot({oktaAuth, testing})
       ],
       declarations: [ 
         AppComponent
       ],
-      providers: [
-        { 
-          provide: OKTA_CONFIG, 
-          useValue: { oktaAuth, testing } 
-        },
-      ]
     });
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;

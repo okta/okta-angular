@@ -23,7 +23,6 @@ import {
   OktaAuthGuard,
   OktaAuthModule,
   OktaCallbackComponent,
-  OKTA_CONFIG
 } from '@okta/okta-angular';
 
 /**
@@ -100,7 +99,7 @@ const oktaAuth = new OktaAuth(environment.oidc);
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    OktaAuthModule
+    OktaAuthModule.forRoot({ oktaAuth })
   ],
   declarations: [
     AppComponent,
@@ -109,12 +108,6 @@ const oktaAuth = new OktaAuth(environment.oidc);
     PublicComponent,
     HasGroupComponent,
   ],
-  providers: [{
-    provide: OKTA_CONFIG,
-    useValue: {
-      oktaAuth
-    }
-  }],
   bootstrap: [ AppComponent ]
 })
 

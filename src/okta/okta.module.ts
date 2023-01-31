@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { NgModule, Inject, Optional, VERSION } from '@angular/core';
+import { NgModule, ModuleWithProviders, Inject, Optional, VERSION } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OktaCallbackComponent } from './components/callback.component';
@@ -46,6 +46,22 @@ export function oktaAuthFactory(config: OktaConfig): OktaAuth {
   ]
 })
 export class OktaAuthModule {
+  static forRoot(config?: OktaConfig): ModuleWithProviders<OktaAuthModule> {
+    return {
+      ngModule: OktaAuthModule,
+      providers: [
+        OktaAuthGuard,
+        OktaAuthStateService,
+        { provide: OKTA_CONFIG, useValue: config },
+        {
+          provide: OKTA_AUTH,
+          useFactory: oktaAuthFactory,
+          deps: [ OKTA_CONFIG ]
+        },
+      ]
+    };
+  }
+
   constructor(
     @Inject(OKTA_CONFIG) config: OktaConfig, 
     @Optional() location?: Location, 
