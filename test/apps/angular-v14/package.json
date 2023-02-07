@@ -23,7 +23,6 @@
     "@angular/platform-browser": "~14.2.0",
     "@angular/platform-browser-dynamic": "~14.2.0",
     "@angular/router": "~14.2.0",
-    "@okta/okta-angular": "file:.yalc/@okta/okta-angular",
     "@okta/okta-auth-js": "*",
     "rxjs": "~7.4.0",
     "tslib": "^2.4.0",
