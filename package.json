@@ -1,7 +1,7 @@
 {
   "name": "@okta/okta-angular-root",
   "private": true,
-  "version": "6.1.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "ng": "ng",
@@ -46,6 +46,7 @@
     "@angular/animations": "~12.2.0",
     "@angular/common": "~12.2.0",
     "@angular/compiler": "~12.2.0",
+    "@angular/cli": "~12.2.0",
     "@angular/compiler-cli": "~12.2.0",
     "@angular/core": "~12.2.0",
     "@angular/platform-browser": "~12.2.0",
