@@ -4,7 +4,7 @@ import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
   OktaAuthStateService
-} from '../../src/okta-angular';
+} from '../../projects/okta-angular/src/okta-angular';
 
 function setup(oktaAuth: OktaAuth) {
   TestBed.configureTestingModule({

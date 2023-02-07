@@ -1,6 +1,6 @@
 # Test Apps
 
-This folder includes Angular test apps cross all supported Angular versions (7 - 15). All apps are generated via @angular/cli, then small adjustment has been added to support the E2E testing requirements.
+This folder includes Angular test apps cross all supported Angular versions (12 - 15). All apps are generated via @angular/cli, then small adjustment has been added to support the E2E testing requirements.
 
 ## How to setup a new test app
 

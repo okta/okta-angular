@@ -6,7 +6,7 @@ import {
   OKTA_CONFIG,
   OKTA_AUTH,
   OktaCallbackComponent
-} from '../../src/okta-angular';
+} from '../../projects/okta-angular/src/okta-angular';
 
 describe('OktaCallbackComponent', () => {
   let component: OktaCallbackComponent;

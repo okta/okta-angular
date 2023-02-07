@@ -101,9 +101,9 @@ module.exports = {
         }],
       }
     },
-    // NodeJS build tools, Rollup configs
+    // NodeJS build tools
     {
-      files: ['build.js', 'env.cjs', 'util/**/*', 'rollup*.js'],
+      files: ['env.cjs', 'util/**/*'],
       rules: {
         'node/no-unpublished-import': ['error', {
           'allowModules': devDependencies

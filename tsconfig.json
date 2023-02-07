@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "downlevelIteration": true,
-        "emitDecoratorMetadata": true,
+        "emitDecoratorMetadata": false,
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "strict": true,
@@ -12,10 +12,10 @@
         "rootDir": ".",
         "sourceMap": true,
         "inlineSources": true,
-        "target": "es2015",
+        "target": "es2016",
         "skipLibCheck": true,
         "lib": [
-            "es2015",
+            "es2016",
             "dom"
         ],
         "typeRoots": [

@@ -3,7 +3,7 @@ node_modules
 .DS_Store
 testenv
 /test-reports
-/src/okta/packageInfo.ts
+**/src/okta/packageInfo.ts
 .yalc
 yalc.lock
 yarn-error.log

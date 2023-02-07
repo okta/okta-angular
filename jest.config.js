@@ -2,7 +2,7 @@ export default {
   coverageDirectory: "<rootDir>/test-reports/coverage",
   collectCoverage: true,
   collectCoverageFrom: [
-    "./src/**",
+    "./projects/okta-angular/src/**",
     "!./test/**"
   ],
   reporters: [
@@ -14,22 +14,17 @@ export default {
   ],
   restoreMocks: true,
   transform: {
-    '^.+\\.(ts|html)$': "ts-jest"
+     "^.+\\.(ts|html)$": "jest-preset-angular"
   },
   transformIgnorePatterns: [
-    "node_modules",
-    "packages/(?!okta-angular)"
+    "node_modules"
   ],
-  globals: {
-    'ts-jest': {
-      tsconfig: "<rootDir>/test/spec/tsconfig.spec.json"
-    }
-  },
   preset: "jest-preset-angular",
   roots: [
     "./test/spec"
   ],
-  setupFilesAfterEnv: [
-    "<rootDir>/test/support/setupJest.ts"
-  ]
+  testMatch: [
+    "<rootDir>/test/spec/*.ts"
+  ],
+  globalSetup: "jest-preset-angular/global-setup"
 };
