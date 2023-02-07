@@ -13,6 +13,6 @@
     "test/spec/*.ts"
   ],
   "include": [
-    "projects/okta-angular/**/*.ts"
+    "lib/**/*.ts"
   ]
 }

@@ -6,20 +6,20 @@
     "okta-angular": {
       "projectType": "library",
       "root": "",
-      "sourceRoot": "projects/okta-angular/src",
+      "sourceRoot": "lib/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/okta-angular/ng-package.json"
+            "project": "lib/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/okta-angular/tsconfig.lib.prod.json"
+              "tsConfig": "lib/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/okta-angular/tsconfig.lib.json"
+              "tsConfig": "lib/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"

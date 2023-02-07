@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from "@angular/platform-browser";
 import { of } from 'rxjs';
-import { OktaHasAnyGroupDirective } from '../../projects/okta-angular/src/okta/has-any-group.directive';
-import { OktaAuthStateService } from '../../projects/okta-angular/src/okta-angular';
+import { OktaHasAnyGroupDirective } from '../../lib/src/okta/has-any-group.directive';
+import { OktaAuthStateService } from '../../lib/src/okta-angular';
 
 @Component({ 
   template: `

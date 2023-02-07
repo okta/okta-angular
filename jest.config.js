@@ -2,7 +2,7 @@ export default {
   coverageDirectory: "<rootDir>/test-reports/coverage",
   collectCoverage: true,
   collectCoverageFrom: [
-    "./projects/okta-angular/src/**",
+    "./lib/src/**",
     "!./test/**"
   ],
   reporters: [

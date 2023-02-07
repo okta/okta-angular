@@ -8,9 +8,9 @@ import {
   OKTA_AUTH,
   OktaAuthStateService, 
   OktaAuthGuard 
-} from '../../projects/okta-angular/src/okta-angular';
+} from '../../lib/src/okta-angular';
 
-jest.mock('../../projects/okta-angular/src/okta/packageInfo', () => ({
+jest.mock('../../lib/src/okta/packageInfo', () => ({
   __esModule: true,
   default: {
     authJSMinSupportedVersion: '5.3.1',

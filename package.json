@@ -7,7 +7,7 @@
     "ng": "ng",
     "build": "ng build okta-angular",
     "banners": "node util/maintain-banners.js",
-    "build:package-info": "node ./util/write-package-info.js . projects/okta-angular/src/okta/packageInfo.ts",
+    "build:package-info": "node ./util/write-package-info.js . lib/src/okta/packageInfo.ts",
     "clean": "rimraf dist/ && rimraf test-reports/",
     "lint": "eslint --ext .js,.ts  .",
     "lint:report": "eslint -f checkstyle -o ./test-reports/lint/eslint-checkstyle-result.xml .",
@@ -100,7 +100,7 @@
   "sideEffects": false,
   "workspaces": {
     "packages": [
-      "projects/*",
+      "lib",
       "test/e2e"
     ],
     "nohoist": [

@@ -5,8 +5,8 @@ import {
   OktaAuthGuard,
   OktaConfig,
   OKTA_CONFIG,
-} from '../../projects/okta-angular/src/okta-angular';
-import { AuthRequiredFunction } from '../../projects/okta-angular/src/okta/models/okta.config';
+} from '../../lib/src/okta-angular';
+import { AuthRequiredFunction } from '../../lib/src/okta/models/okta.config';
 import { 
   ActivatedRouteSnapshot, 
   RouterStateSnapshot, 
