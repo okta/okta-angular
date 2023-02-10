@@ -18,7 +18,7 @@
     "pretest:e2e": "yarn test:apps:prepare && yarn test:apps:build",
     "test:e2e": "yarn workspace @okta/test.e2e start",
     "test:unit": "ng test okta-angular",
-    "compodoc": "compodoc -p tsconfig.json",
+    "compodoc": "compodoc lib -p tsconfig.json",
     "compodoc:serve": "compodoc -s",
     "test:apps:prepare": "sh ./scripts/prepare-test-apps.sh",
     "test:apps:build": "sh ./scripts/build-test-apps.sh",
