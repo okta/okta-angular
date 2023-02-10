@@ -4,9 +4,9 @@
 
 # Migrating
 
-## To version 6.2.0
+## To version 6.1.0
 
-Starting with `@okta/okta-angular 6.2.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service. 
+Starting with `@okta/okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service. 
 
 Before:
 ```typescript

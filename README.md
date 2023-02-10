@@ -111,7 +111,7 @@ const oktaAuth = new OktaAuth(authConfig);
 export class MyAppModule { }
 ```
 
-Starting with `okta-angular 6.2.0`, the preferred way to import `OktaAuthModule` is by using [`forRoot()` static method](https://angular.io/guide/singleton-services#the-forroot-pattern) to create a singleton service. Pass your configuration object of type `OktaConfig` as the only parameter to `OktaAuthModule.forRoot()`. It will provide [`OKTA_CONFIG`](#okta_config) for you.
+Starting with `okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using [`forRoot()` static method](https://angular.io/guide/singleton-services#the-forroot-pattern) to create a singleton service. Pass your configuration object of type `OktaConfig` as the only parameter to `OktaAuthModule.forRoot()`. It will provide [`OKTA_CONFIG`](#okta_config) for you.
 
 ```typescript
 // myApp.module.ts

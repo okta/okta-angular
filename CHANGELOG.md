@@ -1,3 +1,13 @@
+# 6.1.0
+
+### Features
+
+- [#118](https://github.com/okta/okta-angular/pull/118) Supports `OktaAuthModule.forRoot()`
+
+### Others
+
+- [#119](https://github.com/okta/okta-angular/pull/119) Uses `ng-packagr` to build the library in APF v12. Uses `@angular-builders/jest` to run Jest tests with `ng test`.
+
 # 6.0.0
 
 ### Breaking Changes
