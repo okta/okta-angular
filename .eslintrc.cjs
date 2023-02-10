@@ -40,7 +40,7 @@ module.exports = {
     {
       // ES6/browser processed by Babel
       files: [
-        'src/**/*',
+        'lib/src/**/*',
         'test/spec/**/*',
         'test/e2e/harness/src/**/*',
         'test/e2e/harness/e2e/**/*'
@@ -71,6 +71,11 @@ module.exports = {
         'plugin:@typescript-eslint/recommended'
       ],
       rules: {
+        'node/no-extraneous-import': ['error', {
+          'allowModules': [
+            '@okta/okta-angular'
+          ]
+        }],
         'node/no-missing-import': ['error', {
           'allowModules': [
             '@okta/okta-angular'
