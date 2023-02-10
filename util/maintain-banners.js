@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const bannerSourcePath = path.join(__dirname, 'license-template.txt');
-const files = globby.sync(path.join(__dirname, '..','packages/*/{index.js,index.ts,lib.js,src/**/*.{js,ts},test/integration-test/*.{js,ts},test/e2e/**/*.{js,ts}}'));
+const files = globby.sync(path.join(__dirname, '..','lib/**/*.{js,ts},test/integration-test/*.{js,ts},test/e2e/**/*.{js,ts}}'));
 // console.log(files);
 const bannerSource = fs.readFileSync(bannerSourcePath).toString();
 const copyrightRegex = /(Copyright \(c\) )([0-9]+)-?([0-9]+)?/;

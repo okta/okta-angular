@@ -11,7 +11,7 @@
     "build": "ng build",
     "build:prod": "yarn prebuild && ng build",
     "watch": "ng build --watch --configuration development",
-    "test:unit": "jest"
+    "test:unit": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~14.2.0",
+    "@angular-builders/jest": "^14.1.0",
     "@angular/cli": "~14.2.0",
     "@angular/compiler-cli": "~14.2.0",
     "@types/jest": "^29.2.3",

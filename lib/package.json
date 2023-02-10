@@ -1,0 +1,28 @@
+{
+  "name": "@okta/okta-angular",
+  "version": "6.1.0",
+  "description": "Angular support for Okta",
+  "repository": "https://github.com/okta/okta-angular",
+  "homepage": "https://github.com/okta/okta-angular",
+  "keywords": [
+    "okta",
+    "oidc",
+    "OpenID Connect",
+    "authentication",
+    "auth",
+    "oauth2"
+  ],
+  "license": "Apache-2.0",
+  "type": "module",
+  "dependencies": {
+    "compare-versions": "^5.0.1",
+    "tslib": "^2.4.0"
+  },
+  "peerDependencies": {
+    "@angular/common": ">= 12.0.0",
+    "@angular/core": ">= 12.0.0",
+    "@angular/router": ">= 12.0.0",
+    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0",
+    "rxjs": "^6.0.0 || ^7.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../dist",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "@okta/okta-auth-js": "oktaAuthJs",
+      "compare-versions": "compareVersions"
+    }
+  },
+  "assets": [
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "allowedNonPeerDependencies": ["compare-versions"]
+}

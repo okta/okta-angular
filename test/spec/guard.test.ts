@@ -5,8 +5,8 @@ import {
   OktaAuthGuard,
   OktaConfig,
   OKTA_CONFIG,
-} from '../../src/okta-angular';
-import { AuthRequiredFunction } from '../../src/okta/models/okta.config';
+} from '../../lib/src/okta-angular';
+import { AuthRequiredFunction } from '../../lib/src/okta/models/okta.config';
 import { 
   ActivatedRouteSnapshot, 
   RouterStateSnapshot, 
@@ -28,7 +28,7 @@ function setup(oktaAuth: OktaAuth, config: OktaConfig) {
       OktaAuthGuard,
       {
         provide: OktaAuth,
-        value: oktaAuth
+        useValue: oktaAuth
       },
       {
         provide: OKTA_CONFIG,
