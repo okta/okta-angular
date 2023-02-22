@@ -83,7 +83,6 @@
     "rxjs": "6.6.3",
     "shelljs": "0.8.5",
     "source-map-loader": "^1.1.3",
-    "to-string-loader": "1.1.5",
     "ts-loader": "^9.0.2",
     "tsickle": "^0.46.3",
     "tslint": "^6.1.3",
@@ -95,7 +94,13 @@
   },
   "resolutions": {
     "**/wait-on/axios": "^0.27.2",
-    "**/chokidar/glob-parent": "^6.0.2"
+    "**/chokidar/glob-parent": "^6.0.2",
+    "**/@angular-devkit/build-angular/minimatch": "^3.1.2",
+    "**/@angular-devkit/build-angular/babel-loader": "^8.3.0",
+    "**/@angular-devkit/build-angular/loader-utils": "^2.0.4",
+    "**/nx/minimatch": "^3.1.2",
+    "**/postcss-url/minimatch": "^3.1.2",
+    "**/globule/minimatch": "^3.1.2"
   },
   "sideEffects": false,
   "workspaces": {
