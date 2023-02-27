@@ -16,11 +16,13 @@ export class OktaHasAnyGroupDirective implements OnChanges, OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
-    this.hasAnyGroups$.unsubscribe();
+    if (this.hasAnyGroups$) {
+      this.hasAnyGroups$.unsubscribe();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.groups.currentValue !== changes.groups.previousValue) {
+    if (changes.oktaHasAnyGroup.currentValue !== changes.oktaHasAnyGroup.previousValue) {
       this.subscribeToAnyGroups();
     }
   }
