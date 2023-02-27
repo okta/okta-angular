@@ -94,7 +94,7 @@
   },
   "resolutions": {
     "**/wait-on/axios": "^0.27.2",
-    "**/chokidar/glob-parent": "^6.0.2",
+    "**/glob-parent": "^6.0.2",
     "**/@angular-devkit/build-angular/minimatch": "^3.1.2",
     "**/@angular-devkit/build-angular/babel-loader": "^8.3.0",
     "**/@angular-devkit/build-angular/loader-utils": "^2.0.4",
