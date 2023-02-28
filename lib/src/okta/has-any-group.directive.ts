@@ -1,12 +1,12 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { ReplaySubject, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { OktaAuthStateService, Groups } from './services/auth-state.service';
 
 @Directive({ selector: '[oktaHasAnyGroup]'})
-export class OktaHasAnyGroupDirective implements OnChanges, OnDestroy {
-  private previousIsAuthorized: boolean;
-  private hasAnyGroups$: Subscription;
-  private groups: Groups;
+export class OktaHasAnyGroupDirective implements OnInit, OnChanges, OnDestroy {
+  private groupsSub$: Subject<Groups> = new ReplaySubject<Groups>();
+  private destroySub$ = new Subject<void>();
 
   constructor(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,50 +15,29 @@ export class OktaHasAnyGroupDirective implements OnChanges, OnDestroy {
     private authStateService: OktaAuthStateService
   ) { }
 
-  ngOnDestroy(): void {
-    if (this.hasAnyGroups$) {
-      this.hasAnyGroups$.unsubscribe();
-    }
+  @Input() oktaHasAnyGroup!: Groups;
+
+  ngOnInit(): void {
+    this.groupsSub$.pipe(
+      filter(groups => !!groups),
+      switchMap(groups => this.authStateService.hasAnyGroups(groups)),
+      takeUntil(this.destroySub$)
+    ).subscribe(isAuthorized => {
+      this.viewContainer.clear();
+      if (isAuthorized) {
+        this.viewContainer.createEmbeddedView(this.templateRef);
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.oktaHasAnyGroup.currentValue !== changes.oktaHasAnyGroup.previousValue) {
-      this.subscribeToAnyGroups();
+    if (changes['oktaHasAnyGroup'].currentValue !== changes['oktaHasAnyGroup'].previousValue) {
+      this.groupsSub$.next(changes['oktaHasAnyGroup'].currentValue as Groups);
     }
   }
 
-  subscribeToAnyGroups() {
-    if (this.hasAnyGroups$) {
-      this.hasAnyGroups$.unsubscribe();
-    }
-
-    this.hasAnyGroups$ = this.authStateService.hasAnyGroups(this.groups)
-      .subscribe(isAuthorized => {
-        // don't update UI if no state change
-        if (isAuthorized === this.previousIsAuthorized) {
-          return;
-        }
-        this.previousIsAuthorized = isAuthorized;
-        this.viewContainer.clear();
-        if (isAuthorized) {
-          this.viewContainer.createEmbeddedView(this.templateRef);
-        }
-      });
-  }
-
-  @Input() set oktaHasAnyGroup(groups: Groups) {
-    this.groups = groups;
-    // this.hasAnyGroups$ = this.authStateService.hasAnyGroups(groups)
-    //   .subscribe(isAuthorized => {
-    //     // don't update UI if no state change
-    //     if (isAuthorized === this.previousIsAuthorized) {
-    //       return;
-    //     }
-    //     this.previousIsAuthorized = isAuthorized;
-    //     this.viewContainer.clear();
-    //     if (isAuthorized) {
-    //       this.viewContainer.createEmbeddedView(this.templateRef);
-    //     }
-    //   });
+  ngOnDestroy(): void {
+    this.destroySub$.next();
+    this.destroySub$.complete();
   }
 }
