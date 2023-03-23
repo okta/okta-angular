@@ -20,7 +20,8 @@ const getContent = (env, isProd) => {
     },
     resourceServer: {
       messagesUrl: 'http://localhost:8000/api/messages',
-    }
+    },
+    asyncOktaConfig: ${env.ASYNC_OKTA_CONFIG === '1'},
   };
   `;
 };
@@ -37,7 +38,8 @@ const env = {};
 // List of environment variables made available to the app
 [
   'ISSUER',
-  'CLIENT_ID'
+  'CLIENT_ID',
+  'ASYNC_OKTA_CONFIG'
 ].forEach(function (key) {
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
