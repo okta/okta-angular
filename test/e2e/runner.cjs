@@ -7,11 +7,17 @@ const getTask = (taskConfig) => () => {
     const { app, name, asyncOktaConfig } = taskConfig;
     console.log(`Start server for ${app}`);
     // 1. start the sample's web server
-    const server = spawn(`ASYNC_OKTA_CONFIG=${asyncOktaConfig ? '1' : '0'} yarn`, [
+    const server = spawn(`yarn`, [
       '--cwd',
       `../apps/${app}`,
       'start:prod'
-    ], { stdio: 'inherit' });
+    ], {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        ASYNC_OKTA_CONFIG: asyncOktaConfig ? '1' : '0',
+      }
+    });
 
     waitOn({
       resources: [
