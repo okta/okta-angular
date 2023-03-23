@@ -1,28 +1,70 @@
-import { Component } from '@angular/core';
+import { Component, APP_INITIALIZER } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthSdkError, OktaAuth } from '@okta/okta-auth-js';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
 import { 
   OktaAuthModule, 
   OKTA_CONFIG, 
   OKTA_AUTH,
   OktaAuthStateService, 
-  OktaAuthGuard 
+  OktaAuthGuard,
+  OktaAuthConfigService
 } from '../../lib/src/okta-angular';
-
-jest.mock('../../lib/src/okta/packageInfo', () => ({
-  __esModule: true,
-  default: {
-    authJSMinSupportedVersion: '5.3.1',
-    version: '99.9.9',
-    name: '@okta/okta-angular',
-  }
-}));
 
 @Component({ template: '' })
 class MockComponent {}
 
-function setup(oktaAuth: OktaAuth) {
+// Simulate fetching OktaAuthOptions from backend with GET /config
+// In APP_INITIALIZER factory the config should be set with configService.setConfig()
+async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
+  const configInitializer = (configService: OktaAuthConfigService, httpClient: HttpClient) => {
+    return () => {
+      return httpClient.get('/config')
+        .toPromise()
+        .then((oktaAuthOptions: OktaAuthOptions) => {
+          const oktaAuth = new OktaAuth(oktaAuthOptions);
+          oktaAuth.start = jest.fn();
+          configService.setConfig({
+            oktaAuth,
+          });
+        })
+        .catch(() => {
+          // Config not loaded
+        });
+    };
+  };
+
+  TestBed.configureTestingModule({
+    imports: [
+      HttpClientTestingModule,
+      RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
+      OktaAuthModule.forRoot()
+    ],
+    declarations: [ MockComponent ],
+    providers: [{
+      provide: APP_INITIALIZER,
+      useFactory: configInitializer,
+      deps: [OktaAuthConfigService, HttpClient],
+      multi: true
+    }],
+  });
+
+  const httpTestingController = TestBed.inject(HttpTestingController);
+  const req = httpTestingController.expectOne('/config');
+  expect(req.request.method).toEqual('GET');
+  if (oktaAuthOptions) {
+    req.flush(oktaAuthOptions);
+  } else {
+    req.flush('404', { status: 404, statusText: 'Not Found' });
+  }
+  httpTestingController.verify();
+
+  await TestBed.createComponent(MockComponent);
+}
+
+function setup(oktaAuth?: OktaAuth) {
   TestBed.configureTestingModule({
     imports: [
       RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
@@ -39,21 +81,29 @@ function setup(oktaAuth: OktaAuth) {
   return TestBed.createComponent(MockComponent);
 }
 
-function setupForRoot(oktaAuth: OktaAuth) {
+function setupForRoot(oktaAuth?: OktaAuth) {
   TestBed.configureTestingModule({
     imports: [
       RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
-      OktaAuthModule.forRoot({ oktaAuth })
+      oktaAuth ? OktaAuthModule.forRoot({ oktaAuth }) : OktaAuthModule.forRoot()
     ],
     declarations: [ MockComponent ],
   });
   return TestBed.createComponent(MockComponent);
 }
 
+
 describe('Okta Module', () => {
   let oktaAuth: OktaAuth;
+  let oktaAuthOptions: OktaAuthOptions;
 
   beforeEach(() => {
+    oktaAuthOptions = {
+      issuer: 'http://xyz',
+      clientId: 'fake clientId',
+      redirectUri: 'fake redirectUri'
+    };
+
     oktaAuth = {
       options: {},
       authStateManager: {
@@ -69,90 +119,100 @@ describe('Okta Module', () => {
     } as unknown as OktaAuth;
   });
 
-  describe('constructor', () => {
-    describe('auth-js major version compatibility', () => {
-      it('should not throw when version matches', () => {
-        expect(() => setup(oktaAuth)).not.toThrow();
-      });
-
-      it('throws when version not match', () => {
-        oktaAuth = {
-          ...oktaAuth,
-          _oktaUserAgent: {
-            addEnvironment: jest.fn(),
-            // any major version before 5 should be invalid
-            getVersion: jest.fn().mockReturnValue('0.9.9')
-          }
-        } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
-      });
-      
-    });
-
-    describe('Okta User Agent tracking', () => {
-      it('adds sdk environment to oktaAuth instance', () => {
-        setup(oktaAuth);
-        expect(oktaAuth._oktaUserAgent.addEnvironment).toHaveBeenCalledWith('@okta/okta-angular/99.9.9');
-      });
-      it('throws if _oktaUserAgent is not exist', () => {
-        oktaAuth = {
-          ...oktaAuth,
-          _oktaUserAgent: null
-        } as unknown as OktaAuth;
-        expect(() => setup(oktaAuth)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
-      });
-    });
-  
-    describe('default restoreOriginalUri', () => {
-      it('sets default restoreOriginalUri', () => {
-        setup(oktaAuth);
-        const injectedOktaAuth = TestBed.get(OKTA_AUTH);
-        expect(injectedOktaAuth.options.restoreOriginalUri).toBeDefined();
-      });
-    });
-  
-    describe('Start service', () => {
-      it('starts service', () => {
-        setup(oktaAuth);
-        expect(oktaAuth.start).toHaveBeenCalled();
-      });
-    });
-  });
 
   describe('DI', () => {
-    it('provides OktaAuth', () => {
-      setup(oktaAuth);
-      expect(TestBed.get(OKTA_AUTH)).toBeDefined();
-    });
-    it('provides AuthStateService', () => {
-      setup(oktaAuth);
-      expect(TestBed.get(OktaAuthStateService)).toBeDefined();
-    });
-    it('provides OktaAuthGuard', () => {
-      setup(oktaAuth);
-      expect(TestBed.get(OktaAuthGuard)).toBeDefined();
-    });
-  });
-
-  describe('forRoot', () => {
-    it('should not throw', () => {
-      expect(() => setupForRoot(oktaAuth)).not.toThrow();
-    });
-
-    it('should provide OktaAuth', () => {
-      setupForRoot(oktaAuth);
-      expect(TestBed.get(OKTA_CONFIG)).toBeDefined();
-      expect(TestBed.get(OKTA_AUTH)).toBeDefined();
-    });
-
-    it('should provide OktaAuthStateService', () => {
-      setupForRoot(oktaAuth);
-      expect(TestBed.get(OktaAuthStateService)).toBeDefined();
+    describe('with OKTA_CONFIG injection token', () => {
+      it('provides OktaAuth', () => {
+        setup(oktaAuth);
+        expect(TestBed.get(OKTA_AUTH)).toBeDefined();
+        expect(oktaAuth.start).toHaveBeenCalled();
+      });
+      it('provides AuthStateService', () => {
+        setup(oktaAuth);
+        expect(TestBed.get(OktaAuthStateService)).toBeDefined();
+      });
+      it('provides OktaAuthGuard', () => {
+        setup(oktaAuth);
+        expect(TestBed.get(OktaAuthGuard)).toBeDefined();
+      });
+      it('provides OktaAuthConfigService', () => {
+        setup(oktaAuth);
+        expect(TestBed.get(OktaAuthConfigService)).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig().oktaAuth).toEqual(oktaAuth);
+      });
+      it('should throw if oktaAuth is not provided in OKTA_CONFIG value', () => {
+        setup();
+        expect(() => TestBed.get(OKTA_AUTH)).toThrow('Okta config should contain oktaAuth');
+      });
     });
 
-    it('should provide OktaAuthGuard', () => {
-      setupForRoot(oktaAuth);
-      expect(TestBed.get(OktaAuthGuard)).toBeDefined();
+    describe('with .forRoot(config)', () => {
+      it('should provide OktaAuth', () => {
+        setupForRoot(oktaAuth);
+        expect(TestBed.get(OKTA_AUTH)).toBeDefined();
+        expect(oktaAuth.start).toHaveBeenCalled();
+      });
+
+      it('should provide OKTA_CONFIG', () => {
+        setupForRoot(oktaAuth);
+        expect(TestBed.get(OKTA_CONFIG)).toBeDefined();
+        expect(TestBed.get(OKTA_CONFIG).oktaAuth).toEqual(oktaAuth);
+      });
+
+      it('should provide OktaAuthConfigService', () => {
+        setupForRoot(oktaAuth);
+        expect(TestBed.get(OktaAuthConfigService)).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig().oktaAuth).toEqual(oktaAuth);
+      });
+  
+      it('should provide OktaAuthStateService', () => {
+        setupForRoot(oktaAuth);
+        expect(TestBed.get(OktaAuthStateService)).toBeDefined();
+      });
+  
+      it('should provide OktaAuthGuard', () => {
+        setupForRoot(oktaAuth);
+        expect(TestBed.get(OktaAuthGuard)).toBeDefined();
+      });
+  
+      it('should throw if oktaAuth is not provided', () => {
+        setupForRoot();
+        expect(() => TestBed.get(OKTA_AUTH)).toThrow('Okta config is not provided');
+      });
+    });
+  
+    describe('with APP_INITIALIZER', () => {
+      it('should set loaded config with configService.setConfig()', async () => {
+        await setupWithAppInitializer(oktaAuthOptions);
+        expect(TestBed.get(OKTA_CONFIG)).not.toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService)).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig().oktaAuth.options.issuer).toEqual(oktaAuthOptions.issuer);
+      });
+
+      it('should provide OktaAuth', async () => {
+        await setupWithAppInitializer(oktaAuthOptions);
+        expect(TestBed.get(OKTA_AUTH)).toBeDefined();
+        expect(TestBed.get(OKTA_AUTH).start).toHaveBeenCalled();
+      });
+  
+      it('should provide OktaAuthStateService', async () => {
+        await setupWithAppInitializer(oktaAuthOptions);
+        expect(TestBed.get(OktaAuthStateService)).toBeDefined();
+      });
+  
+      it('should provide OktaAuthGuard', async () => {
+        await setupWithAppInitializer(oktaAuthOptions);
+        expect(TestBed.get(OktaAuthGuard)).toBeDefined();
+      });
+  
+      it('should throw if oktaAuth is not provided', async () => {
+        await setupWithAppInitializer();
+        expect(() => TestBed.get(OKTA_AUTH)).toThrow('Okta config is not provided');
+      });
+
     });
   });
   

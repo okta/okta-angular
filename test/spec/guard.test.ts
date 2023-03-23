@@ -7,6 +7,7 @@ import {
   OKTA_CONFIG,
 } from '../../lib/src/okta-angular';
 import { AuthRequiredFunction } from '../../lib/src/okta/models/okta.config';
+import { OktaAuthConfigService } from '../../lib/src/okta/services/auth-config.serice';
 import { 
   ActivatedRouteSnapshot, 
   RouterStateSnapshot, 
@@ -16,6 +17,13 @@ import {
 } from '@angular/router';
 import { Injector } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
+
+function createConfigSetvice(config: OktaConfig) {
+  return {
+    getConfig: jest.fn().mockReturnValue(config),
+    setConfig: jest.fn(),
+  } as unknown as OktaAuthConfigService;
+}
 
 function setup(oktaAuth: OktaAuth, config: OktaConfig) {
   config = config || {};
@@ -50,9 +58,10 @@ describe('Angular auth guard', () => {
         const oktaAuth = {
           isAuthenticated: jest.fn().mockResolvedValue(true),
         } as unknown;
+        const configSetvice = createConfigSetvice({} as OktaConfig);
         setup(oktaAuth as OktaAuth, {} as OktaConfig);
         const injector: Injector = TestBed.get(Injector);
-        const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
+        const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configSetvice);
         const route: unknown = {};
         const res = await guard.canLoad(route as Route);
         expect(res).toBe(true);
@@ -74,9 +83,10 @@ describe('Angular auth guard', () => {
         } as unknown as OktaAuth;
         onAuthRequired = jest.fn();
         const config = { oktaAuth } as OktaConfig;
+        const configSetvice = createConfigSetvice(config);
         setup(oktaAuth, config);
         injector = TestBed.get(Injector);
-        guard = new OktaAuthGuard(config, oktaAuth, injector);
+        guard = new OktaAuthGuard(oktaAuth, injector, configSetvice);
         route = {} as unknown as Route;
       });
 
@@ -119,7 +129,9 @@ describe('Angular auth guard', () => {
       });
 
       it('onAuthRequired can be set on config', async () => {
-        guard = new OktaAuthGuard({ oktaAuth, onAuthRequired }, oktaAuth, injector);
+        const config = { oktaAuth, onAuthRequired };
+        const configSetvice = createConfigSetvice(config);
+        guard = new OktaAuthGuard(oktaAuth, injector, configSetvice);
         await guard.canLoad(route);
         expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
       });
@@ -135,9 +147,10 @@ describe('Angular auth guard', () => {
             subscribe: jest.fn()
           }
         } as unknown;
+        const configSetvice = createConfigSetvice({} as OktaConfig);
         setup(oktaAuth as OktaAuth, {} as OktaConfig);
         const injector: Injector = TestBed.get(Injector);
-        const guard = new OktaAuthGuard({} as OktaConfig, oktaAuth as OktaAuth, injector as Injector);
+        const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configSetvice);
         const route: unknown = {};
         const state: unknown = {};
         const res = await guard.canActivate(route as ActivatedRouteSnapshot, state as RouterStateSnapshot);
@@ -164,10 +177,11 @@ describe('Angular auth guard', () => {
         } as unknown as OktaAuth;
         onAuthRequired = jest.fn();
         const config = { oktaAuth } as OktaConfig;
+        const configSetvice = createConfigSetvice(config);
         setup(oktaAuth, config);
         router = TestBed.get(Router);
         injector = TestBed.get(Injector);
-        guard = new OktaAuthGuard(config, oktaAuth, injector);
+        guard = new OktaAuthGuard(oktaAuth, injector, configSetvice);
         const routerState: RouterState = router.routerState;
         state = routerState.snapshot;
         route = state.root;
@@ -201,7 +215,9 @@ describe('Angular auth guard', () => {
       });
 
       it('onAuthRequired can be set on config', async () => {
-        guard = new OktaAuthGuard({ oktaAuth, onAuthRequired }, oktaAuth, injector);
+        const config = { oktaAuth, onAuthRequired };
+        const configSetvice = createConfigSetvice(config);
+        guard = new OktaAuthGuard(oktaAuth, injector, configSetvice);
         await guard.canActivate(route, state);
         expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
       });
@@ -220,9 +236,10 @@ describe('Angular auth guard', () => {
         signInWithRedirect: jest.fn()
       } as unknown as OktaAuth;
       const config = { oktaAuth } as OktaConfig;
+      const configSetvice = createConfigSetvice(config);
       setup(oktaAuth, config);
       const injector = TestBed.get(Injector);
-      const guard = new OktaAuthGuard(config, oktaAuth, injector);
+      const guard = new OktaAuthGuard(oktaAuth, injector, configSetvice);
       const router = TestBed.get(Router);
       const routerState: RouterState = router.routerState;
       const state = routerState.snapshot;

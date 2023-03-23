@@ -25,8 +25,8 @@ import {
 import { filter } from 'rxjs/operators';
 
 import { OktaAuth, AuthState } from '@okta/okta-auth-js';
-
-import { AuthRequiredFunction, OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
+import { OktaAuthConfigService } from './services/auth-config.serice';
+import { AuthRequiredFunction, OKTA_AUTH } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
@@ -35,11 +35,15 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
 
   constructor(
-    @Inject(OKTA_CONFIG) private config: OktaConfig, 
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, 
-    private injector: Injector
-  ) { 
-    this.onAuthRequired = this.config.onAuthRequired;
+    private injector: Injector,
+    private configService: OktaAuthConfigService
+  ) {
+    const config = this.configService.getConfig();
+    if (!config) {
+      throw new Error('Okta config is not provided');
+    }
+    this.onAuthRequired = config.onAuthRequired;
 
     // Unsubscribe updateAuthStateListener when route change
     const router = injector.get(Router);
