@@ -39,13 +39,13 @@ const env = {};
 [
   'ISSUER',
   'CLIENT_ID',
-  'ASYNC_OKTA_CONFIG'
 ].forEach(function (key) {
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
   }
   env[key] = process.env[key];
 });
+env['ASYNC_OKTA_CONFIG'] = process.env['ASYNC_OKTA_CONFIG'];
 
 fs.writeFileSync(getFilePath(false), getContent(env, false));
 fs.writeFileSync(getFilePath(true), getContent(env, true));
