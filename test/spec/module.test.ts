@@ -12,6 +12,8 @@ import {
   OktaAuthGuard,
   OktaAuthConfigService
 } from '../../lib/src/okta-angular';
+import { of } from 'rxjs';
+import { map, tap, take, catchError } from 'rxjs/operators';
 
 @Component({ template: '' })
 class MockComponent {}
@@ -20,20 +22,23 @@ class MockComponent {}
 // In APP_INITIALIZER factory the config should be set with configService.setConfig()
 async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
   const configInitializer = (configService: OktaAuthConfigService, httpClient: HttpClient) => {
-    return () => {
-      return httpClient.get('/config')
-        .toPromise()
-        .then((oktaAuthOptions: OktaAuthOptions) => {
-          const oktaAuth = new OktaAuth(oktaAuthOptions);
+    return () => httpClient.get('/config')
+      .pipe(
+        map((res: any) => ({
+          issuer: res.issuer,
+          clientId: res.clientId,
+          redirectUri: res.redirectUri,
+        })),
+        tap((authConfig: OktaAuthOptions) => {
+          const oktaAuth = new OktaAuth(authConfig);
           oktaAuth.start = jest.fn();
           configService.setConfig({
             oktaAuth,
           });
-        })
-        .catch(() => {
-          // Config not loaded
-        });
-    };
+        }),
+        take(1),
+        catchError((_err) => of(null)),
+      )
   };
 
   TestBed.configureTestingModule({
