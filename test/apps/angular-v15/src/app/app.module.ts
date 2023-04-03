@@ -12,7 +12,7 @@
 
 /*eslint import/no-unresolved: [2, { ignore: ['@okta/okta-angular$'] }]*/
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
+import { NgModule, Injector, APP_INITIALIZER, Provider } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 
 /**
@@ -23,6 +23,8 @@ import {
   OktaAuthGuard,
   OktaAuthModule,
   OktaCallbackComponent,
+  OktaAuthConfigService,
+  OktaConfig,
 } from '@okta/okta-angular';
 
 /**
@@ -93,13 +95,41 @@ const appRoutes: Routes = [
   },
 ];
 
-const oktaAuth = new OktaAuth(environment.oidc);
+let providers: Provider[] = [];
+let oktaConfig: OktaConfig | undefined;
+if (environment.asyncOktaConfig) {
+  const configInitializer = (configService: OktaAuthConfigService) => {
+    return async () => {
+      // Use asynchronous import of configuration
+      // You can also load configuration with HTTP request here with HttpClient
+      const { environment: { oidc } } = await import('../environments/environment');
+      const oktaAuth = new OktaAuth(oidc);
+      oktaConfig = {
+        oktaAuth
+      };
+      configService.setConfig(oktaConfig);
+    };
+  };
+  providers = [{
+    provide: APP_INITIALIZER,
+    useFactory: configInitializer,
+    deps: [OktaAuthConfigService],
+    multi: true
+  }];
+} else {
+  const oktaAuth = new OktaAuth(environment.oidc);
+  oktaConfig = {
+    oktaAuth
+  };
+}
+
 
 @NgModule({
+  providers,
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    OktaAuthModule.forRoot({oktaAuth})
+    OktaAuthModule.forRoot(oktaConfig),
   ],
   declarations: [
     AppComponent,
