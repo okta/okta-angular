@@ -22,9 +22,9 @@ class MockComponent {}
 // In APP_INITIALIZER factory the config should be set with configService.setConfig()
 async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
   const configInitializer = (configService: OktaAuthConfigService, httpClient: HttpClient) => {
-    return () => httpClient.get('/config')
+    return () => httpClient.get<OktaAuthOptions>('/config')
       .pipe(
-        map((res: any) => ({
+        map((res) => ({
           issuer: res.issuer,
           clientId: res.clientId,
           redirectUri: res.redirectUri,
@@ -37,8 +37,8 @@ async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
           });
         }),
         take(1),
-        catchError((_err) => of(null)),
-      )
+        catchError(() => of(null)),
+      );
   };
 
   TestBed.configureTestingModule({

@@ -102,6 +102,7 @@ if (environment.asyncOktaConfig) {
     return async () => {
       // Use asynchronous import of configuration
       // You can also load configuration with HTTP request here with HttpClient
+      // eslint-disable-next-line node/no-unpublished-import, node/no-missing-import, import/no-unresolved
       const { environment: { oidc } } = await import('../environments/environment');
       const oktaAuth = new OktaAuth(oidc);
       oktaConfig = {
