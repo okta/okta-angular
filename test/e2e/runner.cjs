@@ -4,14 +4,20 @@ const waitOn = require('wait-on');
 
 const getTask = (taskConfig) => () => {
   return new Promise(resolve => {
-    const { app, name } = taskConfig;
+    const { app, name, asyncOktaConfig } = taskConfig;
     console.log(`Start server for ${app}`);
     // 1. start the sample's web server
-    const server = spawn('yarn', [
+    const server = spawn(`yarn`, [
       '--cwd',
       `../apps/${app}`,
       'start:prod'
-    ], { stdio: 'inherit' });
+    ], {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        ASYNC_OKTA_CONFIG: asyncOktaConfig ? '1' : '0',
+      }
+    });
 
     waitOn({
       resources: [
@@ -58,7 +64,8 @@ const tasks = [
   },
   {
     name: '@okta/test.app.ng15',
-    app: 'angular-v15'
+    app: 'angular-v15',
+    asyncOktaConfig: true
   },
 ]
   .reduce((tasks, app) => {

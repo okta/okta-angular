@@ -1,3 +1,9 @@
+# 6.2.0
+
+### Features
+
+- [#124](https://github.com/okta/okta-angular/pull/124) Supports asynchronous configuration of `OktaAuthModule` in `APP_INITIALIZER` with `OktaAuthConfigService.setConfig()`
+
 # 6.1.0
 
 ### Features

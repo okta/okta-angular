@@ -77,6 +77,8 @@ npm install @okta/okta-angular @okta/okta-auth-js
 
 ## Usage
 
+:warning: This method of configuration is deprecated and will be removed in v7. Starting with `okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using static method [`forRoot`](#oktaauthmoduleforroot).  
+
 Add [`OktaAuthModule`](#oktaauthmodule) to your module's imports.
 Create a configuration object and provide this as [`OKTA_CONFIG`](#okta_config).
 
@@ -111,7 +113,9 @@ const oktaAuth = new OktaAuth(authConfig);
 export class MyAppModule { }
 ```
 
-Starting with `okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using [`forRoot()` static method](https://angular.io/guide/singleton-services#the-forroot-pattern) to create a singleton service. Pass your configuration object of type `OktaConfig` as the only parameter to `OktaAuthModule.forRoot()`. It will provide [`OKTA_CONFIG`](#okta_config) for you.
+### `OktaAuthModule.forRoot()`
+
+Add `OktaAuthModule.forRoot(config: OktaConfig)` to your module's imports to create a [singleton service](https://angular.io/guide/singleton-services#the-forroot-pattern) with provied [configuration](#okta_config).  
 
 ```typescript
 // myApp.module.ts
@@ -138,6 +142,56 @@ const moduleConfig: OktaConfig = { oktaAuth };
 })
 export class MyAppModule { }
 ```
+
+### `APP_INITIALIZER`
+
+Starting with `okta-angular 6.2.0`, you can provide `OktaConfig` in `APP_INITIALIZER` provider factory with method `setConfig()` of `OktaAuthConfigService` instance which allows you to load the `OktaConfig` at runtime.
+
+```typescript
+// myApp.module.ts
+
+import {
+  OktaAuthModule,
+  OktaConfig,
+  OktaAuthOptions,
+  OktaAuthConfigService,
+} from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+function configInitializer(configService: OktaAuthConfigService, httpBackend: HttpBackend): () => void {
+  return () =>
+  new HttpClient(httpBackend)
+    .get('/api/config')
+    .pipe(
+      map((res: any) => ({
+        issuer: res.issuer,
+        clientId: res.clientId,
+        redirectUri: window.location.origin + '/login/callback'
+      })),
+      tap((authConfig: OktaAuthOptions) => {
+        const oktaAuth = new OktaAuth(authConfig);
+        const moduleConfig: OktaConfig = { oktaAuth };
+        configService.setConfig(moduleConfig);
+      }),
+      take(1)
+    );
+};
+
+@NgModule({
+  providers: [{
+    provide: APP_INITIALIZER,
+    useFactory: configInitializer,
+    deps: [OktaAuthConfigService, HttpBackend],
+    multi: true
+  }],
+  imports: [
+    ...
+    OktaAuthModule.forRoot()
+  ],
+})
+export class MyAppModule { }
+```
+
 
 ### `OKTA_CONFIG`
 
