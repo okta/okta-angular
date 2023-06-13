@@ -3,7 +3,7 @@
 source ${OKTA_HOME}/${REPO}/scripts/setup.sh
 
 if [ ! -z "$AUTHJS_VERSION" ]; then
-  echo "Skipping e2e tests against auth-js v6.x"
+  echo "Skipping unit tests against auth-js v6.x"
   exit ${SUCCESS}
 fi
 
