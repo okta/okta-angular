@@ -11,13 +11,19 @@
  */
 
 import AppPage from '../pageobjects/app.page';
-import OktaSignInPage from '../pageobjects/okta-signin.page';
+import OktaSignInPageV1 from '../pageobjects/okta-signin.page';
+import OktaSignInPageOIE from '../pageobjects/okta-signin-oie.page';
 import ProtectedPage from '../pageobjects/protected.page';
 import LazyPage from '../pageobjects/lazy.page';
 import SessionTokenSignInPage from '../pageobjects/sessiontoken-signin.page';
 import PublicPage from '../pageobjects/public.page';
 import HasGroupPage from '../pageobjects/has-group.page';
 import { waitForLoad } from '../util/waitUtil';
+
+let OktaSignInPage = OktaSignInPageV1;
+if (process.env.ORG_OIE_ENABLED) {
+  OktaSignInPage = OktaSignInPageOIE;
+}
 
 describe('Angular + Okta App', () => {
   

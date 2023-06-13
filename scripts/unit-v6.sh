@@ -2,6 +2,11 @@
 
 source ${OKTA_HOME}/${REPO}/scripts/setup.sh
 
+if [ ! -z "$AUTHJS_VERSION" ]; then
+  echo "Skipping e2e tests against auth-js v6.x"
+  exit ${SUCCESS}
+fi
+
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/test-reports/unit"
 
