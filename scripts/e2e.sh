@@ -8,11 +8,11 @@ setup_service google-chrome-stable 106.0.5249.61-1
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/test-reports/e2e"
 
-export ISSUER=https://samples-javascript.okta.com/oauth2/default
-export SPA_CLIENT_ID=0oapmwm72082GXal14x6
-export USERNAME=george@acme.com
-get_vault_secret_key devex/samples-javascript password PASSWORD
-export ORG_OIE_ENABLED=
+export ISSUER=https://javascript-idx-sdk.okta.com/oauth2/default
+export SPA_CLIENT_ID=0oa17suj5x9khaVH75d7
+export USERNAME=mary@acme.com
+get_vault_secret_key repo_gh-okta-okta-auth-js/default password PASSWORD
+export ORG_OIE_ENABLED=true
 
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
