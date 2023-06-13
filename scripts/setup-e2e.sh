@@ -47,6 +47,7 @@ yarn global add yalc
 
 cd ${OKTA_HOME}/${REPO}
 
+# if running on bacon
 if [ -n "${TEST_SUITE_ID}" ]; then
   # undo permissions change on scripts/publish.sh
   git checkout -- scripts
