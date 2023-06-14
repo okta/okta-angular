@@ -10,10 +10,9 @@ export TEST_RESULT_FILE_DIR="${REPO}/test-reports/e2e"
 
 export ISSUER=https://samples-javascript.okta.com/oauth2/default
 export SPA_CLIENT_ID=0oapmwm72082GXal14x6
-export WEB_CLIENT_ID=0oapmx9r5dK1dDAd54x6
 export USERNAME=george@acme.com
-get_secret prod/okta-sdk-vars/client_secret CLIENT_SECRET
-get_secret prod/okta-sdk-vars/password PASSWORD
+get_vault_secret_key devex/samples-javascript password PASSWORD
+export ORG_OIE_ENABLED=
 
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
