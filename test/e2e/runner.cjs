@@ -67,6 +67,11 @@ const tasks = [
     app: 'angular-v15',
     asyncOktaConfig: true
   },
+  {
+    name: '@okta/test.app.ng16',
+    app: 'angular-v16',
+    asyncOktaConfig: true
+  },
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);
