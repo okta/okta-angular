@@ -34,8 +34,8 @@
     "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jest": "^29.2.3",
+    "@types/node": "^16.18.38",
     "jest": "^29.3.1",
-    "jest-preset-angular": "^12.2.3",
     "lite-server": "^2.6.1",
     "typescript": "~5.1.3"
   },
