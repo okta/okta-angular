@@ -30,7 +30,7 @@ install_auth_js () {
 
 # Install required node version
 export NVM_DIR="/root/.nvm"
-setup_service node v16.13.2
+setup_service node v16.14.0
 
 # Install yarn
 # Use the cacert bundled with centos as okta root CA is self-signed and cause issues downloading from yarn
