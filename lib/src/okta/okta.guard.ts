@@ -129,6 +129,8 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
     const options: TokenParams = {};
     if (routeData?.acrValues) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Supports auth-js >= 7.1.0
       options.acrValues = routeData.acrValues;
     }
 

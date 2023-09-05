@@ -120,6 +120,10 @@ describe('Angular + Okta App', () => {
     });
 
     it('displays the child route "Step-up (1FA)" with Step-up authentication', async () => {
+      if (process.env.AUTHJS_VERSION_6) {
+        // skip
+        return;
+      }
       // 1. Go to /private with a standard authentication
       await PublicPage.navigateTo('/private');
       await OktaSignInPage.waitForLoad();

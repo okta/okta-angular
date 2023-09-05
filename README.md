@@ -266,7 +266,7 @@ const appRoutes: Routes = [
 ]
 ```
 
-To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add []`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data:
+To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add [`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data:
 
 ```typescript
 // myApp.module.ts
