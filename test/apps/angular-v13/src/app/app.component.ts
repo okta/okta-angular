@@ -26,6 +26,8 @@ import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
     [queryParams]="{ fooParams: 'foo' }"> Protected Page w/ custom config </button>
   <button id="public-button" routerLink="/public"> Parent Route (public) </button>
   <button id="private-button" routerLink="/public/private"> Child Route (private) </button>
+  <button id="1fa-button" routerLink="/public/1fa"> Step-up Route (1fa) </button>
+  <button id="2fa-button" routerLink="/public/2fa"> Step-up Route (2fa) </button>
   <button id="group-button" routerLink="/group"> Has Group </button>
   <router-outlet></router-outlet>
   `,
