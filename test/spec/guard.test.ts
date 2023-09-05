@@ -16,7 +16,17 @@ import {
   Route
 } from '@angular/router';
 import { Injector } from '@angular/core';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuth, AuthSdkError } from '@okta/okta-auth-js';
+
+jest.mock('../../lib/src/okta/packageInfo', () => ({
+  __esModule: true,
+  default: {
+    authJSMinSupportedVersion: '5.3.1',
+    authJSMinSupportedVersionForAcr: '7.1.0',
+    version: '99.9.9',
+    name: '@okta/okta-angular',
+  }
+}));
 
 function createConfigService(config: OktaConfig) {
   return {
@@ -53,6 +63,31 @@ describe('Angular auth guard', () => {
   });
 
   describe('canLoad', () => {
+    it('throws AuthSdkError if acrValues is provided and auth-js version < 7.1.0', async () => {
+      const oktaAuth = {
+        isAuthenticated: jest.fn().mockResolvedValue(false),
+        authStateManager: {
+          subscribe: jest.fn()
+        },
+        _oktaUserAgent: {
+          getVersion: jest.fn().mockReturnValue('7.0.0')
+        }
+      } as unknown;
+      const configService = createConfigService({} as OktaConfig);
+      setup(oktaAuth as OktaAuth, {} as OktaConfig);
+      const injector: Injector = TestBed.get(Injector);
+      const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
+      const route: unknown = {
+        data: {
+          acrValues: 'urn:okta:loa:2fa:any'
+        }
+      };
+      const guardCall = () => guard.canLoad(route as Route);
+      await expect(guardCall).rejects.toThrow(new AuthSdkError(
+        'Passed in oktaAuth does not support ACR values, minimum supported okta-auth-js version is 7.1.0.'
+      ));
+    });
+
     describe('isAuthenticated() = true', () => {
       it('returns true', async () => {
         const oktaAuth = {
@@ -125,7 +160,8 @@ describe('Angular auth guard', () => {
           onAuthRequired: mockFn
         };
         await guard.canLoad(route);
-        expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector);
+        const options = {};
+        expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector, options);
       });
 
       it('onAuthRequired can be set on config', async () => {
@@ -133,12 +169,130 @@ describe('Angular auth guard', () => {
         const configService = createConfigService(config);
         guard = new OktaAuthGuard(oktaAuth, injector, configService);
         await guard.canLoad(route);
-        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
+        const options = {};
+        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector, options);
+      });
+    });
+
+    describe('isAuthenticated() = true and "acr" claim matches provided acrValues', () => {
+      it('returns true', async () => {
+        const oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(true),
+          authStateManager: {
+            getAuthState: jest.fn().mockReturnValue({
+              accessToken: {
+                claims: {
+                  acr: 'urn:okta:loa:2fa:any'
+                }
+              }
+            })
+          },
+          _oktaUserAgent: {
+            getVersion: jest.fn().mockReturnValue('7.1.0')
+          }
+        } as unknown;
+        const configService = createConfigService({} as OktaConfig);
+        setup(oktaAuth as OktaAuth, {} as OktaConfig);
+        const injector: Injector = TestBed.get(Injector);
+        const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
+        const route: unknown = {
+          data: {
+            acrValues: 'urn:okta:loa:2fa:any'
+          }
+        };
+        const res = await guard.canLoad(route as Route);
+        expect(res).toBe(true);
+      });
+    });
+
+    describe('isAuthenticated() = true and "acr" claim does not match provided acrValues', () => {
+      let oktaAuth: OktaAuth;
+      let guard: OktaAuthGuard;
+      let route: Route;
+      let injector: Injector;
+      beforeEach(() => {
+        oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(true),
+          authStateManager: {
+            getAuthState: jest.fn().mockReturnValue({
+              accessToken: {
+                claims: {
+                  acr: 'urn:okta:loa:1fa:any'
+                }
+              }
+            })
+          },
+          signInWithRedirect: jest.fn(),
+          _oktaUserAgent: {
+            getVersion: jest.fn().mockReturnValue('7.1.0')
+          }
+        } as unknown as OktaAuth;
+        const config = { oktaAuth } as OktaConfig;
+        const configService = createConfigService(config);
+        setup(oktaAuth, config);
+        injector = TestBed.get(Injector);
+        guard = new OktaAuthGuard(oktaAuth, injector, configService);
+        route = {
+          data: {
+            acrValues: 'urn:okta:loa:2fa:any'
+          }
+        } as unknown as Route;
+      });
+
+      it('returns false', async () => {
+        const res = await guard.canLoad(route);
+        expect(res).toBe(false);
+      });
+
+      it('by default, calls "signInWithRedirect({ acrValues })"', async () => {
+        await guard.canLoad(route);
+        expect(oktaAuth.signInWithRedirect).toHaveBeenCalledWith({
+          acrValues: 'urn:okta:loa:2fa:any'
+        });
+      });
+
+      it('if onAuthRequired is provided, calls with options { acrValues }', async () => {
+        const mockFn = jest.fn();
+        route.data = {
+          ...route.data,
+          onAuthRequired: mockFn,
+        };
+        await guard.canLoad(route);
+        const options = {
+          acrValues: 'urn:okta:loa:2fa:any'
+        };
+        expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector, options);
       });
     });
   });
 
   describe('canActivate', () => {
+    it('throws AuthSdkError if acrValues is provided and auth-js version < 7.1.0', async () => {
+      const oktaAuth = {
+        isAuthenticated: jest.fn().mockResolvedValue(false),
+        authStateManager: {
+          subscribe: jest.fn()
+        },
+        _oktaUserAgent: {
+          getVersion: jest.fn().mockReturnValue('7.0.0')
+        }
+      } as unknown;
+      const configService = createConfigService({} as OktaConfig);
+      setup(oktaAuth as OktaAuth, {} as OktaConfig);
+      const injector: Injector = TestBed.get(Injector);
+      const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
+      const route: unknown = {
+        data: {
+          acrValues: 'urn:okta:loa:2fa:any'
+        }
+      };
+      const state: unknown = {};
+      const guardCall = () => guard.canActivate(route as ActivatedRouteSnapshot, state as RouterStateSnapshot);
+      await expect(guardCall).rejects.toThrow(new AuthSdkError(
+        'Passed in oktaAuth does not support ACR values, minimum supported okta-auth-js version is 7.1.0.'
+      ));
+    });
+
     describe('isAuthenticated() = true', () => {
       it('returns true', async () => {
         const oktaAuth = {
@@ -211,7 +365,8 @@ describe('Angular auth guard', () => {
       it('onAuthRequired can be set on route', async () => {
         const fn = route.data['onAuthRequired'] = jest.fn();
         await guard.canActivate(route, state);
-        expect(fn).toHaveBeenCalledWith(oktaAuth, injector);
+        const options = {};
+        expect(fn).toHaveBeenCalledWith(oktaAuth, injector, options);
       });
 
       it('onAuthRequired can be set on config', async () => {
@@ -219,7 +374,106 @@ describe('Angular auth guard', () => {
         const configService = createConfigService(config);
         guard = new OktaAuthGuard(oktaAuth, injector, configService);
         await guard.canActivate(route, state);
-        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector);
+        const options = {};
+        expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, injector, options);
+      });
+    });
+
+    describe('isAuthenticated() = true and "acr" claim matches provided acrValues', () => {
+      it('returns true', async () => {
+        const oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(true),
+          authStateManager: {
+            getAuthState: jest.fn().mockReturnValue({
+              accessToken: {
+                claims: {
+                  acr: 'urn:okta:loa:2fa:any'
+                }
+              }
+            }),
+            subscribe: jest.fn()
+          },
+          _oktaUserAgent: {
+            getVersion: jest.fn().mockReturnValue('7.1.0')
+          }
+        } as unknown;
+        const configService = createConfigService({} as OktaConfig);
+        setup(oktaAuth as OktaAuth, {} as OktaConfig);
+        const injector: Injector = TestBed.get(Injector);
+        const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
+        const route: unknown = {
+          data: {
+            acrValues: 'urn:okta:loa:2fa:any'
+          }
+        };
+        const state: unknown = {};
+        const res = await guard.canActivate(route as ActivatedRouteSnapshot, state as RouterStateSnapshot);
+        expect(res).toBe(true);
+      });
+    });
+
+    describe('isAuthenticated() = true and "acr" claim does not match provided acrValues', () => {
+      let oktaAuth: OktaAuth;
+      let guard: OktaAuthGuard;
+      let state: RouterStateSnapshot;
+      let route: ActivatedRouteSnapshot;
+      let router: Router;
+      let injector: Injector;
+      beforeEach(() => {
+        oktaAuth = {
+          isAuthenticated: jest.fn().mockResolvedValue(true),
+          authStateManager: {
+            getAuthState: jest.fn().mockReturnValue({
+              accessToken: {
+                claims: {
+                  acr: 'urn:okta:loa:1fa:any'
+                }
+              }
+            }),
+            subscribe: jest.fn(),
+          },
+          signInWithRedirect: jest.fn(),
+          _oktaUserAgent: {
+            getVersion: jest.fn().mockReturnValue('7.1.0')
+          }
+        } as unknown as OktaAuth;
+        const config = { oktaAuth } as OktaConfig;
+        const configService = createConfigService(config);
+        setup(oktaAuth, config);
+        router = TestBed.get(Router);
+        injector = TestBed.get(Injector);
+        guard = new OktaAuthGuard(oktaAuth, injector, configService);
+        const routerState: RouterState = router.routerState;
+        state = routerState.snapshot;
+        route = state.root;
+        route.data = {
+          acrValues: 'urn:okta:loa:2fa:any'
+        };
+      });
+
+      it('returns false', async () => {
+        const res = await guard.canActivate(route, state);
+        expect(res).toBe(false);
+      });
+
+      it('by default, calls "signInWithRedirect({ acrValues })"', async () => {
+        await guard.canActivate(route, state);
+        expect(oktaAuth.signInWithRedirect).toHaveBeenCalledWith({
+          acrValues: 'urn:okta:loa:2fa:any'
+        });
+      });
+
+      it('if onAuthRequired is provided, calls with options { acrValues }', async () => {
+        const mockFn = jest.fn();
+        route.data = {
+          ...route.data,
+          onAuthRequired: mockFn
+        };
+        await guard.canActivate(route, state);
+        const options = {
+          acrValues: 'urn:okta:loa:2fa:any'
+        };
+        expect(mockFn).toHaveBeenCalledWith(oktaAuth, injector, options);
       });
     });
   });

@@ -80,7 +80,21 @@ const appRoutes: Routes = [
     children: [
       {
         path: 'private',
-        component: ProtectedComponent
+        component: ProtectedComponent,
+      },
+      {
+        path: '2fa',
+        component: ProtectedComponent,
+        data: {
+          acrValues: 'urn:okta:loa:2fa:any'
+        },
+      },
+      {
+        path: '1fa',
+        component: ProtectedComponent,
+        data: {
+          acrValues: 'urn:okta:loa:1fa:any'
+        },
       }
     ]
   },

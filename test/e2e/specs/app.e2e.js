@@ -118,6 +118,38 @@ describe('Angular + Okta App', () => {
       });
       await PublicPage.logout();
     });
+
+    it('displays the child route "Step-up (1FA)" with Step-up authentication', async () => {
+      // 1. Go to /private with a standard authentication
+      await PublicPage.navigateTo('/private');
+      await OktaSignInPage.waitForLoad();
+      await OktaSignInPage.signIn({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
+      });
+      await PublicPage.waitForLoad();
+      await PublicPage.waitUntilLoggedIn();
+      await PublicPage.publicArea.then(el => el.getText()).then(txt => {
+        expect(txt).toContain('Public!');
+      });
+      await PublicPage.privateArea.then(el => el.getText()).then(txt => {
+        expect(txt).toContain('Protected!');
+      });
+      await ProtectedPage.assertClaim('acr', undefined);
+
+      // 2. Go to /1fa with a Step-up authentication (with acr_values in authentication request)
+      //    As user has already performed authentication with one factor (password),
+      //     there should be automatic redirect to login callback.
+      await PublicPage.navigateTo('/1fa');
+      await PublicPage.waitForLoad();
+      await PublicPage.waitUntilLoggedIn();
+      await PublicPage.privateArea.then(el => el.getText()).then(txt => {
+        expect(txt).toContain('Protected!');
+      });
+      await ProtectedPage.assertClaim('acr', 'urn:okta:loa:1fa:any');
+
+      await PublicPage.logout();
+    });
   });
 
   describe('Role Based Access Control (RBAC)', () => {
