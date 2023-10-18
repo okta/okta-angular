@@ -25,11 +25,9 @@ import {
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-import { OktaAuth, AuthState, TokenParams, AuthSdkError } from '@okta/okta-auth-js';
+import { OktaAuth, AuthState, TokenParams } from '@okta/okta-auth-js';
 import { OktaAuthConfigService } from './services/auth-config.serice';
 import { AuthRequiredFunction, OKTA_AUTH } from './models/okta.config';
-import { compare } from 'compare-versions';
-import packageInfo from './packageInfo';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
@@ -109,10 +107,6 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     const isAuthenticated = authState ? authState?.isAuthenticated : await this.oktaAuth.isAuthenticated();
     let res = isAuthenticated;
     if (routeData?.acrValues) {
-      const isSupported = this.oktaAuth._oktaUserAgent && compare(this.oktaAuth._oktaUserAgent.getVersion(), packageInfo.authJSMinSupportedVersionForAcr, '>=');
-      if (!isSupported) {
-        throw new AuthSdkError(`Passed in oktaAuth does not support ACR values, minimum supported okta-auth-js version is ${packageInfo.authJSMinSupportedVersionForAcr}.`);
-      }
       if (!authState) {
         authState = this.oktaAuth.authStateManager.getAuthState();
       }

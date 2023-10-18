@@ -11,8 +11,7 @@ const packageJson = require(packageJsonPath);
 const packageInfo = {
   name: packageJson.name,
   version: packageJson.version,
-  authJSMinSupportedVersion: '5.3.1',
-  authJSMinSupportedVersionForAcr: '7.1.0'
+  authJSMinSupportedVersion: '5.3.1'
 };
 const output = 'export default ' + JSON.stringify(packageInfo, null, 2).replace(/"/g, '\'') + ';\n';
 

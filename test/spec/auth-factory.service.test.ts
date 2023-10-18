@@ -8,7 +8,6 @@ jest.mock('../../lib/src/okta/packageInfo', () => ({
   __esModule: true,
   default: {
     authJSMinSupportedVersion: '5.3.1',
-    authJSMinSupportedVersionForAcr: '7.1.0',
     version: '99.9.9',
     name: '@okta/okta-angular',
   }

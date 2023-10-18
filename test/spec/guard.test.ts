@@ -22,7 +22,6 @@ jest.mock('../../lib/src/okta/packageInfo', () => ({
   __esModule: true,
   default: {
     authJSMinSupportedVersion: '5.3.1',
-    authJSMinSupportedVersionForAcr: '7.1.0',
     version: '99.9.9',
     name: '@okta/okta-angular',
   }
@@ -63,31 +62,6 @@ describe('Angular auth guard', () => {
   });
 
   describe('canLoad', () => {
-    it('throws AuthSdkError if acrValues is provided and auth-js version < 7.1.0', async () => {
-      const oktaAuth = {
-        isAuthenticated: jest.fn().mockResolvedValue(false),
-        authStateManager: {
-          subscribe: jest.fn()
-        },
-        _oktaUserAgent: {
-          getVersion: jest.fn().mockReturnValue('7.0.0')
-        }
-      } as unknown;
-      const configService = createConfigService({} as OktaConfig);
-      setup(oktaAuth as OktaAuth, {} as OktaConfig);
-      const injector: Injector = TestBed.get(Injector);
-      const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
-      const route: unknown = {
-        data: {
-          acrValues: 'urn:okta:loa:2fa:any'
-        }
-      };
-      const guardCall = () => guard.canLoad(route as Route);
-      await expect(guardCall).rejects.toThrow(new AuthSdkError(
-        'Passed in oktaAuth does not support ACR values, minimum supported okta-auth-js version is 7.1.0.'
-      ));
-    });
-
     describe('isAuthenticated() = true', () => {
       it('returns true', async () => {
         const oktaAuth = {
