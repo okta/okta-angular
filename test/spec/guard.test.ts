@@ -16,7 +16,7 @@ import {
   Route
 } from '@angular/router';
 import { Injector } from '@angular/core';
-import { OktaAuth, AuthSdkError } from '@okta/okta-auth-js';
+import { OktaAuth } from '@okta/okta-auth-js';
 
 jest.mock('../../lib/src/okta/packageInfo', () => ({
   __esModule: true,
