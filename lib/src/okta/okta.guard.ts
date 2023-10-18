@@ -35,7 +35,6 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   private routeData: Data;
   private onAuthRequired?: AuthRequiredFunction;
 
-
   constructor(
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, 
     private injector: Injector,
