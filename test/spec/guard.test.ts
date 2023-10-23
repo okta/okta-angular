@@ -171,7 +171,9 @@ describe('Angular auth guard', () => {
         const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
         const route: unknown = {
           data: {
-            acrValues: 'urn:okta:loa:2fa:any'
+            okta: {
+              acrValues: 'urn:okta:loa:2fa:any'
+            }
           }
         };
         const res = await guard.canLoad(route as Route);
@@ -208,7 +210,9 @@ describe('Angular auth guard', () => {
         guard = new OktaAuthGuard(oktaAuth, injector, configService);
         route = {
           data: {
-            acrValues: 'urn:okta:loa:2fa:any'
+            okta: {
+              acrValues: 'urn:okta:loa:2fa:any'
+            }
           }
         } as unknown as Route;
       });
@@ -351,7 +355,9 @@ describe('Angular auth guard', () => {
         const guard = new OktaAuthGuard(oktaAuth as OktaAuth, injector as Injector, configService);
         const route: unknown = {
           data: {
-            acrValues: 'urn:okta:loa:2fa:any'
+            okta: {
+              acrValues: 'urn:okta:loa:2fa:any'
+            }
           }
         };
         const state: unknown = {};
@@ -395,7 +401,9 @@ describe('Angular auth guard', () => {
         state = routerState.snapshot;
         route = state.root;
         route.data = {
-          acrValues: 'urn:okta:loa:2fa:any'
+          okta: {
+            acrValues: 'urn:okta:loa:2fa:any'
+          }
         };
       });
 

@@ -198,7 +198,7 @@ export class MyAppModule { }
 An Angular InjectionToken used to configure the OktaAuthModule. This value must be provided by your own application.
 
 - `oktaAuth` *(required)*: - [OktaAuth][@okta/okta-auth-js] instance. The instance that can be shared cross different components of the application. One popular use case is to share one single instance cross the application and [Okta Sign-In Widget](https://github.com/okta/okta-signin-widget).
-- `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication or without needed level of end-user assurance (if `acrValues` is provided in route data). Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
+- `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication or without needed level of end-user assurance (if `okta.acrValues` is provided in route data). Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
 - `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
 
 ### `OKTA_AUTH`
@@ -232,7 +232,7 @@ export class MyProtectedComponent implements OnInit {
 The top-level Angular module which provides these components and services:
 
 - [`OktaAuth`][@okta/okta-auth-js] - The passed in [`OktaAuth`][@okta/okta-auth-js] instance with default behavior setup.
-- [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication (and only with needed level of end-user assurance if `acrValues` is provided in route data).
+- [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication (and only with needed level of end-user assurance if `okta.acrValues` is provided in route data).
 - [`OktaCallbackComponent`](#oktacallbackcomponent) - Handles the implicit flow callback by parsing tokens from the URL and storing them automatically.
 - [`OktaAuthStateService`](#oktaauthstateservice) - A data service exposing observable [authState$][AuthState].
 
@@ -240,7 +240,7 @@ The top-level Angular module which provides these components and services:
 
 Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `accessToken` stored.  
 
-To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data. Then `OktaAuthGuard` will also verify `acr` claim of `accessToken` to match provided `acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
+To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then `OktaAuthGuard` will also verify `acr` claim of `accessToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
 
 To ensure the user has been authenticated before accessing your route, add the `canActivate` guard to one of your routes:
 
@@ -266,7 +266,7 @@ const appRoutes: Routes = [
 ]
 ```
 
-To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add [`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data:
+To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add [`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data in `okta` namespace:
 
 ```typescript
 // myApp.module.ts
@@ -279,8 +279,10 @@ const appRoutes: Routes = [
     component: MyProtectedComponent,
     canActivate: [ OktaAuthGuard ],
     data: {
-      // requires any 2 factors before accessing the route
-      acrValues: 'urn:okta:loa:2fa:any'
+      okta: {
+        // requires any 2 factors before accessing the route
+        acrValues: 'urn:okta:loa:2fa:any'
+      }
     },
   },
   ...

@@ -86,14 +86,18 @@ const appRoutes: Routes = [
         path: '2fa',
         component: ProtectedComponent,
         data: {
-          acrValues: 'urn:okta:loa:2fa:any'
+          okta: {
+            acrValues: 'urn:okta:loa:2fa:any'
+          }
         },
       },
       {
         path: '1fa',
         component: ProtectedComponent,
         data: {
-          acrValues: 'urn:okta:loa:1fa:any'
+          okta: {
+            acrValues: 'urn:okta:loa:1fa:any'
+          }
         },
       }
     ]

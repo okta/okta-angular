@@ -105,11 +105,11 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   private async isAuthenticated(routeData?: Data, authState?: AuthState | null) {
     const isAuthenticated = authState ? authState?.isAuthenticated : await this.oktaAuth.isAuthenticated();
     let res = isAuthenticated;
-    if (routeData?.acrValues) {
+    if (routeData?.okta?.acrValues) {
       if (!authState) {
         authState = this.oktaAuth.authStateManager.getAuthState();
       }
-      res = authState?.accessToken?.claims.acr === routeData?.acrValues;
+      res = authState?.accessToken?.claims.acr === routeData?.okta?.acrValues;
     }
     return res;
   }
@@ -121,10 +121,10 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     const options: TokenParams = {};
-    if (routeData?.acrValues) {
+    if (routeData?.okta?.acrValues) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore Supports auth-js >= 7.1.0
-      options.acrValues = routeData.acrValues;
+      options.acrValues = routeData.okta.acrValues;
     }
 
     if (this.onAuthRequired) {
