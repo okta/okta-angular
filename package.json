@@ -55,7 +55,7 @@
     "@angular/router": "~12.2.0",
     "@babel/helper-get-function-arity": "^7.16.7",
     "@compodoc/compodoc": "1.1.19",
-    "@okta/okta-auth-js": "^7.0.0",
+    "@okta/okta-auth-js": "^7.1.0",
     "@types/jest": "^26.0.14",
     "@types/json-schema": "^7.0.3",
     "@types/node": "10.14.0",

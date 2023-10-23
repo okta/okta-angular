@@ -1,3 +1,9 @@
+# 6.3.0
+
+### Features
+
+- [#132](https://github.com/okta/okta-angular/pull/132) Supports Step-up authentication in `OktaAuthGuard` by specifying `okta.acrValues` in route data
+
 # 6.2.0
 
 ### Features

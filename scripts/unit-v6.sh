@@ -7,6 +7,7 @@ if [ ! -z "$AUTHJS_VERSION" ]; then
   exit ${SUCCESS}
 fi
 
+export AUTHJS_VERSION_6="true"
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/test-reports/unit"
 

@@ -11,9 +11,9 @@
  */
 
 import { InjectionToken, Injector } from '@angular/core';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { OktaAuth, TokenParams } from '@okta/okta-auth-js';
 
-export type AuthRequiredFunction = (oktaAuth: OktaAuth, injector: Injector) => void;
+export type AuthRequiredFunction = (oktaAuth: OktaAuth, injector: Injector, options?: TokenParams) => void;
 
 export interface TestingObject {
   disableHttpsCheck: boolean;

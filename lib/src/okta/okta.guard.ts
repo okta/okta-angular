@@ -20,19 +20,20 @@ import {
   NavigationStart, 
   Event,
   CanLoad,
-  Route
+  Route,
+  Data
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-import { OktaAuth, AuthState } from '@okta/okta-auth-js';
+import { OktaAuth, AuthState, TokenParams } from '@okta/okta-auth-js';
 import { OktaAuthConfigService } from './services/auth-config.serice';
 import { AuthRequiredFunction, OKTA_AUTH } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   private state: RouterStateSnapshot;
+  private routeData: Data;
   private onAuthRequired?: AuthRequiredFunction;
-
 
   constructor(
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, 
@@ -55,9 +56,9 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   async canLoad(route: Route): Promise<boolean> {
-    this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
+    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
 
-    const isAuthenticated = await this.oktaAuth.isAuthenticated();
+    const isAuthenticated = await this.isAuthenticated(route.data);
     if (isAuthenticated) {
       return true;
     }
@@ -65,7 +66,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     const router = this.injector.get(Router);
     const nav = router.getCurrentNavigation();
     const originalUri = nav ? nav.extractedUrl.toString() : undefined;
-    await this.handleLogin(originalUri);
+    await this.handleLogin(originalUri, route.data);
 
     return false;
   }
@@ -79,16 +80,17 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     // Track states for current route
     this.state = state;
+    this.routeData = route.data;
     this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
 
     // Protect the route after accessing
     this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);
-    const isAuthenticated = await this.oktaAuth.isAuthenticated();
+    const isAuthenticated = await this.isAuthenticated(route.data);
     if (isAuthenticated) {
       return true;
     }
 
-    await this.handleLogin(state.url);
+    await this.handleLogin(state.url, route.data);
 
     return false;
   }
@@ -100,22 +102,42 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     return this.canActivate(route, state);
   }
 
-  private async handleLogin(originalUri?: string): Promise<void> {
+  private async isAuthenticated(routeData?: Data, authState?: AuthState | null) {
+    const isAuthenticated = authState ? authState?.isAuthenticated : await this.oktaAuth.isAuthenticated();
+    let res = isAuthenticated;
+    if (routeData?.okta?.acrValues) {
+      if (!authState) {
+        authState = this.oktaAuth.authStateManager.getAuthState();
+      }
+      res = authState?.accessToken?.claims.acr === routeData?.okta?.acrValues;
+    }
+    return res;
+  }
+
+  private async handleLogin(originalUri?: string, routeData?: Data): Promise<void> {
     // Store the current path
     if (originalUri) {
       this.oktaAuth.setOriginalUri(originalUri);
     }
 
+    const options: TokenParams = {};
+    if (routeData?.okta?.acrValues) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Supports auth-js >= 7.1.0
+      options.acrValues = routeData.okta.acrValues;
+    }
+
     if (this.onAuthRequired) {
-      this.onAuthRequired(this.oktaAuth, this.injector);
+      this.onAuthRequired(this.oktaAuth, this.injector, options);
     } else {
-      this.oktaAuth.signInWithRedirect();
+      this.oktaAuth.signInWithRedirect(options);
     }
   }
 
-  private updateAuthStateListener = (authState: AuthState) => {
-    if (!authState.isAuthenticated) {
-      this.handleLogin(this.state.url);
+  private updateAuthStateListener = async (authState: AuthState) => {
+    const isAuthenticated = await this.isAuthenticated(this.routeData, authState);
+    if (!isAuthenticated) {
+      this.handleLogin(this.state.url, this.routeData);
     }
   };
 

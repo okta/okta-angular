@@ -20,12 +20,14 @@ import { OktaAuth } from '@okta/okta-auth-js';
   template: `
   <div>
   {{ message }}<br/>
-  <pre id="userinfo-container">{{ user }}</pre>
+  Claims: <pre id="claims-container">{{ claims }}</pre>
+  User: <pre id="userinfo-container">{{ user }}</pre>
   </div>`
 })
 export class ProtectedComponent implements OnInit {
   message;
   user = '';
+  claims = '';
 
   constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
     this.message = 'Protected!';
@@ -34,5 +36,7 @@ export class ProtectedComponent implements OnInit {
   async ngOnInit() {
     const user = await this.oktaAuth.getUser();
     this.user = JSON.stringify(user, null, 4);
+    const claims = await this.oktaAuth.authStateManager.getAuthState()?.accessToken?.claims;
+    this.claims = JSON.stringify(claims, null, 4);
   }
 }

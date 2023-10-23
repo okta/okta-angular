@@ -1334,14 +1334,6 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/runtime-corejs3@^7.17.0":
-  version "7.17.8"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.17.8.tgz#d7dd49fb812f29c61c59126da3792d8740d4e284"
-  integrity sha512-ZbYSUvoSF6dXZmMl/CYTMOvzIFnbGfv4W3SEHYgMvNsFTeLaF2gkGAF4K2ddmtSK4Emej+0aYcnSC6N5dPCXUQ==
-  dependencies:
-    core-js-pure "^3.20.2"
-    regenerator-runtime "^0.13.4"
-
 "@babel/runtime@7.15.4":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
@@ -1882,24 +1874,23 @@
     read-package-json-fast "^2.0.1"
 
 "@okta/okta-auth-js@*":
-  version "6.7.6"
-  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-6.7.6.tgz#31745df22f31e981d18bd0ec1fe85fcb9aa1b4c7"
-  integrity sha512-HUhy0+cccTPRRvlswDkeRt205cAPm+Z+51Xm8nTsnKn5+tWVDZ86Rq8w7JDsr+HjUQGZpdUxRP3Er+vEcoVcgg==
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-7.2.0.tgz#7380d1ab8a5d62ce289a1320346079ff24d58cee"
+  integrity sha512-0YZ8cEbTGwlw9KGey+4ZnGJs4qKs8PkQsbaCyQ1q9jKMftuDlGXL85jrLpnEqg3jfYCpi6GDtEl/QquOKMvAFw==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@babel/runtime-corejs3" "^7.17.0"
     "@peculiar/webcrypto" "^1.4.0"
     Base64 "1.1.0"
     atob "^2.1.2"
-    broadcast-channel "4.13.0"
+    broadcast-channel "~4.17.0"
     btoa "^1.2.1"
     core-js "^3.6.5"
     cross-fetch "^3.1.5"
+    fast-text-encoding "^1.0.6"
     js-cookie "^3.0.1"
     jsonpath-plus "^6.0.1"
     node-cache "^5.1.2"
     p-cancelable "^2.0.0"
-    text-encoding "^0.7.0"
     tiny-emitter "1.1.0"
     webcrypto-shim "^0.1.5"
     xhr2 "0.1.3"
@@ -2818,14 +2809,12 @@ braces@^3.0.1, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-broadcast-channel@4.13.0:
-  version "4.13.0"
-  resolved "https://registry.yarnpkg.com/broadcast-channel/-/broadcast-channel-4.13.0.tgz#21387b2602b9e9ec3b97b03bd8a8d2c198352ff6"
-  integrity sha512-fcDr8QNJ4SOb6jyjUNZatVNmcHtSWfW4PFcs4xIEFZAtorKCIFoEYtjIjaQ4c0jrbr/Bl8NIwOWiLSyspoAnEQ==
+broadcast-channel@~4.17.0:
+  version "4.17.0"
+  resolved "https://registry.yarnpkg.com/broadcast-channel/-/broadcast-channel-4.17.0.tgz#599d44674b09a4e2e07af6da5d03b45ca8bffd11"
+  integrity sha512-r2GSQMNgZv7eAsbdsu9xofSjc3J2diCQTPkSuyVhLBfx8fylLCVhi5KheuhuAQBJNd4pxqUyz9U6rvdnt7GZng==
   dependencies:
     "@babel/runtime" "^7.16.0"
-    detect-node "^2.1.0"
-    microtime "3.0.0"
     oblivious-set "1.1.1"
     p-queue "6.6.2"
     rimraf "3.0.2"
@@ -3400,11 +3389,6 @@ core-js-compat@^3.16.0, core-js-compat@^3.16.2:
     browserslist "^4.17.6"
     semver "7.0.0"
 
-core-js-pure@^3.20.2:
-  version "3.21.1"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.21.1.tgz#8c4d1e78839f5f46208de7230cebfb72bc3bdb51"
-  integrity sha512-12VZfFIu+wyVbBebyHmRTuEE/tZrB4tJToWcwAMcsp3h4+sHR+fMJWbKpYiCRWlhFBq+KNyO8rIV9rTkeVmznQ==
-
 core-js@3.19.0:
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
@@ -3727,7 +3711,7 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-detect-node@2.1.0, detect-node@^2.0.4, detect-node@^2.1.0:
+detect-node@2.1.0, detect-node@^2.0.4:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
@@ -4509,6 +4493,11 @@ fast-levenshtein@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
+
+fast-text-encoding@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/fast-text-encoding/-/fast-text-encoding-1.0.6.tgz#0aa25f7f638222e3396d72bf936afcf1d42d6867"
+  integrity sha512-VhXlQgj9ioXCqGstD37E/HBeqEGV/qOD/kmbVG8h5xKBYvM1L3lR1Zn4555cQ8GkYbJa8aJSipLPndE1k6zK2w==
 
 fastq@^1.6.0:
   version "1.13.0"
@@ -6309,14 +6298,6 @@ micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.1"
     picomatch "^2.2.3"
 
-microtime@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/microtime/-/microtime-3.0.0.tgz#d140914bde88aa89b4f9fd2a18620b435af0f39b"
-  integrity sha512-SirJr7ZL4ow2iWcb54bekS4aWyBQNVcEDBiwAz9D/sTgY59A+uE8UJU15cp5wyZmPBwg/3zf8lyCJ5NUe1nVlQ==
-  dependencies:
-    node-addon-api "^1.2.0"
-    node-gyp-build "^3.8.0"
-
 mime-db@1.51.0, "mime-db@>= 1.43.0 < 2":
   version "1.51.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.51.0.tgz#d9ff62451859b18342d960850dc3cfb77e63fb0c"
@@ -6539,11 +6520,6 @@ nice-napi@^1.0.2:
     node-addon-api "^3.0.0"
     node-gyp-build "^4.2.2"
 
-node-addon-api@^1.2.0:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
-  integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
-
 node-addon-api@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.2.1.tgz#81325e0a2117789c0128dab65e7e38f07ceba161"
@@ -6567,11 +6543,6 @@ node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
-node-gyp-build@^3.8.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-3.9.0.tgz#53a350187dd4d5276750da21605d1cb681d09e25"
-  integrity sha512-zLcTg6P4AbcHPq465ZMFNXx7XpKKJh+7kkN699NiQWisR2uWYOWNWqRHAmbnmKiL4e9aLSlmy5U7rEMUXV59+A==
 
 node-gyp-build@^4.2.2:
   version "4.3.0"
@@ -8557,11 +8528,6 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
-
-text-encoding@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
-  integrity sha512-oJQ3f1hrOnbRLOcwKz0Liq2IcrvDeZRHXhd9RgLrsT+DjWY/nty1Hi7v3dtkaEYbPYe0mUoOfzRrMwfXXwgPUA==
 
 text-table@0.2.0:
   version "0.2.0"

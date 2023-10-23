@@ -34,7 +34,7 @@ This library currently supports:
 - [OAuth 2.0 Implicit Flow](https://tools.ietf.org/html/rfc6749#section-1.3.2)
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
-> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14, 15
+> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 > :warning: `okta-angular` 6.0+ supports Angular 12+. For Angular 7 to 11 please use `okta-angular` 5.x
 > :warning: Angular versions older than 7 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
 
@@ -198,7 +198,7 @@ export class MyAppModule { }
 An Angular InjectionToken used to configure the OktaAuthModule. This value must be provided by your own application.
 
 - `oktaAuth` *(required)*: - [OktaAuth][@okta/okta-auth-js] instance. The instance that can be shared cross different components of the application. One popular use case is to share one single instance cross the application and [Okta Sign-In Widget](https://github.com/okta/okta-signin-widget).
-- `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication. Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
+- `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication or without needed level of end-user assurance (if `okta.acrValues` is provided in route data). Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
 - `onAuthResume` *(optional)*: - callback function. Only relevant if using a [custom login page](#using-a-custom-login-page). Called when the [authentication flow should be resumed by the application](#resuming-the-authentication-flow), typically as a result of redirect callback from an [external identity provider][]. If not defined, `onAuthRequired` will be called.
 
 ### `OKTA_AUTH`
@@ -232,13 +232,17 @@ export class MyProtectedComponent implements OnInit {
 The top-level Angular module which provides these components and services:
 
 - [`OktaAuth`][@okta/okta-auth-js] - The passed in [`OktaAuth`][@okta/okta-auth-js] instance with default behavior setup.
-- [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication.
+- [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication (and only with needed level of end-user assurance if `okta.acrValues` is provided in route data).
 - [`OktaCallbackComponent`](#oktacallbackcomponent) - Handles the implicit flow callback by parsing tokens from the URL and storing them automatically.
 - [`OktaAuthStateService`](#oktaauthstateservice) - A data service exposing observable [authState$][AuthState].
 
 ### `OktaAuthGuard`
 
-Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `accessToken` stored. To ensure the user has been authenticated before accessing your route, add the `canActivate` guard to one of your routes:
+Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `accessToken` stored.  
+
+To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then `OktaAuthGuard` will also verify `acr` claim of `accessToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
+
+To ensure the user has been authenticated before accessing your route, add the `canActivate` guard to one of your routes:
 
 ```typescript
 // myApp.module.ts
@@ -257,6 +261,29 @@ const appRoutes: Routes = [
       // children of a protected route are also protected
       path: 'also-protected'
     }]
+  },
+  ...
+]
+```
+
+To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add [`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data in `okta` namespace:
+
+```typescript
+// myApp.module.ts
+
+import { OktaAuthGuard } from '@okta/okta-angular';
+
+const appRoutes: Routes = [
+  {
+    path: 'protected',
+    component: MyProtectedComponent,
+    canActivate: [ OktaAuthGuard ],
+    data: {
+      okta: {
+        // requires any 2 factors before accessing the route
+        acrValues: 'urn:okta:loa:2fa:any'
+      }
+    },
   },
   ...
 ]
@@ -408,7 +435,9 @@ To implement a custom login page, set an `onAuthRequired` callback on the `OktaC
 ```typescript
 // myApp.module.ts
 
-function onAuthRequired(oktaAuth, injector) {
+function onAuthRequired(oktaAuth, injector, options) {
+  // `options` object can contain `acrValues` if it was provided in route data
+
   // Use injector to access any service available within your application
   const router = injector.get(Router);
 
