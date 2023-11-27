@@ -1,3 +1,9 @@
+# 6.3.2
+
+### Fixes
+
+- [#134](https://github.com/okta/okta-angular/pull/134) Fixed providing `OKTA_CONFIG` with `OktaAuthModule` when config is loaded at runtime
+
 # 6.3.1
 
 ### Fixes
