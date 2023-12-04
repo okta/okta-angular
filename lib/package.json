@@ -1,6 +1,6 @@
 {
   "name": "@okta/okta-angular",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "description": "Angular support for Okta",
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",

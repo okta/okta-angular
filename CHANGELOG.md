@@ -1,3 +1,9 @@
+# 6.3.1
+
+### Fixes
+
+- [#135](https://github.com/okta/okta-angular/pull/135) Fixes okta extended user agent header to correct SDK version
+
 # 6.3.0
 
 ### Features
