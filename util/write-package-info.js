@@ -1,12 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
 const require = createRequire(import.meta.url);
 
-const workingDirectory = process.argv[2];
-const destinationFile = process.argv[3];
-const packageJsonPath = path.join(process.cwd(), workingDirectory, 'package.json');
-const configDest = path.join(process.cwd(), workingDirectory, destinationFile);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const projectPath = path.join(__dirname, '..');
+const packageJsonPath = path.join(projectPath, 'lib', 'package.json');
+const destPath = path.join(projectPath, 'lib', 'src', 'okta', 'packageInfo.ts');
+
 const packageJson = require(packageJsonPath);
 const packageInfo = {
   name: packageJson.name,
@@ -15,6 +19,6 @@ const packageInfo = {
 };
 const output = 'export default ' + JSON.stringify(packageInfo, null, 2).replace(/"/g, '\'') + ';\n';
 
-console.log('Writing config to', configDest);
+console.log('Writing config to', destPath);
 
-fs.writeFileSync(configDest, output);
+fs.writeFileSync(destPath, output);
