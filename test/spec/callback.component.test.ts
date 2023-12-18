@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { APP_INITIALIZER } from '@angular/core';
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OktaAuth } from '@okta/okta-auth-js';
 import {
-  OKTA_CONFIG,
-  OKTA_AUTH,
-  OktaCallbackComponent
+  OktaCallbackComponent,
+  OktaAuthModule,
+  OktaAuthConfigService
 } from '../../lib/src/okta-angular';
 
 describe('OktaCallbackComponent', () => {
@@ -32,27 +33,40 @@ describe('OktaCallbackComponent', () => {
       handleLoginRedirect: jest.fn(),
       idx: {
         isInteractionRequiredError: jest.fn()
-      }
+      },
+      _oktaUserAgent: {
+        addEnvironment: jest.fn(),
+        getVersion: jest.fn().mockReturnValue(`999.9.9`)
+      },
+      options: {},
+      start: jest.fn(),
     } as unknown as OktaAuth;
+
+    const configInitializer = (configService: OktaAuthConfigService) => {
+      return () => {
+        configService.setConfig({
+          oktaAuth,
+          ...config
+        });
+      };
+    };
 
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }])
+        RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
+        OktaAuthModule,
       ],
+      providers: [{
+        provide: APP_INITIALIZER,
+        useFactory: configInitializer,
+        deps: [OktaAuthConfigService],
+        multi: true
+      }],
       declarations: [
         OktaCallbackComponent
       ],
-      providers: [
-        {
-          provide: OKTA_CONFIG,
-          useValue: config
-        },
-        {
-          provide: OKTA_AUTH,
-          useValue: oktaAuth
-        },
-      ],
     });
+
     fixture = TestBed.createComponent(OktaCallbackComponent);
     component = fixture.componentInstance;
   }
