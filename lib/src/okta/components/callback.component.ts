@@ -12,7 +12,7 @@
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
-import { OKTA_CONFIG, OktaConfig, OKTA_AUTH } from '../models/okta.config';
+import { OKTA_AUTH } from '../models/okta.config';
 import { OktaAuthConfigService } from '../services/auth-config.serice';
 
 @Component({
