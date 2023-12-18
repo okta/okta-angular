@@ -44,9 +44,6 @@ import { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './models/okta.config';
         [new Optional(), Location]
       ]
     },
-    // Provide empty OKTA_CONFIG by default
-    // Real config should be provided at runtime with `APP_INITIALIZER` or with `OktaAuthModule.forRoot()`
-    { provide: OKTA_CONFIG, useValue: undefined },
   ]
 })
 export class OktaAuthModule {

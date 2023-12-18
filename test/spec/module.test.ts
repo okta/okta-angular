@@ -195,7 +195,6 @@ describe('Okta Module', () => {
     describe('with APP_INITIALIZER', () => {
       it('should set loaded config with configService.setConfig()', async () => {
         await setupWithAppInitializer(oktaAuthOptions);
-        expect(TestBed.get(OKTA_CONFIG)).not.toBeDefined();
         expect(TestBed.get(OktaAuthConfigService)).toBeDefined();
         expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
         expect(TestBed.get(OktaAuthConfigService).getConfig().oktaAuth.options.issuer).toEqual(oktaAuthOptions.issuer);
