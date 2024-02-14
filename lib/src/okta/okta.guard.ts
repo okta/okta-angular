@@ -72,7 +72,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   /**
-   * Gateway for protected route. Returns true if there is a valid accessToken,
+   * Gateway for protected route. Returns true if there is a valid idToken,
    * otherwise it will cache the route and start the login flow.
    * @param route
    * @param state
@@ -109,7 +109,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
       if (!authState) {
         authState = this.oktaAuth.authStateManager.getAuthState();
       }
-      res = authState?.accessToken?.claims.acr === routeData?.okta?.acrValues;
+      res = authState?.idToken?.claims.acr === routeData?.okta?.acrValues;
     }
     return res;
   }

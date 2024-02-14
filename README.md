@@ -238,9 +238,9 @@ The top-level Angular module which provides these components and services:
 
 ### `OktaAuthGuard`
 
-Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `accessToken` stored.  
+Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `idToken` stored.  
 
-To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then `OktaAuthGuard` will also verify `acr` claim of `accessToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
+To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then `OktaAuthGuard` will also verify `acr` claim of `idToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
 
 To ensure the user has been authenticated before accessing your route, add the `canActivate` guard to one of your routes:
 

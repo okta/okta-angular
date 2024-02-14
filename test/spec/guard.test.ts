@@ -154,7 +154,7 @@ describe('Angular auth guard', () => {
           isAuthenticated: jest.fn().mockResolvedValue(true),
           authStateManager: {
             getAuthState: jest.fn().mockReturnValue({
-              accessToken: {
+              idToken: {
                 claims: {
                   acr: 'urn:okta:loa:2fa:any'
                 }
@@ -191,7 +191,7 @@ describe('Angular auth guard', () => {
           isAuthenticated: jest.fn().mockResolvedValue(true),
           authStateManager: {
             getAuthState: jest.fn().mockReturnValue({
-              accessToken: {
+              idToken: {
                 claims: {
                   acr: 'urn:okta:loa:1fa:any'
                 }
@@ -337,7 +337,7 @@ describe('Angular auth guard', () => {
           isAuthenticated: jest.fn().mockResolvedValue(true),
           authStateManager: {
             getAuthState: jest.fn().mockReturnValue({
-              accessToken: {
+              idToken: {
                 claims: {
                   acr: 'urn:okta:loa:2fa:any'
                 }
@@ -378,7 +378,7 @@ describe('Angular auth guard', () => {
           isAuthenticated: jest.fn().mockResolvedValue(true),
           authStateManager: {
             getAuthState: jest.fn().mockReturnValue({
-              accessToken: {
+              idToken: {
                 claims: {
                   acr: 'urn:okta:loa:1fa:any'
                 }

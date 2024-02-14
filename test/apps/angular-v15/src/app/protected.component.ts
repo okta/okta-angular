@@ -36,7 +36,7 @@ export class ProtectedComponent implements OnInit {
   async ngOnInit() {
     const user = await this.oktaAuth.getUser();
     this.user = JSON.stringify(user, null, 4);
-    const claims = await this.oktaAuth.authStateManager.getAuthState()?.accessToken?.claims;
+    const claims = await this.oktaAuth.authStateManager.getAuthState()?.idToken?.claims;
     this.claims = JSON.stringify(claims, null, 4);
   }
 }
