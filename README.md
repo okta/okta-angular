@@ -426,6 +426,8 @@ Only use `object` format input when custom claim is defined:
 class RBACComponent { }
 ```
 
+> **Note** - [JWT claim names are case-sensitive](https://www.rfc-editor.org/rfc/rfc7519#section-10.1.1). Ensure the claim name is lowercase for the standard `group` claim or that it matches the casing of your custom group's claim. 
+
 #### Using a custom login-page
 
 Using the [Okta Signin Widget](https://github.com/okta/okta-signin-widget), you can embed the complete authentication flow within your application. This allows users to signin without requiring any redirects. A full working example is available [here](https://github.com/okta/samples-js-angular/tree/master/custom-login)
