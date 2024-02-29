@@ -12,7 +12,8 @@
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
-import { OKTA_CONFIG, OktaConfig, OKTA_AUTH } from '../models/okta.config';
+import { OKTA_AUTH } from '../models/okta.config';
+import { OktaAuthConfigService } from '../services/auth-config.serice';
 
 @Component({
   template: `<div>{{error}}</div>`
@@ -21,12 +22,16 @@ export class OktaCallbackComponent implements OnInit {
   error?: string;
 
   constructor(
-    @Inject(OKTA_CONFIG) private config: OktaConfig,
+    private configService: OktaAuthConfigService,
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     @Optional() private injector?: Injector
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const config = this.configService.getConfig();
+    if (!config) {
+      throw new Error('Okta config is not provided');
+    }
     try {
       // Parse code or tokens from the URL, store tokens in the TokenManager, and redirect back to the originalUri
       await this.oktaAuth.handleLoginRedirect();
@@ -36,7 +41,7 @@ export class OktaCallbackComponent implements OnInit {
       // @ts-ignore Supports auth-js v5 & v6-7
       const isInteractionRequiredError = this.oktaAuth.isInteractionRequiredError || this.oktaAuth.idx.isInteractionRequiredError;
       if (isInteractionRequiredError(e) && this.injector) {
-        const { onAuthResume, onAuthRequired } = this.config;
+        const { onAuthResume, onAuthRequired } = config;
         const callbackFn = onAuthResume || onAuthRequired;
         if (callbackFn) {
           callbackFn(this.oktaAuth, this.injector);

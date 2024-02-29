@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, APP_INITIALIZER } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -20,7 +21,10 @@ class MockComponent {}
 
 // Simulate fetching OktaAuthOptions from backend with GET /config
 // In APP_INITIALIZER factory the config should be set with configService.setConfig()
-async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
+async function setupWithAppInitializer(
+  oktaAuthOptions?: OktaAuthOptions,
+  imports: any[] = [ OktaAuthModule ],
+) {
   const configInitializer = (configService: OktaAuthConfigService, httpClient: HttpClient) => {
     return () => httpClient.get<OktaAuthOptions>('/config')
       .pipe(
@@ -45,7 +49,7 @@ async function setupWithAppInitializer(oktaAuthOptions?: OktaAuthOptions) {
     imports: [
       HttpClientTestingModule,
       RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
-      OktaAuthModule.forRoot()
+      ...imports,
     ],
     declarations: [ MockComponent ],
     providers: [{
@@ -191,7 +195,6 @@ describe('Okta Module', () => {
     describe('with APP_INITIALIZER', () => {
       it('should set loaded config with configService.setConfig()', async () => {
         await setupWithAppInitializer(oktaAuthOptions);
-        expect(TestBed.get(OKTA_CONFIG)).not.toBeDefined();
         expect(TestBed.get(OktaAuthConfigService)).toBeDefined();
         expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
         expect(TestBed.get(OktaAuthConfigService).getConfig().oktaAuth.options.issuer).toEqual(oktaAuthOptions.issuer);
@@ -216,6 +219,13 @@ describe('Okta Module', () => {
       it('should throw if oktaAuth is not provided', async () => {
         await setupWithAppInitializer();
         expect(() => TestBed.get(OKTA_AUTH)).toThrow('Okta config is not provided');
+      });
+  
+      it('should work if OktaAuthModule is imported with .forRoot()', async () => {
+        await setupWithAppInitializer(oktaAuthOptions, [ OktaAuthModule.forRoot() ]);
+        expect(TestBed.get(OKTA_CONFIG)).not.toBeDefined();
+        expect(TestBed.get(OKTA_AUTH)).toBeDefined();
+        expect(TestBed.get(OktaAuthConfigService).getConfig()).toBeDefined();
       });
 
     });
