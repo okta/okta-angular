@@ -59,7 +59,7 @@ describe('Unit Tests', () => {
       disableHttpsCheck: false
     };
     const config: OktaAuthOptions = {
-      issuer: process.env['ISSUER'],
+      issuer: process.env['ISSUER']!,
       redirectUri: process.env['REDIRECT_URI'],
       clientId: process.env['CLIENT_ID'],
       scopes: ['email'],
