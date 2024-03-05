@@ -1,3 +1,9 @@
+# 6.4.0
+
+### Fixes
+
+- [#140](https://github.com/okta/okta-angular/pull/140) fix: pulls `acr_values` from idToken rather than accessToken
+
 # 6.3.2
 
 ### Fixes
