@@ -11,6 +11,8 @@
  */
 
 import { Component, OnInit, Optional, Injector, Inject } from '@angular/core';
+// import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '../models/okta.config';
 import { OktaAuthConfigService } from '../services/auth-config.serice';
@@ -23,6 +25,8 @@ export class OktaCallbackComponent implements OnInit {
 
   constructor(
     private configService: OktaAuthConfigService,
+    // private router: Router,
+    private location: Location,
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     @Optional() private injector?: Injector
   ) {}
@@ -33,6 +37,14 @@ export class OktaCallbackComponent implements OnInit {
       throw new Error('Okta config is not provided');
     }
     try {
+      if (!this.oktaAuth.isLoginRedirect()) {
+        const isAuthenticated = await this.oktaAuth.isAuthenticated();
+        if (isAuthenticated) {
+          // this.router.navigate()
+          this.location.forward();
+        }
+      }
+
       // Parse code or tokens from the URL, store tokens in the TokenManager, and redirect back to the originalUri
       await this.oktaAuth.handleLoginRedirect();
     } catch (e) {

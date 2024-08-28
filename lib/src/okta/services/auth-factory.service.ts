@@ -26,6 +26,8 @@ export class OktaAuthFactoryService {
       oktaAuth.options.restoreOriginalUri = async (_, originalUri: string | undefined) => {
         const baseUrl = window.location.origin + location.prepareExternalUrl('');
         const routePath = toRelativeUrl(originalUri || '/', baseUrl);
+        console.log('NAVIGATE GOOD TIMES COME ON!')
+        // router.navigateByUrl(routePath, { replaceUrl: true });
         router.navigateByUrl(routePath);
       };
     }
