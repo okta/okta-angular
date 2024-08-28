@@ -41,6 +41,7 @@ export class OktaCallbackComponent implements OnInit {
         const isAuthenticated = await this.oktaAuth.isAuthenticated();
         if (isAuthenticated) {
           // this.router.navigate()
+          console.log(this.location.getState());
           this.location.forward();
         }
       }
