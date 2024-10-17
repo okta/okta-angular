@@ -19,7 +19,7 @@ unzip chromedriver_linux64.zip
 mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
 chmod +x /usr/bin/chromedriver
-get_vault_secret_key devex/samples-javascript password SIW_TEST_USER_PASSWORD
+get_terminus_secret "/" PASSWORD SIW_TEST_USER_PASSWORD
 export SIW_TEST_USER_EMAIL=george@acme.com
 if ! node /root/okta/okta-angular/test/selenium-test/selenium/okta-angular-widget-test.ts; then
   echo "Test failed! Exiting..."
