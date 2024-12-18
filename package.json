@@ -61,10 +61,10 @@
     "@types/node": "10.14.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "axios": "^0.27.2",
+    "axios": "^1.7.9",
     "chalk": "2.4.2",
-    "core-js": "3.1.3",
-    "dotenv": "^8.2.0",
+    "core-js": "3.39.0",
+    "dotenv": "^16.4.7",
     "eslint": "^8.23.1",
     "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-angular": "^4.1.0",
@@ -94,11 +94,12 @@
     "zone.js": "~0.11.4"
   },
   "resolutions": {
-    "**/wait-on/axios": "^0.27.2",
     "**/chokidar/glob-parent": "^6.0.2",
     "**/@angular-devkit/build-angular/minimatch": "^3.1.2",
     "**/@angular-devkit/build-angular/babel-loader": "^8.3.0",
     "**/@angular-devkit/build-angular/loader-utils": "^2.0.4",
+    "**/@angular-devkit/build-angular/webpack-dev-server": "^4.15.2",
+    "**/@angular-devkit/build-angular/core-js": "^3.39.0",
     "**/nx/minimatch": "^3.1.2",
     "**/postcss-url/minimatch": "^3.1.2",
     "**/globule/minimatch": "^3.1.2"
