@@ -39,6 +39,9 @@
     "lite-server": "^2.6.1",
     "typescript": "~5.1.3"
   },
+  "resolutions": {
+    "core-js": "3.40.0"
+  },
   "workspaces": {
     "nohoist": [
       "**"

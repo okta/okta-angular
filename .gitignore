@@ -10,3 +10,4 @@ yarn-error.log
 .idea
 build2
 /documentation
+test/apps/**/yarn.lock
