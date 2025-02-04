@@ -186,7 +186,7 @@ function configInitializer(configService: OktaAuthConfigService, httpBackend: Ht
   }],
   imports: [
     ...
-    OktaAuthModule.forRoot()
+    OktaAuthModule
   ],
 })
 export class MyAppModule { }
