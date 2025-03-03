@@ -8,7 +8,7 @@ if [ ! -z "$AUTHJS_VERSION" ]; then
 fi
 
 setup_service java 1.8.222
-setup_service google-chrome-stable 106.0.5249.61-1
+setup_service google-chrome-stable 121.0.6167.85-1
 
 export AUTHJS_VERSION_6="true"
 export TEST_SUITE_TYPE="junit"
@@ -37,6 +37,11 @@ do
     fi
   popd
 done
+
+if [ -z "${PASSWORD}" ]; then
+  echo "No PASSWORD has been set! Exiting..."
+  exit ${TEST_FAILURE}
+fi
 
 if ! yarn test:e2e; then
   echo "unit failed! Exiting..."

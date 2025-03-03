@@ -34,7 +34,7 @@ install_auth_js () {
 
 # Install required node version
 export NVM_DIR="/root/.nvm"
-setup_service node v16.14.0
+setup_service node v16.18.1
 setup_service python 3.6
 
 # Install yarn
@@ -62,7 +62,7 @@ if [ -n "${TEST_SUITE_ID}" ]; then
 fi
 
 # Install dependencies but do not build
-if ! yarn install --frozen-lockfile --ignore-scripts; then
+if ! yarn install --ignore-scripts; then
   echo "yarn install failed! Exiting..."
   exit ${FAILED_SETUP}
 fi

@@ -12,6 +12,18 @@
     "auth",
     "oauth2"
   ],
+  "exports": {
+    ".": {
+      "es2015": "./fesm2015/okta-okta-angular.js",
+      "esm2015": "./esm2015/okta-okta-angular.js",
+      "node": "./fesm2015/okta-okta-angular.js",
+      "default": "./fesm2015/okta-okta-angular.js",
+      "types": "./okta-okta-angular.d.ts"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
