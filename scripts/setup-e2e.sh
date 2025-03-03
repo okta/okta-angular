@@ -62,7 +62,7 @@ if [ -n "${TEST_SUITE_ID}" ]; then
 fi
 
 # Install dependencies but do not build
-if ! yarn install --frozen-lockfile --ignore-scripts; then
+if ! yarn install --ignore-scripts; then
   echo "yarn install failed! Exiting..."
   exit ${FAILED_SETUP}
 fi
