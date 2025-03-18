@@ -3,7 +3,7 @@
 source ${OKTA_HOME}/${REPO}/scripts/setup-e2e.sh
 
 setup_service java 1.8.222
-setup_service google-chrome-stable 106.0.5249.61-1
+setup_service google-chrome-stable 121.0.6167.85-1
 
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/test-reports/e2e"
@@ -26,6 +26,11 @@ do
     fi
   popd
 done
+
+if [ -z "${PASSWORD}" ]; then
+  echo "No PASSWORD has been set! Exiting..."
+  exit ${TEST_FAILURE}
+fi
 
 # Run e2e tests
 if ! yarn test:e2e; then

@@ -21,12 +21,9 @@ if (CI) {
     ]);
 }
 
-// driver version must match installed chrome version
-// https://chromedriver.storage.googleapis.com/index.html
-const CHROMEDRIVER_VERSION = process.env.CHROMEDRIVER_VERSION || '106.0.5249.61';
-const drivers = {
-  chrome: { version: CHROMEDRIVER_VERSION }
-};
+if (process.env.CHROME_BINARY) {
+  browserOptions.binary = process.env.CHROME_BINARY;
+}
 
 exports.config = {
     jasmineNodeOpts: {
@@ -146,17 +143,6 @@ exports.config = {
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
     services: [
-        [
-            'selenium-standalone', 
-            {
-                installArgs: {
-                drivers
-                },
-                args: {
-                drivers
-                }
-            }
-        ]
     ],
     
     // Framework you want to run your specs with.
