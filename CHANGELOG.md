@@ -2,7 +2,7 @@
 
 ### Fixes
 
-- [#157](https://github.com/okta/okta-angular/pull/157) fix: adds `exports` block to `package.json` to support modern build tooling, like `vite`
+- [#159](https://github.com/okta/okta-angular/pull/159) fix: adjusts default exports to umd bundle to fix CJS module resolution
 
 # 6.5.0
 
