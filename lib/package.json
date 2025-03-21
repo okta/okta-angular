@@ -1,6 +1,6 @@
 {
   "name": "@okta/okta-angular",
-  "version": "6.5.0",
+  "version": "6.5.1",
   "description": "Angular support for Okta",
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",
@@ -16,8 +16,9 @@
     ".": {
       "es2015": "./fesm2015/okta-okta-angular.js",
       "esm2015": "./esm2015/okta-okta-angular.js",
+      "fesm2015": "./fesm2015/okta-okta-angular.js",
       "node": "./fesm2015/okta-okta-angular.js",
-      "default": "./fesm2015/okta-okta-angular.js",
+      "default": "./bundles/okta-okta-angular.umd.js",
       "types": "./okta-okta-angular.d.ts"
     },
     "./package.json": {

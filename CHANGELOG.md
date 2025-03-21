@@ -1,3 +1,9 @@
+# 6.5.1
+
+### Fixes
+
+- [#159](https://github.com/okta/okta-angular/pull/159) fix: adjusts default exports to umd bundle to fix CJS module resolution
+
 # 6.5.0
 
 ### Fixes
