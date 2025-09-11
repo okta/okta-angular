@@ -8,18 +8,6 @@
     "inlineSources": true,
     "types": []
   },
-  "angularCompilerOptions": {
-    "enableIvy": true,
-    "compilationMode": "partial",
-    "enableResourceInlining": true,
-    "skipTemplateCodegen": true,
-    "annotateForClosureCompiler": false,
-    "strictMetadataEmit": true,
-    "flatModuleOutFile": "okta-angular.js",
-    "flatModuleId": "@okta/okta-angular",
-    "disableTypeScriptVersionCheck": true,
-    "allowedNonPeerDependencies": true
-  },
   "exclude": [
     "**/*.spec.ts"
   ]

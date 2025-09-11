@@ -27,7 +27,6 @@ function setupForRoot(oktaAuth: OktaAuth) {
   return TestBed.createComponent(MockComponent);
 }
 
-
 describe('OktaAuthFactoryService', () => {
   let oktaAuth: OktaAuth;
 

@@ -51,23 +51,6 @@ const getTask = (taskConfig) => () => {
 const codes = [];
 const tasks = [
   {
-    name: '@okta/test.app.ng12',
-    app: 'angular-v12'
-  },
-  {
-    name: '@okta/test.app.ng13',
-    app: 'angular-v13'
-  },
-  {
-    name: '@okta/test.app.ng14',
-    app: 'angular-v14'
-  },
-  {
-    name: '@okta/test.app.ng15',
-    app: 'angular-v15',
-    asyncOktaConfig: true
-  },
-  {
     name: '@okta/test.app.ng16',
     app: 'angular-v16',
     asyncOktaConfig: true

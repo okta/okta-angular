@@ -1,21 +1,23 @@
 {
+    "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": ".",
+        "outDir": "./dist/out-tsc",
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "strict": true,
         "strictPropertyInitialization": false,
-        "module": "esnext",
+        "module": "ES2022",
         "moduleResolution": "node",
         "rootDir": ".",
         "sourceMap": true,
         "inlineSources": true,
-        "target": "es2016",
+        "target": "ES2022",
         "skipLibCheck": true,
         "lib": [
-            "es2016",
+            "ES2022",
             "dom"
         ],
         "typeRoots": [

@@ -5,14 +5,13 @@
     "types": [
       "jest",
       "node"
-    ],
-    "resolveJsonModule": true,
-    "emitDecoratorMetadata": true
+    ]
   },
   "files": [
     "test/spec/*.ts"
   ],
   "include": [
-    "lib/**/*.ts"
+    "lib/**/*.spec.ts",
+    "lib/**/*.d.ts"
   ]
 }

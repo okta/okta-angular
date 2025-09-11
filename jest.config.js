@@ -14,11 +14,8 @@ export default {
   ],
   restoreMocks: true,
   transform: {
-     "^.+\\.(ts|html)$": "jest-preset-angular"
+    "^.+\\.(ts|tsx)$": 'ts-jest',
   },
-  transformIgnorePatterns: [
-    "node_modules"
-  ],
   preset: "jest-preset-angular",
   roots: [
     "./test/spec"
@@ -26,5 +23,9 @@ export default {
   testMatch: [
     "<rootDir>/test/spec/*.ts"
   ],
-  globalSetup: "jest-preset-angular/global-setup"
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/test/apps/*'
+  ]
 };
