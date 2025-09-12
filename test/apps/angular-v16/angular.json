@@ -27,7 +27,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "p-cancelable",
+              "cross-fetch",
+              "tiny-emitter"
+            ]
           },
           "configurations": {
             "production": {
