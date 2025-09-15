@@ -12,11 +12,6 @@
     "auth",
     "oauth2"
   ],
-  "exports": {
-    "./package.json": {
-      "default": "./package.json"
-    }
-  },
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
