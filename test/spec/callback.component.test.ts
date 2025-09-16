@@ -63,6 +63,7 @@ describe('OktaCallbackComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(oktaAuth.idx.isInteractionRequiredError).toHaveBeenCalledWith(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(onAuthResume).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
       expect(component.error).toBe(undefined);
     });
@@ -76,6 +77,7 @@ describe('OktaCallbackComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(oktaAuth.idx.isInteractionRequiredError).toHaveBeenCalledWith(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(onAuthRequired).toHaveBeenCalledWith(oktaAuth, (component as any).injector);
       expect(component.error).toBe(undefined);
     });

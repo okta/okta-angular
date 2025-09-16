@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "../../.eslintrc.json",
+    "plugin:jest/recommended"
+  ],
+  "ignorePatterns": [
+    "!**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "rules": {
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ],
+  "plugins": [
+    "jest"
+  ]
+}
