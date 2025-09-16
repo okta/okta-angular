@@ -9,7 +9,7 @@
     "banners": "node util/maintain-banners.js",
     "build:package-info": "node ./util/write-package-info.js . lib/src/okta/packageInfo.ts",
     "clean": "rimraf dist/ && rimraf test-reports/",
-    "lint": "ng lint --help",
+    "lint": "ng lint",
     "lint:report": "ng lint --output-file ./test-reports/lint/eslint-checkstyle-result.xml --format checkstyle",
     "prebuild": "yarn build:package-info",
     "prepare": "yarn build",
