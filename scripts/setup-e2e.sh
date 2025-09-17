@@ -76,7 +76,7 @@ fi
 
 
 # Install dependencies for test apps
-yarn test:apps:prepare
+yarn test:apps:build
 for app in test/apps/angular-*
 do
   pushd $app
