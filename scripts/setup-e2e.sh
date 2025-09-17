@@ -44,8 +44,6 @@ setup_service yarn 1.21.1 /etc/pki/tls/certs/ca-bundle.crt
 # Add yarn to the $PATH so npm cli commands do not fail
 export PATH="${PATH}:$(yarn global bin)"
 
-yarn global add yalc
-
 cd ${OKTA_HOME}/${REPO}
 
 # if running on bacon

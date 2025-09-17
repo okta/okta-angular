@@ -17,7 +17,8 @@
     "test": "yarn lint && yarn test:e2e && yarn test:unit",
     "test:e2e": "yarn workspace @okta/test.e2e start",
     "test:unit": "ng test okta-angular",
-    "test:apps:build": "sh ./scripts/build-test-apps.sh"
+    "test:apps:build": "sh ./scripts/build-test-apps.sh",
+    "pretest:e2e": "sh ./scripts/build-test-apps.sh"
   },
   "engines": {
     "node": ">=18.19.1",

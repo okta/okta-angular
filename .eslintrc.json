@@ -19,7 +19,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "lib",
+            "prefix": "okta-angular",
             "style": "camelCase"
           }
         ],
@@ -27,7 +27,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "lib",
+            "prefix": "okta-angular",
             "style": "kebab-case"
           }
         ]
