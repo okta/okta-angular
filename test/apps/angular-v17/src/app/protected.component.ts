@@ -10,24 +10,31 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
-  selector: 'app-public',
+  selector: 'app-secure',
+  standalone: false,
   template: `
-  <div id="public-message">
-  {{ message }}
-  </div>
-  <router-outlet></router-outlet>
-  `
+  <div>
+  {{ message }}<br/>
+  Claims: <pre id="claims-container">{{ claims }}</pre>
+  User: <pre id="userinfo-container">{{ user }}</pre>
+  </div>`
 })
-export class PublicComponent {
-  message;
+export class ProtectedComponent implements OnInit {
+  message = 'Protected!';
+  user = '';
+  claims = '';
 
-  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
-    this.message = 'Public!';
+  oktaAuth = inject(OKTA_AUTH);
+
+  async ngOnInit() {
+    const user = await this.oktaAuth.getUser();
+    this.user = JSON.stringify(user, null, 4);
+    const claims = await this.oktaAuth.authStateManager.getAuthState()?.idToken?.claims;
+    this.claims = JSON.stringify(claims, null, 4);
   }
-
 }

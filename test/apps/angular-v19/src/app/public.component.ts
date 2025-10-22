@@ -10,12 +10,11 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
-import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-public',
+  standalone: false,
   template: `
   <div id="public-message">
   {{ message }}
@@ -24,10 +23,6 @@ import { OktaAuth } from '@okta/okta-auth-js';
   `
 })
 export class PublicComponent {
-  message;
-
-  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
-    this.message = 'Public!';
-  }
+  message = 'Public!';
 
 }

@@ -10,12 +10,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-session-login',
+  standalone: false,
   template: `
   <router-outlet></router-outlet>
 
@@ -32,7 +33,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
   `
 })
 export class SessionTokenLoginComponent {
-  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
+  oktaAuth = inject(OKTA_AUTH);
 
   signIn(username: string, password: string) {
     this.oktaAuth.signIn({

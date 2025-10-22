@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2017-Present, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021-Present, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,24 +10,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
-import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-public',
+  selector: 'has-group',
+  standalone: false,
   template: `
-  <div id="public-message">
-  {{ message }}
+  <div id="in-group" *oktaHasAnyGroup="['Test']">
+    In "Test" group
   </div>
-  <router-outlet></router-outlet>
+  <div id="not-in-group" *oktaHasAnyGroup="['NotExistGroup']">
+    Not in "Test" group
+  </div>
   `
 })
-export class PublicComponent {
-  message;
-
-  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
-    this.message = 'Public!';
-  }
-
-}
+export class HasGroupComponent { }
