@@ -49,13 +49,14 @@ This library currently supports:
 
 ## Release Status
 
-:heavy_check_mark: The current stable major version series is: `6.x`
+:heavy_check_mark: The current stable major version series is: `7.x`
 
 | Version   | Status                           |
 | -------   | -------------------------------- |
-| `6.x`     | :heavy_check_mark: Stable        |
-| `5.x`     | :heavy_check_mark: Stable        |
-| `4.x`     | :heavy_check_mark: Stable        |
+| `7.x`     | :heavy_check_mark: Stable        |
+| `6.x`     | :heavy_check_mark: Maintenance   |
+| `5.x`     | :bug: Critical Vulns Only        |
+| `4.x`     | :x: Retired                      |
 | `3.x`     | :x: Retired                      |
 | `2.x`     | :x: Retired                      |
 | `1.x`     | :x: Retired                      |
