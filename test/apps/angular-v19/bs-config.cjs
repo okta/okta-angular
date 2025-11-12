@@ -3,7 +3,7 @@ module.exports = {
   logLevel: 'silent',
   files: ['./dist/**/*.{html,htm,css,js}'],
   server: {
-    baseDir: './dist/angular-v18/browser',
+    baseDir: './dist/angular-v19/browser',
     middleware: {
       0: null
     }
