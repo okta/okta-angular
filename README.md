@@ -34,7 +34,7 @@ This library currently supports:
 - [OAuth 2.0 Implicit Flow](https://tools.ietf.org/html/rfc6749#section-1.3.2)
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
-> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+> This library has been tested for compatibility with the following Angular versions: 16, 17, 18, 19
 
 > [!IMPORTANT] 
 > `okta-angular` 7.0+ supports Angular 16 - 19. For Angular 12-16, please use `okta-angular` 6.x. For Angular 7 to 11, please use `okta-angular` 5.x
@@ -55,7 +55,7 @@ This library currently supports:
 | -------   | -------------------------------- |
 | `7.x`     | :heavy_check_mark: Stable        |
 | `6.x`     | :heavy_check_mark: Maintenance   |
-| `5.x`     | :bug: Critical Vulns Only        |
+| `5.x`     | :x: Retired                      |
 | `4.x`     | :x: Retired                      |
 | `3.x`     | :x: Retired                      |
 | `2.x`     | :x: Retired                      |
