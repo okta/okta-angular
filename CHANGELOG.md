@@ -1,3 +1,9 @@
+# 7.0.0
+
+### BREAKING CHANGES
+
+- [#164](https://github.com/okta/okta-angular/pull/164) BREAKING: updates minimum Angular version to `16.x`
+
 # 6.5.1
 
 ### Fixes

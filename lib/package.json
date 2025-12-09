@@ -1,6 +1,6 @@
 {
   "name": "@okta/okta-angular",
-  "version": "6.5.1",
+  "version": "7.0.0",
   "description": "Angular support for Okta",
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",
@@ -12,19 +12,6 @@
     "auth",
     "oauth2"
   ],
-  "exports": {
-    ".": {
-      "es2015": "./fesm2015/okta-okta-angular.js",
-      "esm2015": "./esm2015/okta-okta-angular.js",
-      "fesm2015": "./fesm2015/okta-okta-angular.js",
-      "node": "./fesm2015/okta-okta-angular.js",
-      "default": "./bundles/okta-okta-angular.umd.js",
-      "types": "./okta-okta-angular.d.ts"
-    },
-    "./package.json": {
-      "default": "./package.json"
-    }
-  },
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
@@ -32,10 +19,10 @@
     "tslib": "^2.4.0"
   },
   "peerDependencies": {
-    "@angular/common": ">= 12.0.0",
-    "@angular/core": ">= 12.0.0",
-    "@angular/router": ">= 12.0.0",
+    "@angular/common": ">= 16.2.0",
+    "@angular/core": ">= 16.2.0",
+    "@angular/router": ">= 16.2.0",
     "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0",
-    "rxjs": "^6.0.0 || ^7.0.0"
+    "rxjs": "^7.0.0 || ^8.0.0"
   }
 }

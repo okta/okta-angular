@@ -5,51 +5,26 @@ test_suites:
       timeout: '60'
       script_name: lint
       criteria: MERGE
-      queue_name: small
+      queue_name: al2023
     - name: unit
       script_path: /root/okta/okta-angular/scripts
       sort_order: '2'
       timeout: '10'
       script_name: unit
       criteria: MERGE
-      queue_name: small
+      queue_name: al2023
     - name: e2e
       script_path: /root/okta/okta-angular/scripts
       sort_order: '3'
       timeout: '20'
       script_name: e2e
       criteria: MERGE
-      queue_name: small
-    - name: unit-v6
-      script_path: /root/okta/okta-angular/scripts
-      sort_order: '4'
-      timeout: '10'
-      script_name: unit-v6
-      criteria: MERGE
-      queue_name: small
-    - name: e2e-v6
-      script_path: /root/okta/okta-angular/scripts
-      sort_order: '5'
-      timeout: '20'
-      script_name: e2e-v6
-      criteria: MERGE
-      queue_name: small
+      queue_name: al2023
     - name: publish
       script_path: /root/okta/okta-angular/scripts
       sort_order: '6'
       timeout: '60'
       script_name: publish
       criteria: MERGE
-      queue_name: small
-    # TODO: repalce selenium test with sample generator 
-    # https://oktainc.atlassian.net/browse/OKTA-427607
-    # disable the doc guide test
-    # The selenium test protects doc sample, but the code is not correctly reflect the SDK + widget usage
-    # re-visit after release 
-    # - name: selenium-test
-    #   script_path: /root/okta/okta-angular/scripts
-    #   sort_order: '5'
-    #   timeout: '60'
-    #   script_name: selenium-test
-    #   criteria: MERGE
-    #   queue_name: ci-queue-prodJenga-Monolith-API
+      queue_name: al2023
+

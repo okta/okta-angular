@@ -4,6 +4,10 @@
 
 # Migrating
 
+## To version 7.x
+
+`@okta/okta-angular` minimum Angular version was updated to v16. This should not require any code changes
+
 ## To version 6.1.0
 
 Starting with `@okta/okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service. 

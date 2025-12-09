@@ -34,7 +34,7 @@ install_auth_js () {
 
 # Install required node version
 export NVM_DIR="/root/.nvm"
-setup_service node v16.18.1
+setup_service node v18.19.1
 setup_service python 3.6
 
 # Install yarn
@@ -43,8 +43,6 @@ setup_service yarn 1.21.1 /etc/pki/tls/certs/ca-bundle.crt
 
 # Add yarn to the $PATH so npm cli commands do not fail
 export PATH="${PATH}:$(yarn global bin)"
-
-yarn global add yalc
 
 cd ${OKTA_HOME}/${REPO}
 
@@ -78,7 +76,7 @@ fi
 
 
 # Install dependencies for test apps
-yarn test:apps:prepare
+yarn test:apps:build
 for app in test/apps/angular-*
 do
   pushd $app

@@ -34,19 +34,29 @@ This library currently supports:
 - [OAuth 2.0 Implicit Flow](https://tools.ietf.org/html/rfc6749#section-1.3.2)
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
-> This library has been tested for compatibility with the following Angular versions: 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
-> :warning: `okta-angular` 6.0+ supports Angular 12+. For Angular 7 to 11 please use `okta-angular` 5.x
-> :warning: Angular versions older than 7 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
+> This library has been tested for compatibility with the following Angular versions: 16, 17, 18, 19
+
+> [!IMPORTANT] 
+> `okta-angular` 7.0+ supports Angular 16 - 19. For Angular 12-16, please use `okta-angular` 6.x. For Angular 7 to 11, please use `okta-angular` 5.x
+
+> [!WARNING] 
+> Angular versions older than 16 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
+
+> [!NOTE]  
+> This library uses NgModule architecture. If you don't use the `HasAnyGroup` structural directive, you can use this library in a standalone project.
+>
+>Import the library in a standalone project using `importProvidersFrom(OktaAuthModule.forRoot({oktaAuth}))`.  
 
 ## Release Status
 
-:heavy_check_mark: The current stable major version series is: `6.x`
+:heavy_check_mark: The current stable major version series is: `7.x`
 
 | Version   | Status                           |
 | -------   | -------------------------------- |
-| `6.x`     | :heavy_check_mark: Stable        |
-| `5.x`     | :heavy_check_mark: Stable        |
-| `4.x`     | :heavy_check_mark: Stable        |
+| `7.x`     | :heavy_check_mark: Stable        |
+| `6.x`     | :heavy_check_mark: Maintenance   |
+| `5.x`     | :x: Retired                      |
+| `4.x`     | :x: Retired                      |
 | `3.x`     | :x: Retired                      |
 | `2.x`     | :x: Retired                      |
 | `1.x`     | :x: Retired                      |
@@ -213,7 +223,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 @Component({
   selector: 'app-component',
   template: `
-    <pre id="userinfo-container">{{ user }}</pre>
+    <pre id="userinfo-container">{{ user | json }}</pre>
   `,
 })
 export class MyProtectedComponent implements OnInit {
@@ -222,7 +232,6 @@ export class MyProtectedComponent implements OnInit {
   
   async ngOnInit() {
     const user = await this.oktaAuth.getUser();
-    this.user = JSON.stringify(user, null, 4);
   }
 }
 ```
