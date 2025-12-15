@@ -10,33 +10,64 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [RouterLink, AsyncPipe, RouterOutlet, NgIf],
   template: `
-  <button id="home-button" routerLink="/"> Home </button>
-  <button id="login-button" *ngIf="!(authStateService.authState$ | async)?.isAuthenticated" (click)="login()"> Login </button>
-  <button id="logout-button" *ngIf="(authStateService.authState$ | async)?.isAuthenticated" (click)="logout()"> Logout </button>
-  <button id="protected-button" routerLink="/protected" [queryParams]="{ fooParams: 'foo' }"> Protected </button>
-  <button id="protected-login-button" routerLink="/protected-with-data"
-    [queryParams]="{ fooParams: 'foo' }"> Protected Page w/ custom config </button>
-  <button id="public-button" routerLink="/public"> Parent Route (public) </button>
-  <button id="private-button" routerLink="/public/private"> Child Route (private) </button>
-  <button id="1fa-button" routerLink="/public/1fa"> Step-up Route (1fa) </button>
-  <button id="2fa-button" routerLink="/public/2fa"> Step-up Route (2fa) </button>
-  <button id="group-button" routerLink="/group"> Has Group </button>
-  <router-outlet></router-outlet>
+    <button id="home-button" routerLink="/">Home</button>
+    <button
+      id="login-button"
+      *ngIf="!(authStateService.authState$ | async)?.isAuthenticated"
+      (click)="login()"
+    >
+      Login
+    </button>
+    <button
+      id="logout-button"
+      *ngIf="(authStateService.authState$ | async)?.isAuthenticated"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+    <button
+      id="protected-button"
+      routerLink="/protected"
+      [queryParams]="{ fooParams: 'foo' }"
+    >
+      Protected
+    </button>
+    <button
+      id="protected-login-button"
+      routerLink="/protected-with-data"
+      [queryParams]="{ fooParams: 'foo' }"
+    >
+      Protected Page w/ custom config
+    </button>
+    <button id="public-button" routerLink="/public">
+      Parent Route (public)
+    </button>
+    <button id="private-button" routerLink="/public/private">
+      Child Route (private)
+    </button>
+    <button id="1fa-button" routerLink="/public/1fa">
+      Step-up Route (1fa)
+    </button>
+    <button id="2fa-button" routerLink="/public/2fa">
+      Step-up Route (2fa)
+    </button>
+    <button id="group-button" routerLink="/group">Has Group</button>
+    <router-outlet />
   `,
 })
 export class AppComponent {
-
-  constructor(
-    @Inject(OKTA_AUTH) public oktaAuth: OktaAuth,
-    public authStateService: OktaAuthStateService
-  ) {}
+  readonly oktaAuth = inject(OKTA_AUTH);
+  readonly authStateService = inject(OktaAuthStateService);
 
   login() {
     this.oktaAuth.signInWithRedirect();

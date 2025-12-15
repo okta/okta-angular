@@ -79,7 +79,6 @@ describe('AppComponent', () => {
         provideRouter([{ path: 'foo', redirectTo: '/foo' }]),
         provideOktaAuth({ oktaAuth, testing }),
       ],
-      declarations: [AppComponent],
     });
 
     fixture = TestBed.createComponent(AppComponent);

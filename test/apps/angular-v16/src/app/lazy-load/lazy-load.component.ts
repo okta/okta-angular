@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-lazy-load',
-  template: `
-  <div>Lazy Load</div>
-  `
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: ` <div>Lazy Load</div> `,
 })
-export class LazyLoadComponent { }
+export class LazyLoadComponent {}

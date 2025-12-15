@@ -10,41 +10,46 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-session-login',
-  standalone: false,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
   template: `
-  <router-outlet></router-outlet>
+    <router-outlet />
 
-  <div>
-  <br/>
-    <label>
-      Username:
-      <input #username id="username" type="text" />
-      Password:
-      <input #password id="password" type="password" />
-    </label>
-    <button id="submit" (click)="signIn(username.value, password.value)">Login</button>
-  </div>
-  `
+    <div>
+      <br />
+      <label>
+        Username:
+        <input #username id="username" type="text" />
+        Password:
+        <input #password id="password" type="password" />
+      </label>
+      <button id="submit" (click)="signIn(username.value, password.value)">
+        Login
+      </button>
+    </div>
+  `,
 })
 export class SessionTokenLoginComponent {
-  oktaAuth = inject(OKTA_AUTH);
+  private readonly oktaAuth = inject(OKTA_AUTH);
 
   signIn(username: string, password: string) {
-    this.oktaAuth.signIn({
-      username: username,
-      password: password
-    })
-    .then(res => {
-      return this.oktaAuth.token.getWithRedirect({
-        sessionToken: res.sessionToken
-      });
-    })
-    .catch(err => console.log('Found an error', err));
+    this.oktaAuth
+      .signIn({
+        username,
+        password,
+      })
+      .then((res) => {
+        return this.oktaAuth.token.getWithRedirect({
+          sessionToken: res.sessionToken,
+        });
+      })
+      .catch((err) => console.log('Found an error', err));
   }
 }

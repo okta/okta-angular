@@ -10,18 +10,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { OktaHasAnyGroupDirective } from '@okta/okta-angular';
 
 @Component({
   selector: 'has-group',
-  standalone: false,
+  imports: [OktaHasAnyGroupDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   template: `
-  <div id="in-group" *oktaHasAnyGroup="['Test']">
-    In "Test" group
-  </div>
-  <div id="not-in-group" *oktaHasAnyGroup="['NotExistGroup']">
-    Not in "Test" group
-  </div>
-  `
+    <div id="in-group" *oktaHasAnyGroup="['Test']">In "Test" group</div>
+    <div id="not-in-group" *oktaHasAnyGroup="['NotExistGroup']">
+      Not in "Test" group
+    </div>
+  `,
 })
-export class HasGroupComponent { }
+export class HasGroupComponent {}

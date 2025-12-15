@@ -10,19 +10,21 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-public',
-  standalone: false,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
   template: `
-  <div id="public-message">
-  {{ message }}
-  </div>
-  <router-outlet></router-outlet>
-  `
+    <div id="public-message">
+      {{ message }}
+    </div>
+    <router-outlet />
+  `,
 })
 export class PublicComponent {
-  message = 'Public!';
-
+  readonly message = 'Public!';
 }

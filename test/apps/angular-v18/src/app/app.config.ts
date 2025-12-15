@@ -10,35 +10,47 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector, APP_INITIALIZER, Provider } from '@angular/core';
-import { Routes, RouterModule, Router } from '@angular/router';
+import {
+  Injector,
+  APP_INITIALIZER,
+  Provider,
+  ApplicationConfig,
+} from '@angular/core';
+import {
+  Routes,
+  Router,
+  provideRouter,
+  withComponentInputBinding,
+} from '@angular/router';
 
 /**
  * Okta Library
  */
 import { OktaAuth } from '@okta/okta-auth-js';
 import {
-  OktaAuthGuard,
-  OktaAuthModule,
   OktaCallbackComponent,
   OktaAuthConfigService,
   OktaConfig,
+  provideOktaAuth,
+  oktaCanActivate,
+  oktaCanActivateChild,
+  oktaCanMatch,
 } from '@okta/okta-angular';
 
 /**
  * App Components
  */
 import { ProtectedComponent } from './protected.component';
-import { AppComponent } from './app.component';
 import { SessionTokenLoginComponent } from './sessionToken-login.component';
 import { PublicComponent } from './public.component';
 import { HasGroupComponent } from './has-group.component';
 
-// eslint-disable-next-line node/no-unpublished-import, node/no-missing-import
 import { environment } from '../environments/environment';
 
-export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injector) {
+export function onNeedsAuthenticationGuard(
+  oktaAuth: OktaAuth,
+  injector: Injector
+) {
   const router = injector.get(Router);
   router.navigate(['/sessionToken-login']);
 }
@@ -46,48 +58,48 @@ export function onNeedsAuthenticationGuard(oktaAuth: OktaAuth, injector: Injecto
 const appRoutes: Routes = [
   {
     path: 'sessionToken-login',
-    component: SessionTokenLoginComponent
+    component: SessionTokenLoginComponent,
   },
   {
     path: 'login/callback',
-    component: OktaCallbackComponent
+    component: OktaCallbackComponent,
   },
   {
     path: 'protected',
     component: ProtectedComponent,
-    canActivate: [ OktaAuthGuard ],
+    canActivate: [oktaCanActivate],
     children: [
       {
         path: 'foo',
-        component: ProtectedComponent
+        component: ProtectedComponent,
         // protected by canActivate on parent route
-      }
-    ]
+      },
+    ],
   },
   {
     path: 'protected-with-data',
     component: ProtectedComponent,
-    canActivate: [ OktaAuthGuard ],
+    canActivate: [oktaCanActivate],
     data: {
-      onAuthRequired: onNeedsAuthenticationGuard
-    }
+      onAuthRequired: onNeedsAuthenticationGuard,
+    },
   },
   {
     path: 'public',
     component: PublicComponent,
-    canActivateChild: [ OktaAuthGuard ],
+    canActivateChild: [oktaCanActivateChild],
     children: [
       {
         path: 'private',
-        component: ProtectedComponent
+        component: ProtectedComponent,
       },
       {
         path: '2fa',
         component: ProtectedComponent,
         data: {
           okta: {
-            acrValues: 'urn:okta:loa:2fa:any'
-          }
+            acrValues: 'urn:okta:loa:2fa:any',
+          },
         },
       },
       {
@@ -95,16 +107,16 @@ const appRoutes: Routes = [
         component: ProtectedComponent,
         data: {
           okta: {
-            acrValues: 'urn:okta:loa:1fa:any'
-          }
+            acrValues: 'urn:okta:loa:1fa:any',
+          },
         },
-      }
-    ]
+      },
+    ],
   },
   {
     path: 'lazy',
-    loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule),
-    canLoad: [ OktaAuthGuard ]
+    loadChildren: () => import('./lazy-load/lazy-load.routes'),
+    canMatch: [oktaCanMatch],
   },
   {
     path: 'group',
@@ -119,44 +131,35 @@ if (environment.asyncOktaConfig) {
     return async () => {
       // Use asynchronous import of configuration
       // You can also load configuration with HTTP request here with HttpClient
-      // eslint-disable-next-line node/no-unpublished-import, node/no-missing-import, import/no-unresolved
-      const { environment: { oidc } } = await import('../environments/environment');
+      const {
+        environment: { oidc },
+      } = await import('../environments/environment');
       const oktaAuth = new OktaAuth(oidc);
       oktaConfig = {
-        oktaAuth
+        oktaAuth,
       };
       configService.setConfig(oktaConfig);
     };
   };
-  providers = [{
-    provide: APP_INITIALIZER,
-    useFactory: configInitializer,
-    deps: [OktaAuthConfigService],
-    multi: true
-  }];
+  providers = [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configInitializer,
+      deps: [OktaAuthConfigService],
+      multi: true,
+    },
+  ];
 } else {
   const oktaAuth = new OktaAuth(environment.oidc);
   oktaConfig = {
-    oktaAuth
+    oktaAuth,
   };
 }
 
-
-@NgModule({
-  providers,
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(appRoutes),
-    OktaAuthModule.forRoot(oktaConfig),
+export const appConfig: ApplicationConfig = {
+  providers: [
+    ...providers,
+    provideRouter(appRoutes, withComponentInputBinding()),
+    provideOktaAuth(oktaConfig),
   ],
-  declarations: [
-    AppComponent,
-    ProtectedComponent,
-    SessionTokenLoginComponent,
-    PublicComponent,
-    HasGroupComponent,
-  ],
-  bootstrap: [ AppComponent ]
-})
-
-export class AppModule { }
+};
