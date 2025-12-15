@@ -8,40 +8,69 @@
 
 `@okta/okta-angular` minimum Angular version was updated to v16. This should not require any code changes
 
-## To version 6.1.0
-
-Starting with `@okta/okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service. 
-
 Before:
+
 ```typescript
-import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
+import { OktaAuthModule, OKTA_CONFIG } from "@okta/okta-angular";
 
 @NgModule({
-  imports: [
-    ...
-    OktaAuthModule
-  ],
-  providers: [
-    { 
-      provide: OKTA_CONFIG, 
-      useValue: { oktaAuth } 
-    }
-  ],
+  imports: [...OktaAuthModule.forRoot({ oktaAuth })],
 })
-export class MyAppModule { }
+export class MyAppModule {}
 ```
 
 After:
+
 ```typescript
-import { OktaAuthModule } from '@okta/okta-angular';
+// myApp.config.ts
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideOktaAuth({ oktaAuth })],
+};
+```
+
+Or
+
+```typescript
+// myApp.module.ts
+import { OktaAuthModule } from "@okta/okta-angular";
 
 @NgModule({
-  imports: [
-    ...
-    OktaAuthModule.forRoot({ oktaAuth })
-  ]
+  imports: [provideOktaAuth({ oktaAuth })],
 })
-export class MyAppModule { }
+export class MyAppModule {}
+```
+
+## To version 6.1.0
+
+Starting with `@okta/okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using `forRoot()` static method to create a singleton service.
+
+Before:
+
+```typescript
+import { OktaAuthModule, OKTA_CONFIG } from "@okta/okta-angular";
+
+@NgModule({
+  imports: [...OktaAuthModule],
+  providers: [
+    {
+      provide: OKTA_CONFIG,
+      useValue: { oktaAuth },
+    },
+  ],
+})
+export class MyAppModule {}
+```
+
+After:
+
+```typescript
+import { OktaAuthModule } from "@okta/okta-angular";
+
+@NgModule({
+  imports: [...OktaAuthModule.forRoot({ oktaAuth })],
+})
+export class MyAppModule {}
 ```
 
 ## From version 5.x to 6.x
@@ -58,14 +87,12 @@ If you project can't be upgraded to Angular 12+, please use `@okta/okta-angular`
 To fix Angular 7 & 8 production build [issue](https://github.com/okta/okta-angular/issues/72), `oktaAuth` instance is now injected by [injection token](https://angular.io/api/core/InjectionToken) instead of implicit referring by types.
 
 ```typescript
-import { Component } from '@angular/core';
-import { OKTA_AUTH } from '@okta/okta-angular';
+import { Component } from "@angular/core";
+import { OKTA_AUTH } from "@okta/okta-angular";
 
 @Component({
-  selector: 'app-component',
-  template: `
-    <div>page content</div>
-  `,
+  selector: "app-component",
+  template: ` <div>page content</div> `,
 })
 export class MyComponent {
   constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
@@ -83,29 +110,23 @@ From version 4.0, an `OktaConfig` starts to explicitly accept [OktaAuth][] insta
 - `@okta/okta-auth-js` is now a peer dependency for this SDK. You must add `@okta/okta-auth-js` as a dependency to your project and install it separately from `@okta/okta-angular`.
 
 ```typescript
-import {
-  OKTA_CONFIG,
-  OktaAuthModule
-} from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { OKTA_CONFIG, OktaAuthModule } from "@okta/okta-angular";
+import { OktaAuth } from "@okta/okta-auth-js";
 
 const config = {
-  issuer: 'https://{yourOktaDomain}/oauth2/default',
-  clientId: '{clientId}',
-  redirectUri: window.location.origin + '/login/callback'
-}
+  issuer: "https://{yourOktaDomain}/oauth2/default",
+  clientId: "{clientId}",
+  redirectUri: window.location.origin + "/login/callback",
+};
 const oktaAuth = new OktaAuth(config);
 
 @NgModule({
-  imports: [
-    ...
-    OktaAuthModule
-  ],
+  imports: [...OktaAuthModule],
   providers: [
-    { 
-      provide: OKTA_CONFIG, 
-      useValue: { oktaAuth } 
-    }
+    {
+      provide: OKTA_CONFIG,
+      useValue: { oktaAuth },
+    },
   ],
 })
 export class MyAppModule {}
@@ -124,14 +145,18 @@ Previously, the SDK module injects `OktaAuthService` to the application, now it'
 [OktaAuth][] instance does not have an observable auth state, `OktaAuthStateService` has been added to serve this purpose. The UI component can track the up to date auth state with code like:
 
 ```typescript
-import { Component } from '@angular/core';
-import { OktaAuthStateService } from '@okta/okta-angular';
+import { Component } from "@angular/core";
+import { OktaAuthStateService } from "@okta/okta-angular";
 
 @Component({
-  selector: 'app-component',
+  selector: "app-component",
   template: `
-    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated">Login</button>
-    <button *ngIf="(authStateService.authState$ | async).isAuthenticated">Logout</button>
+    <button *ngIf="!(authStateService.authState$ | async).isAuthenticated">
+      Login
+    </button>
+    <button *ngIf="(authStateService.authState$ | async).isAuthenticated">
+      Logout
+    </button>
     <router-outlet></router-outlet>
   `,
 })
@@ -169,13 +194,16 @@ This method called `onAuthRequired`, if it was set in the config options, or `lo
 If you had code like this:
 
 ```javascript
-okta.loginRedirect('/profile', { scopes: ['openid', 'profile'] });
+okta.loginRedirect("/profile", { scopes: ["openid", "profile"] });
 ```
 
 it can be rewritten as:
 
 ```javascript
-okta.signInWithRedirect({ originalUri: '/profile', scopes: ['openid', 'profile'] });
+okta.signInWithRedirect({
+  originalUri: "/profile",
+  scopes: ["openid", "profile"],
+});
 ```
 
 ### `logout` is replaced by `signOut`
@@ -185,13 +213,13 @@ okta.signInWithRedirect({ originalUri: '/profile', scopes: ['openid', 'profile']
 If you had code like this:
 
 ```javascript
-okta.logout('/goodbye');
+okta.logout("/goodbye");
 ```
 
 it can be rewritten as:
 
 ```javascript
-okta.signOut({ postLogoutRedirectUri: window.location.orign + '/goodbye' });
+okta.signOut({ postLogoutRedirectUri: window.location.orign + "/goodbye" });
 ```
 
 Note that the value for `postLogoutRedirectUri` must be an absolute URL. This URL must also be on the "allowed list" in your Okta app's configuration. If no options are passed or no `postLogoutRedirectUri` is set on the options object, it will redirect to `window.location.origin` after sign out is complete.

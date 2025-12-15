@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { VERSION } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthSdkError, OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
-import { OktaAuthConfigService } from './auth-config.serice';
+import { OktaAuthConfigService } from './auth-config.service';
 import { compare } from 'compare-versions';
 import packageInfo from '../packageInfo';
 

@@ -14,7 +14,7 @@ jest.mock('../../lib/src/okta/packageInfo', () => ({
 }));
 
 @Component({ template: '' })
-class MockComponent {}
+class MockComponent { }
 
 function setupForRoot(oktaAuth: OktaAuth) {
   TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ function setupForRoot(oktaAuth: OktaAuth) {
       RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
       OktaAuthModule.forRoot({ oktaAuth })
     ],
-    declarations: [ MockComponent ],
+    declarations: [MockComponent],
   });
   return TestBed.createComponent(MockComponent);
 }
@@ -51,7 +51,7 @@ describe('OktaAuthFactoryService', () => {
     describe('auth-js major version compatibility', () => {
       it('should not throw when version matches', () => {
         setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).not.toThrow();
+        expect(() => TestBed.inject(OKTA_AUTH)).not.toThrow();
       });
 
       it('throws when version not match', () => {
@@ -64,15 +64,15 @@ describe('OktaAuthFactoryService', () => {
           }
         } as unknown as OktaAuth;
         setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
+        expect(() => TestBed.inject(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
       });
-      
+
     });
 
     describe('Okta User Agent tracking', () => {
       it('adds sdk environment to oktaAuth instance', () => {
         setupForRoot(oktaAuth);
-        TestBed.get(OKTA_AUTH);
+        TestBed.inject(OKTA_AUTH);
         expect(oktaAuth._oktaUserAgent.addEnvironment).toHaveBeenCalledWith('@okta/okta-angular/99.9.9');
       });
       it('throws if _oktaUserAgent is not exist', () => {
@@ -81,22 +81,22 @@ describe('OktaAuthFactoryService', () => {
           _oktaUserAgent: null
         } as unknown as OktaAuth;
         setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
+        expect(() => TestBed.inject(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
       });
     });
-  
+
     describe('default restoreOriginalUri', () => {
       it('sets default restoreOriginalUri', () => {
         setupForRoot(oktaAuth);
-        const injectedOktaAuth = TestBed.get(OKTA_AUTH);
+        const injectedOktaAuth = TestBed.inject(OKTA_AUTH);
         expect(injectedOktaAuth.options.restoreOriginalUri).toBeDefined();
       });
     });
-  
+
     describe('Start service', () => {
       it('starts service', () => {
         setupForRoot(oktaAuth);
-        TestBed.get(OKTA_AUTH);
+        TestBed.inject(OKTA_AUTH);
         expect(oktaAuth.start).toHaveBeenCalled();
       });
     });
