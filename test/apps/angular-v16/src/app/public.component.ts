@@ -10,24 +10,21 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
-import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-public',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
   template: `
-  <div id="public-message">
-  {{ message }}
-  </div>
-  <router-outlet></router-outlet>
-  `
+    <div id="public-message">
+      {{ message }}
+    </div>
+    <router-outlet />
+  `,
 })
 export class PublicComponent {
-  message;
-
-  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
-    this.message = 'Public!';
-  }
-
+  readonly message = 'Public!';
 }

@@ -10,12 +10,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-export { OktaAuthModule } from './okta/okta.module';
-export { OktaAuthGuard } from './okta/okta.guard';
-export { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from './okta/models/okta.config';
-export { OktaAuthStateService } from './okta/services/auth-state.service';
-export { OktaAuthConfigService } from './okta/services/auth-config.serice';
-export { OktaHasAnyGroupDirective } from './okta/has-any-group.directive';
+export { OktaAuthModule } from "./okta/okta.module";
+export { provideOktaAuth } from "./okta/okta.providers";
+export { OktaAuthGuard } from "./okta/okta.guard-v15";
+export {
+  oktaCanActivate,
+  oktaCanActivateChild,
+  oktaCanMatch,
+} from "./okta/okta.guard";
+export { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from "./okta/models/okta.config";
+export { OktaAuthStateService } from "./okta/services/auth-state.service";
+export { OktaAuthConfigService } from "./okta/services/auth-config.service";
+export { OktaHasAnyGroupDirective } from "./okta/has-any-group.directive";
 
 // Okta View Components
-export { OktaCallbackComponent } from './okta/components/callback.component';
+export { OktaCallbackComponent } from "./okta/components/callback.component";

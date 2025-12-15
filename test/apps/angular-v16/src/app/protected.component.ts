@@ -10,32 +10,38 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-secure',
-  template: `
-  <div>
-  {{ message }}<br/>
-  Claims: <pre id="claims-container">{{ claims }}</pre>
-  User: <pre id="userinfo-container">{{ user }}</pre>
-  </div>`
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: ` <div>
+    {{ message }}<br />
+    Claims:
+    <pre id="claims-container">{{ claims() }}</pre>
+    User:
+    <pre id="userinfo-container">{{ user() }}</pre>
+  </div>`,
 })
 export class ProtectedComponent implements OnInit {
-  message;
-  user = '';
-  claims = '';
-
-  constructor(@Inject(OKTA_AUTH) public oktaAuth: OktaAuth) {
-    this.message = 'Protected!';
-  }
+  readonly oktaAuth = inject(OKTA_AUTH);
+  readonly message = 'Protected!';
+  readonly user = signal('');
+  readonly claims = signal('');
 
   async ngOnInit() {
     const user = await this.oktaAuth.getUser();
-    this.user = JSON.stringify(user, null, 4);
-    const claims = await this.oktaAuth.authStateManager.getAuthState()?.idToken?.claims;
-    this.claims = JSON.stringify(claims, null, 4);
+    this.user.set(JSON.stringify(user, null, 4));
+    const claims = await this.oktaAuth.authStateManager.getAuthState()?.idToken
+      ?.claims;
+    this.claims.set(JSON.stringify(claims, null, 4));
   }
 }

@@ -9,32 +9,20 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-
-import {
-  NgModule,
-  ModuleWithProviders,
-  Optional,
-} from "@angular/core";
+import { Optional, makeEnvironmentProviders } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
-import { OktaCallbackComponent } from "./components/callback.component";
 import { OktaAuthConfigService } from "./services/auth-config.service";
 import { OktaAuthStateService } from "./services/auth-state.service";
 import { OktaAuthFactoryService } from "./services/auth-factory.service";
-import { OktaHasAnyGroupDirective } from "./has-any-group.directive";
 import { OktaConfig, OKTA_CONFIG, OKTA_AUTH } from "./models/okta.config";
-import { OktaAuthGuard } from "./okta.guard-v15";
 import { OktaAuthGuardService } from "./okta-auth-guard.service";
 
-const standalone = [OktaCallbackComponent, OktaHasAnyGroupDirective];
-
-@NgModule({
-  imports: standalone,
-  exports: standalone,
-  providers: [
+export const provideOktaAuth = (config?: OktaConfig) => {
+  return makeEnvironmentProviders([
     OktaAuthConfigService,
     OktaAuthStateService,
-    OktaAuthGuard,
+    OktaAuthGuardService,
     {
       provide: OKTA_AUTH,
       useFactory: OktaAuthFactoryService.createOktaAuth,
@@ -44,18 +32,6 @@ const standalone = [OktaCallbackComponent, OktaHasAnyGroupDirective];
         [new Optional(), Location],
       ],
     },
-  ],
-})
-/**
- * @deprecated Use provideOktaAuth
- */
-export class OktaAuthModule {
-  static forRoot(config?: OktaConfig): ModuleWithProviders<OktaAuthModule> {
-    return {
-      ngModule: OktaAuthModule,
-      providers: [{ provide: OKTA_CONFIG, useValue: config }],
-    };
-  }
-
-  // Should not have constructor to support lazy load of config with APP_INITIALIZER
-}
+    { provide: OKTA_CONFIG, useValue: config },
+  ]);
+};

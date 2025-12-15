@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { OktaAuth, OktaAuthOptions } from '@okta/okta-auth-js';
-import { OktaAuthModule } from '@okta/okta-angular';
-import { RouterModule } from '@angular/router';
-
+import { provideOktaAuth } from '@okta/okta-angular';
+import { provideRouter } from '@angular/router';
 
 const mockAccessToken = `
 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXIiOj
@@ -26,7 +25,7 @@ const standardAccessTokenParsed = {
   scopes: ['openid', 'email'],
   tokenType: 'Bearer',
   authorizeUrl: process.env['ISSUER'] + '/oauth2/v1/authorize',
-  userinfoUrl: process.env['ISSUER'] + '/oauth2/v1/userinfo'
+  userinfoUrl: process.env['ISSUER'] + '/oauth2/v1/userinfo',
 };
 
 const mockIdToken =
@@ -45,7 +44,7 @@ const standardIdTokenParsed = {
   scopes: ['openid', 'email'],
   authorizeUrl: process.env['ISSUER'] + '/oauth2/v1/authorize',
   issuer: process.env['ISSUER'],
-  clientId: process.env['CLIENT_ID']
+  clientId: process.env['CLIENT_ID'],
 };
 
 describe('AppComponent', () => {
@@ -54,7 +53,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     let testing = {
-      disableHttpsCheck: false
+      disableHttpsCheck: false,
     };
     const config: OktaAuthOptions = {
       issuer: process.env['ISSUER']!,
@@ -63,27 +62,23 @@ describe('AppComponent', () => {
       scopes: ['email'],
       responseType: 'id_token',
       tokenManager: {
-        syncStorage: false
-      }
+        syncStorage: false,
+      },
     };
 
     const oktaAuth = new OktaAuth(config);
 
     if (process.env['OKTA_TESTING_DISABLEHTTPSCHECK']) {
       testing = {
-        disableHttpsCheck: true
+        disableHttpsCheck: true,
       };
     }
 
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([{ path: 'foo', redirectTo: '/foo' }]),
-        OktaAuthModule.forRoot({oktaAuth, testing})
-
+      providers: [
+        provideRouter([{ path: 'foo', redirectTo: '/foo' }]),
+        provideOktaAuth({ oktaAuth, testing }),
       ],
-      declarations: [
-        AppComponent
-      ]
     });
 
     fixture = TestBed.createComponent(AppComponent);
@@ -101,9 +96,9 @@ describe('AppComponent', () => {
     localStorage.setItem(
       'okta-token-storage',
       JSON.stringify({
-        'accessToken': standardAccessTokenParsed,
-        'idToken': standardIdTokenParsed
-      }),
+        accessToken: standardAccessTokenParsed,
+        idToken: standardIdTokenParsed,
+      })
     );
     const accessToken = await component.oktaAuth.getAccessToken();
     expect(accessToken).toBe(mockAccessToken);
@@ -116,9 +111,9 @@ describe('AppComponent', () => {
     localStorage.setItem(
       'okta-token-storage',
       JSON.stringify({
-        'accessToken': standardAccessTokenParsed,
-        'idToken': standardIdTokenParsed
-      }),
+        accessToken: standardAccessTokenParsed,
+        idToken: standardIdTokenParsed,
+      })
     );
     const authenticated = await component.oktaAuth.isAuthenticated();
     expect(authenticated).toBeTruthy();
@@ -129,5 +124,4 @@ describe('AppComponent', () => {
     const authenticated = await component.oktaAuth.isAuthenticated();
     expect(authenticated).toBeFalsy();
   });
-
 });
