@@ -19,7 +19,7 @@ import { Injector } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
 
 jest.mock('../../lib/src/okta/packageInfo', () => ({
-  __esModule: true,
+  // __esModule: true,
   default: {
     authJSMinSupportedVersion: '5.3.1',
     version: '99.9.9',

@@ -16,6 +16,9 @@ import { OKTA_AUTH } from '../models/okta.config';
 import { OktaAuthConfigService } from '../services/auth-config.serice';
 
 @Component({
+  // This is temporary until we migrate to standalone components
+  // eslint-disable-next-line @angular-eslint/prefer-standalone
+  standalone: false,
   template: `<div>{{error}}</div>`
 })
 export class OktaCallbackComponent implements OnInit {

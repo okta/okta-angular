@@ -31,8 +31,8 @@ import { AuthRequiredFunction, OKTA_AUTH } from './models/okta.config';
 
 @Injectable()
 export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  private state: RouterStateSnapshot;
-  private routeData: Data;
+  private state!: RouterStateSnapshot;
+  private routeData!: Data;
   private onAuthRequired?: AuthRequiredFunction;
 
   constructor(
@@ -56,7 +56,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   async canLoad(route: Route): Promise<boolean> {
-    this.onAuthRequired = route.data?.onAuthRequired || this.onAuthRequired;
+    this.onAuthRequired = route.data?.['onAuthRequired'] || this.onAuthRequired;
 
     const isAuthenticated = await this.isAuthenticated(route.data);
     if (isAuthenticated) {
@@ -81,7 +81,7 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     // Track states for current route
     this.state = state;
     this.routeData = route.data;
-    this.onAuthRequired = route.data && route.data.onAuthRequired || this.onAuthRequired;
+    this.onAuthRequired = route.data && route.data['onAuthRequired'] || this.onAuthRequired;
 
     // Protect the route after accessing
     this.oktaAuth.authStateManager.subscribe(this.updateAuthStateListener);
@@ -105,11 +105,11 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   private async isAuthenticated(routeData?: Data, authState?: AuthState | null) {
     const isAuthenticated = authState ? authState?.isAuthenticated : await this.oktaAuth.isAuthenticated();
     let res = isAuthenticated;
-    if (routeData?.okta?.acrValues) {
+    if (routeData?.['okta']?.['acrValues']) {
       if (!authState) {
         authState = this.oktaAuth.authStateManager.getAuthState();
       }
-      res = authState?.idToken?.claims.acr === routeData?.okta?.acrValues;
+      res = authState?.idToken?.claims.acr === routeData?.['okta']?.['acrValues'];
     }
     return res;
   }
@@ -121,10 +121,10 @@ export class OktaAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     const options: TokenParams = {};
-    if (routeData?.okta?.acrValues) {
+    if (routeData?.['okta']?.['acrValues']) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore Supports auth-js >= 7.1.0
-      options.acrValues = routeData.okta.acrValues;
+      options.acrValues = routeData['okta']['acrValues'];
     }
 
     if (this.onAuthRequired) {

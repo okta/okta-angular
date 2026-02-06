@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   coverageDirectory: "<rootDir>/test-reports/coverage",
   collectCoverage: true,
   collectCoverageFrom: [
@@ -27,5 +27,5 @@ export default {
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
     '<rootDir>/test/apps/*'
-  ]
+  ],
 };

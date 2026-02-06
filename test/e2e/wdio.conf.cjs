@@ -1,4 +1,4 @@
-require('../../env');
+require('../../env.cjs');
 
 const DEBUG = process.env.DEBUG;
 const CI = process.env.CI;

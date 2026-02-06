@@ -3,7 +3,12 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { OktaAuthStateService, Groups } from './services/auth-state.service';
 
-@Directive({ selector: '[oktaHasAnyGroup]'})
+@Directive({ 
+  selector: '[oktaHasAnyGroup]',
+  // This is temporary until we migrate to standalone components
+  // eslint-disable-next-line @angular-eslint/prefer-standalone
+  standalone: false
+})
 export class OktaHasAnyGroupDirective implements OnInit, OnChanges, OnDestroy {
   private groupsSub$: Subject<Groups> = new ReplaySubject<Groups>();
   private destroySub$ = new Subject<void>();
