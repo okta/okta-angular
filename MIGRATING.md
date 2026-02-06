@@ -4,6 +4,26 @@
 
 # Migrating
 
+## To version 8.x
+
+`@okta/okta-angular` minimum Angular version was updated to v19, and the library now supports functional guards, zoneless, and standalone architecture. Add the `provideOktaAuth()` provider and config to your standalone Angular project's `app.config.ts`:
+
+```ts
+import { provideOktaAuth, withOktaConfig } from '@okta/okta-angular';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // other providers as required for your app
+    provideOktaAuth(
+      withOktaConfig({ oktaAuth })
+    )
+  ]
+};
+```
+
+If you were using Okta auth guards, use `canMatchFn` instead of `CanLoad`. We now export `canActivateFn` and `canActivateChildFn` in place of `CanActivate` and `CanActivateChild` class-based guards as well.
+
+
 ## To version 7.x
 
 `@okta/okta-angular` minimum Angular version was updated to v16. This should not require any code changes

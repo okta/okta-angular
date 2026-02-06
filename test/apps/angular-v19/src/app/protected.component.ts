@@ -16,7 +16,6 @@ import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-secure',
-  standalone: false,
   template: `
   <div>
   {{ message }}<br/>

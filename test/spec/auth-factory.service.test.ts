@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AuthSdkError, OktaAuth } from '@okta/okta-auth-js';
-import { OktaAuthModule, OKTA_AUTH } from '../../lib/src/okta-angular';
+import { OKTA_AUTH, OKTA_CONFIG, OktaAuthConfigService, provideOktaAuth, withOktaConfig } from '../../lib/src/okta-angular';
+import { OktaAuthFactoryService } from '../../lib/src/okta/services/auth-factory.service';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { SpyLocation } from '@angular/common/testing';
 
 jest.mock('../../lib/src/okta/packageInfo', () => ({
   __esModule: true,
@@ -12,20 +14,6 @@ jest.mock('../../lib/src/okta/packageInfo', () => ({
     name: '@okta/okta-angular',
   }
 }));
-
-@Component({ template: '' })
-class MockComponent {}
-
-function setupForRoot(oktaAuth: OktaAuth) {
-  TestBed.configureTestingModule({
-    imports: [
-      RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
-      OktaAuthModule.forRoot({ oktaAuth })
-    ],
-    declarations: [ MockComponent ],
-  });
-  return TestBed.createComponent(MockComponent);
-}
 
 describe('OktaAuthFactoryService', () => {
   let oktaAuth: OktaAuth;
@@ -50,8 +38,14 @@ describe('OktaAuthFactoryService', () => {
   describe('createOktaAuth', () => {
     describe('auth-js major version compatibility', () => {
       it('should not throw when version matches', () => {
-        setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).not.toThrow();
+        TestBed.configureTestingModule({
+          providers: [
+            OktaAuthConfigService,
+            { provide: OKTA_CONFIG, useValue: { oktaAuth } }
+          ]
+        });
+
+        expect(() => OktaAuthFactoryService.createOktaAuth(TestBed.inject(OktaAuthConfigService))).not.toThrow();
       });
 
       it('throws when version not match', () => {
@@ -63,41 +57,75 @@ describe('OktaAuthFactoryService', () => {
             getVersion: jest.fn().mockReturnValue('0.9.9')
           }
         } as unknown as OktaAuth;
-        setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
+
+        TestBed.configureTestingModule({
+          providers: [
+            OktaAuthConfigService,
+            { provide: OKTA_CONFIG, useValue: { oktaAuth } }
+          ]
+        });
+        expect(() => OktaAuthFactoryService.createOktaAuth(TestBed.inject(OktaAuthConfigService))).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
+
       });
-      
+
     });
 
     describe('Okta User Agent tracking', () => {
       it('adds sdk environment to oktaAuth instance', () => {
-        setupForRoot(oktaAuth);
-        TestBed.get(OKTA_AUTH);
-        expect(oktaAuth._oktaUserAgent.addEnvironment).toHaveBeenCalledWith('@okta/okta-angular/99.9.9');
+        TestBed.configureTestingModule({
+          providers: [
+            OktaAuthConfigService,
+            { provide: OKTA_CONFIG, useValue: { oktaAuth } }
+          ]
+        });
+        const configService = TestBed.inject(OktaAuthConfigService);
+        OktaAuthFactoryService.createOktaAuth(configService)
+        expect(configService?.getConfig()?.oktaAuth._oktaUserAgent.addEnvironment).toHaveBeenCalledWith('@okta/okta-angular/99.9.9');
       });
       it('throws if _oktaUserAgent is not exist', () => {
         oktaAuth = {
           ...oktaAuth,
           _oktaUserAgent: null
         } as unknown as OktaAuth;
-        setupForRoot(oktaAuth);
-        expect(() => TestBed.get(OKTA_AUTH)).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
+        TestBed.configureTestingModule({
+          providers: [
+            OktaAuthConfigService,
+            { provide: OKTA_CONFIG, useValue: { oktaAuth } }
+          ]
+        });
+
+        expect(() => OktaAuthFactoryService.createOktaAuth(TestBed.inject(OktaAuthConfigService))).toThrow(new AuthSdkError(`Passed in oktaAuth is not compatible with the SDK, minimum supported okta-auth-js version is 5.3.1.`));
       });
     });
-  
+
     describe('default restoreOriginalUri', () => {
-      it('sets default restoreOriginalUri', () => {
-        setupForRoot(oktaAuth);
-        const injectedOktaAuth = TestBed.get(OKTA_AUTH);
+      it('sets default restoreOriginalUri', async () => {
+
+        TestBed.configureTestingModule({
+          providers: [
+            { provide: Router, useValue: { navigateByUrl: jest.fn() } },
+            { provide: Location, useClass: SpyLocation },
+            provideOktaAuth(withOktaConfig({ oktaAuth }))
+          ]
+        });
+        const injectedOktaAuth = TestBed.inject(OKTA_AUTH);
         expect(injectedOktaAuth.options.restoreOriginalUri).toBeDefined();
       });
     });
-  
+
     describe('Start service', () => {
       it('starts service', () => {
-        setupForRoot(oktaAuth);
-        TestBed.get(OKTA_AUTH);
-        expect(oktaAuth.start).toHaveBeenCalled();
+        TestBed.configureTestingModule({
+          providers: [
+            OktaAuthConfigService,
+            { provide: OKTA_CONFIG, useValue: { oktaAuth } }
+          ]
+        });
+
+        const configService = TestBed.inject(OktaAuthConfigService);
+        OktaAuthFactoryService.createOktaAuth(configService)
+
+        expect(configService?.getConfig()?.oktaAuth.start).toHaveBeenCalled();
       });
     });
   });

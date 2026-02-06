@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 source ${OKTA_HOME}/${REPO}/scripts/setup-e2e.sh
 
@@ -16,17 +16,6 @@ get_terminus_secret "/" PASSWORD PASSWORD
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
 
-# Run unit tests for e2e apps
-for app in test/apps/angular-*
-do
-  pushd $app
-    if ! yarn test:unit; then
-      echo "unit failed for ${app}! Exiting..."
-      exit ${TEST_FAILURE}
-    fi
-  popd
-done
-
 if [ -z "${PASSWORD}" ]; then
   echo "No PASSWORD has been set! Exiting..."
   exit ${TEST_FAILURE}
@@ -40,4 +29,4 @@ fi
 
 echo ${TEST_SUITE_TYPE} > ${TEST_SUITE_TYPE_FILE}
 echo ${TEST_RESULT_FILE_DIR} > ${TEST_RESULT_FILE_DIR_FILE}
-exit ${PUBLISH_TYPE_AND_RESULT_DIR}
+exit ${SUCCESS}

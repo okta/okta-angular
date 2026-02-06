@@ -1,7 +1,7 @@
 [@okta/okta-auth-js]: https://github.com/okta/okta-auth-js
-[@angular/router]: https://angular.io/guide/router
-[Observable]: https://angular.io/guide/observables
-[Dependency Injection]: https://angular.io/guide/dependency-injection
+[Migrate your Angular app to standalone]: https://angular.dev/reference/migrations/standalone# 
+[@angular/router]: https://angular.dev/guide/routing
+[Dependency Injection]: https://angular.dev/guide/di
 [AuthState]: https://github.com/okta/okta-auth-js#authstatemanager
 [external identity provider]: https://developer.okta.com/docs/concepts/identity-providers/
 
@@ -34,18 +34,16 @@ This library currently supports:
 - [OAuth 2.0 Implicit Flow](https://tools.ietf.org/html/rfc6749#section-1.3.2)
 - [OAuth 2.0 Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1) with [Proof Key for Code Exchange (PKCE)](https://tools.ietf.org/html/rfc7636)
 
-> This library has been tested for compatibility with the following Angular versions: 16, 17, 18, 19
+> This library has been tested for compatibility with the following Angular versions: 19, 20, 21
 
 > [!IMPORTANT] 
-> `okta-angular` 7.0+ supports Angular 16 - 19. For Angular 12-16, please use `okta-angular` 6.x. For Angular 7 to 11, please use `okta-angular` 5.x
+> **`okta-angular` 8.0+ supports Angular 19 - 21.** 
+> * For Angular 16-19, please use `okta-angular` 7.x. 
+> * For Angular 12-16, please use `okta-angular` 6.x. 
+> * For Angular 7 to 11, please use `okta-angular` 5.x
 
 > [!WARNING] 
-> Angular versions older than 16 may not be fully compatible with all dependencies of this library, due to an older Typescript version which does not contain a definition for the `unknown` type. You may be able to workaround this issue by setting `skipLibChecks: true` in your `tsconfig.json` file.
-
-> [!NOTE]  
-> This library uses NgModule architecture. If you don't use the `HasAnyGroup` structural directive, you can use this library in a standalone project.
->
->Import the library in a standalone project using `importProvidersFrom(OktaAuthModule.forRoot({oktaAuth}))`.  
+> Angular versions older than 19 may not be fully compatible with all dependencies of this library, due to use of constructs such as `InputSignal`.
 
 ## Release Status
 
@@ -53,8 +51,9 @@ This library currently supports:
 
 | Version   | Status                           |
 | -------   | -------------------------------- |
-| `7.x`     | :heavy_check_mark: Stable        |
-| `6.x`     | :heavy_check_mark: Maintenance   |
+| `8.x`     | :heavy_check_mark: Stable        |
+| `7.x`     | :heavy_check_mark: Maintenance   |
+| `6.x`     | :x: Retired   |
 | `5.x`     | :x: Retired                      |
 | `4.x`     | :x: Retired                      |
 | `3.x`     | :x: Retired                      |
@@ -64,11 +63,11 @@ This library currently supports:
 ## Getting Started
 
 - If you do not already have a **Developer Edition Account**, you can create one at [https://developer.okta.com/signup/](https://developer.okta.com/signup/).
-- An Okta Application, configured for Single-Page App (SPA) mode. This is done from the Okta Developer Console and you can find instructions [here](https://developer.okta.com/authentication-guide/implementing-authentication/implicit#1-setting-up-your-application). When following the wizard, use the default properties. They are are designed to work with our sample applications.
+- An Okta Application, configured for Single-Page App (SPA) mode. This is done from the Okta Developer Console and you can find instructions [here](https://developer.okta.com/docs/guides/implement-grant-type/authcodepkce/main/). When following the wizard, use the default properties. They are are designed to work with our sample applications.
 
 ### Helpful Links
 
-- [Angular Quickstart](https://angular.io/guide/quickstart)
+- [Angular Essentials](https://angular.dev/essentials)
   - If you don't have an Angular app, or are new to Angular, please start with this guide. It will walk you through the creation of an Angular app, creating routes, and other application development essentials.
 - [Okta Sample Application](https://github.com/okta/samples-js-angular)
   - A fully functional sample application.
@@ -87,17 +86,15 @@ npm install @okta/okta-angular @okta/okta-auth-js
 
 ## Usage
 
-:warning: This method of configuration is deprecated and will be removed in v7. Starting with `okta-angular 6.1.0`, the preferred way to import `OktaAuthModule` is by using static method [`forRoot`](#oktaauthmoduleforroot).  
-
-Add [`OktaAuthModule`](#oktaauthmodule) to your module's imports.
-Create a configuration object and provide this as [`OKTA_CONFIG`](#okta_config).
+Add [`provideOktaAuth()`](provideOktaAuth) to your app config's provider's array.
+Create a configuration object and provide this within the [`withOktaConfig()`](#okta_config) configuration option.
 
 ```typescript
-// myApp.module.ts
+// app.config.ts
 
-import {
-  OKTA_CONFIG,
-  OktaAuthModule
+import { 
+  provideOktaAuth, 
+  withOktaConfig 
 } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 
@@ -108,104 +105,64 @@ const authConfig = {
 }
 const oktaAuth = new OktaAuth(authConfig);
 
-@NgModule({
-  imports: [
-    ...
-    OktaAuthModule
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [
-    { 
-      provide: OKTA_CONFIG, 
-      useValue: { oktaAuth } 
-    }
-  ],
-})
-export class MyAppModule { }
-```
-
-### `OktaAuthModule.forRoot()`
-
-Add `OktaAuthModule.forRoot(config: OktaConfig)` to your module's imports to create a [singleton service](https://angular.io/guide/singleton-services#the-forroot-pattern) with provied [configuration](#okta_config).  
-
-```typescript
-// myApp.module.ts
-
-import {
-  OktaAuthModule,
-  OktaConfig
-} from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
-
-const authConfig = {
-  issuer: 'https://{yourOktaDomain}/oauth2/default',
-  clientId: '{clientId}',
-  redirectUri: window.location.origin + '/login/callback'
-}
-const oktaAuth = new OktaAuth(authConfig);
-const moduleConfig: OktaConfig = { oktaAuth };
-
-@NgModule({
-  imports: [
-    ...
-    OktaAuthModule.forRoot(moduleConfig)
-  ],
-})
-export class MyAppModule { }
-```
-
-### `APP_INITIALIZER`
-
-Starting with `okta-angular 6.2.0`, you can provide `OktaConfig` in `APP_INITIALIZER` provider factory with method `setConfig()` of `OktaAuthConfigService` instance which allows you to load the `OktaConfig` at runtime.
-
-```typescript
-// myApp.module.ts
-
-import {
-  OktaAuthModule,
-  OktaConfig,
-  OktaAuthOptions,
-  OktaAuthConfigService,
-} from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
-
-function configInitializer(configService: OktaAuthConfigService, httpBackend: HttpBackend): () => void {
-  return () =>
-  new HttpClient(httpBackend)
-    .get('/api/config')
-    .pipe(
-      map((res: any) => ({
-        issuer: res.issuer,
-        clientId: res.clientId,
-        redirectUri: window.location.origin + '/login/callback'
-      })),
-      tap((authConfig: OktaAuthOptions) => {
-        const oktaAuth = new OktaAuth(authConfig);
-        const moduleConfig: OktaConfig = { oktaAuth };
-        configService.setConfig(moduleConfig);
-      }),
-      take(1)
-    );
+    // other providers as required for your app
+    provideOktaAuth(
+      withOktaConfig({ oktaAuth })
+    )
+  ]
 };
-
-@NgModule({
-  providers: [{
-    provide: APP_INITIALIZER,
-    useFactory: configInitializer,
-    deps: [OktaAuthConfigService, HttpBackend],
-    multi: true
-  }],
-  imports: [
-    ...
-    OktaAuthModule
-  ],
-})
-export class MyAppModule { }
 ```
 
+### Provide config at runtime during application initialization
 
-### `OKTA_CONFIG`
+Starting with `okta-angular 6.2.0`, you can provide `OktaConfig` at runtime using the `APP_INITIALIZER` injection token or the `provideAppInitializer()` provider. The `setConfig()` method in the `OktaAuthConfigService` allows you to load the `OktaConfig` at runtime. A real-world scenario for this is if you want to load your Okta config values via an HTTP request.
 
-An Angular InjectionToken used to configure the OktaAuthModule. This value must be provided by your own application.
+```typescript
+// app.config.ts
+
+import { 
+  provideOktaAuth, 
+  withOktaConfig 
+} from '@okta/okta-angular';
+import { OktaAuth } from '@okta/okta-auth-js';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // other providers as required for your app
+    provideAppInitializer(() => {
+      const configService = inject(OktaAuthConfigService);
+      const http = inject(HttpBackend);
+      
+      return firstValueFrom(
+        new HttpClient(httpBackend)
+          .get('/api/config')
+          .pipe(
+            map((res: any) => ({
+              issuer: res.issuer,
+              clientId: res.clientId,
+              redirectUri: window.location.origin + '/login/callback'
+            })),
+            tap((authConfig: OktaAuthOptions) => {
+              const oktaAuth = new OktaAuth(authConfig);
+              const oktaConfig: OktaConfig = { oktaAuth };
+              configService.setConfig(oktaConfig);
+            })
+          );
+      )
+    }),
+    provideHttpClient(),
+    provideOktaAuth()
+  ]
+};
+```
+
+### `OktaConfig`
+
+You provide the `OktaConfig` using the `withOktaConfig()` provider configuration option or by manually setting it as shown in the runtime example.
+
+The OktaConfig is accessible within your application as an injection token.
 
 - `oktaAuth` *(required)*: - [OktaAuth][@okta/okta-auth-js] instance. The instance that can be shared cross different components of the application. One popular use case is to share one single instance cross the application and [Okta Sign-In Widget](https://github.com/okta/okta-signin-widget).
 - `onAuthRequired` *(optional)*: - callback function. Triggered when a route protected by `OktaAuthGuard` is accessed without authentication or without needed level of end-user assurance (if `okta.acrValues` is provided in route data). Use this to present a [custom login page](#using-a-custom-login-page). If no `onAuthRequired` callback is defined, `okta-angular` will redirect directly to Okta for authentication.
@@ -222,42 +179,39 @@ import { OktaAuth } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-component',
+  imports: [AsyncPipe, JsonPipe],
   template: `
-    <pre id="userinfo-container">{{ user | json }}</pre>
+    <pre id="userinfo-container">{{ user | async | json }}</pre>
   `,
 })
-export class MyProtectedComponent implements OnInit {
-  user: string = '';
-  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {}
-  
-  async ngOnInit() {
-    const user = await this.oktaAuth.getUser();
-  }
+export class MyProtectedComponent {
+  #oktaAuth = inject(OKTA_AUTH);
+  user = this.#oktaAuth.getUser();
 }
 ```
 
-### `OktaAuthModule`
+### `provideOktaAuth`
 
 The top-level Angular module which provides these components and services:
 
 - [`OktaAuth`][@okta/okta-auth-js] - The passed in [`OktaAuth`][@okta/okta-auth-js] instance with default behavior setup.
-- [`OktaAuthGuard`](#oktaauthguard) - A navigation guard implementing [CanActivate](https://angular.io/api/router/CanActivate) and [CanActivateChild](https://angular.io/api/router/CanActivateChild) to grant access to a page (and/or its children) only after successful authentication (and only with needed level of end-user assurance if `okta.acrValues` is provided in route data).
-- [`OktaCallbackComponent`](#oktacallbackcomponent) - Handles the implicit flow callback by parsing tokens from the URL and storing them automatically.
+- [`OktaAuthGuard`](#oktaauthguard) - A navigation guards implementing [`canActivateFn`](https://angular.dev/guide/routing/route-guards#canactivate) and [`canActivateChildFn`](https://angular.dev/guide/routing/route-guards#canactivatechild) to grant access to a page (and/or its children) only after successful authentication (and only with needed level of end-user assurance if `okta.acrValues` is provided in route data).
+- [`OktaCallbackComponent`](#oktacallbackcomponent) - Handles the authentication redirect callback by parsing tokens from the URL and storing them automatically.
 - [`OktaAuthStateService`](#oktaauthstateservice) - A data service exposing observable [authState$][AuthState].
 
-### `OktaAuthGuard`
+### Auth guards
 
-Routes are protected by the `OktaAuthGuard`, which verifies there is a valid `idToken` stored.  
+Routes are protected by Okta auth guards, which verifies there is a valid `idToken` stored.  
 
-To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then `OktaAuthGuard` will also verify `acr` claim of `idToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
+To verify the level of end-user assurance (see [Step-up authentication](https://developer.okta.com/docs/guides/step-up-authentication/main/)), add `acrValues` to route data in `okta` namespace. Then the auth guards will also verify `acr` claim of `idToken` to match provided `okta.acrValues`. See [list of supported ACR values](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values). Minimum supported version of `@okta/okta-auth-js` for this feature is `7.1.0`.  
 
-To ensure the user has been authenticated before accessing your route, add the `canActivate` guard to one of your routes:
+To ensure the user has been authenticated before accessing your route, add the appropriate guard from Okta to one of your routes:
 
 ```typescript
-// myApp.module.ts
+// app.routes.ts
 
 import {
-  OktaAuthGuard,
+  canActivateAuthGuard,
   ...
 } from '@okta/okta-angular';
 
@@ -265,7 +219,7 @@ const appRoutes: Routes = [
   {
     path: 'protected',
     component: MyProtectedComponent,
-    canActivate: [ OktaAuthGuard ],
+    canActivate: [ canActivateAuthGuard ],
     children: [{
       // children of a protected route are also protected
       path: 'also-protected'
@@ -278,15 +232,15 @@ const appRoutes: Routes = [
 To protect a route with [the assurance level](https://developer.okta.com/docs/guides/step-up-authentication/main/), add [`acrValues`](https://developer.okta.com/docs/guides/step-up-authentication/main/#predefined-parameter-values) to route data in `okta` namespace:
 
 ```typescript
-// myApp.module.ts
+// app.routes.ts
 
-import { OktaAuthGuard } from '@okta/okta-angular';
+import { canActivateAuthGuard } from '@okta/okta-angular';
 
 const appRoutes: Routes = [
   {
     path: 'protected',
     component: MyProtectedComponent,
-    canActivate: [ OktaAuthGuard ],
+    canActivate: [ canActivateAuthGuard ],
     data: {
       okta: {
         // requires any 2 factors before accessing the route
@@ -301,10 +255,10 @@ const appRoutes: Routes = [
 You can use `canActivateChild` to protect children of an unprotected route:
 
 ```typescript
-// myApp.module.ts
+// app.routes.ts
 
 import {
-  OktaAuthGuard,
+  canActivateChildAuthGuard,
   ...
 } from '@okta/okta-angular';
 
@@ -312,7 +266,7 @@ const appRoutes: Routes = [
   {
     path: 'public',
     component: MyPublicComponent,
-    canActivateChild: [ OktaAuthGuard ],
+    canActivateChild: [ canActivateChildAuthGuard ],
     children: [{
       path: 'protected',
       component: MyProtectedComponent
@@ -322,19 +276,19 @@ const appRoutes: Routes = [
 ]
 ```
 
-You can use `canLoad` to achieve lazy loading for modules that are not immediately necessary to keep the initial bundle size smaller.
+You can use `canMatch` to determine whether a route matches during path matching. It's used for conditional routing with the beneficial side effect of keeping initial bundle size small until navigating to a lazy loaded feature. 
 
 ```typescript
-// myApp.module.ts
+// app.routes.ts
 import {
-  OktaAuthGuard,
+  canMatchAuthGuard,
   ...
 } from '@okta/okta-angular';
 const appRoutes: Routes = [
   {
     path: 'lazy',
-    canLoad: [ OktaAuthGuard ],
-    loadChildren: () => import('./lazy-load/lazy-load.module').then(mod => mod.LazyLoadModule)
+    canMatch: [ canMatchAuthGuard ],
+    loadChildren: () => import('./lazy-load/lazy-load.routes')
   },
   ...
 ]
@@ -344,7 +298,7 @@ If a user does not have a valid session, then a new authorization flow will begi
 
 ### `OktaCallbackComponent`
 
-Used by the login redirect flow, begun by a call to [signInWithRedirect](https://github.com/okta/okta-auth-js#signinwithredirectoptions). This component handles the callback after the redirect. By default, it parses the tokens from the uri, stores them, then redirects to `/`. If a protected route (using [`OktaAuthGuard`](#oktaauthguard)) caused the redirect, then the callback will redirect back to the protected route. If an error is thrown while processing tokens, the component will display the error and not perform any redirect. This logic can be customized by copying the component to your own source tree and modified as needed. For example, you may want to capture or display errors differently or provide a helpful link for your users in case they encounter an error on the callback route. The most common error is the user does not have permission to access the application. In this case, they may be able to contact an administrator to obtain access.
+Used by the login redirect flow, begun by a call to [signInWithRedirect](https://github.com/okta/okta-auth-js#signinwithredirectoptions). This component handles the callback after the redirect. By default, it parses the tokens from the uri, stores them, then redirects to `/`. If a protected route (using [Okta auth guards](#auth-guards)) caused the redirect, then the callback will redirect back to the protected route. If an error is thrown while processing tokens, the component will display the error and not perform any redirect. This logic can be customized by copying the component to your own source tree and modified as needed. For example, you may want to capture or display errors differently or provide a helpful link for your users in case they encounter an error on the callback route. The most common error is the user does not have permission to access the application. In this case, they may be able to contact an administrator to obtain access.
 
 You should define a route to handle the callback URL (`/login/callback` by default). 
 
@@ -373,37 +327,40 @@ The example below shows connecting two buttons to handle **login** and **logout*
 ```typescript
 // sample.component.ts
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-component',
+  imports: [AsyncPipe, RouterOutlet],
   template: `
-    <button *ngIf="!(authStateService.authState$ | async)?.isAuthenticated" (click)="login()">Login</button>
-    <button *ngIf="(authStateService.authState$ | async)?.isAuthenticated" (click)="logout()">Logout</button>
+    @if(authStateService.authState$ | async)?.isAuthenticated) {
+      <button (click)="logout()">Logout</button>
+    } @else {
+      <button (click)="login()">Login</button>
+    }
+
     <router-outlet></router-outlet>
   `,
 })
 export class MyComponent {
-  constructor(
-    @Inject(OKTA_AUTH) public oktaAuth: OktaAuth, 
-    private authStateService: OktaAuthStateService
-  ) {}
-
+  #oktaAuth = inject(OKTA_AUTH);
+  authStateService = inject(OktaAuthStateService);
+  
   async login() {
-    await this.oktaAuth.signInWithRedirect();
+    await this.#oktaAuth.signInWithRedirect();
   }
 
   async logout() {
-    await this.oktaAuth.signOut();
+    await this.#oktaAuth.signOut();
   }
 }
 ```
 
 ### `OktaHasAnyGroup` directive
 
-This directive implements lite role based access control (RBAC) to only render content for authenticated users in group/s. It supports `string`, `array` and `object` input formats.
+This directive implements light role based access control (RBAC) to only render content for authenticated users in group/s. It supports `string`, `array` and `object` input formats.
 
 - `string`: single group name. -- `'admin'`
 - `array`: array of group names. -- `['admin', 'it']`
@@ -412,7 +369,8 @@ This directive implements lite role based access control (RBAC) to only render c
 Use any format of input when `groups` is available from user claims:
 
 ```typescript
-@Component({ 
+@Component({
+  imports: [OktaHasAnyGroupDirective], 
   template: `
   <div *oktaHasAnyGroup="['admin']">
     In group
@@ -426,6 +384,7 @@ Only use `object` format input when custom claim is defined:
 
 ```typescript
 @Component({ 
+  imports: [OktaHasAnyGroupDirective],
   template: `
   <div *oktaHasAnyGroup="{ 'custom-groups': ['admin', 'it'] }">
     In group
@@ -444,7 +403,7 @@ Using the [Okta Signin Widget](https://github.com/okta/okta-signin-widget), you 
 To implement a custom login page, set an `onAuthRequired` callback on the `OktaConfig` object:
 
 ```typescript
-// myApp.module.ts
+// app.config.ts
 
 function onAuthRequired(oktaAuth, injector, options) {
   // `options` object can contain `acrValues` if it was provided in route data
@@ -458,26 +417,25 @@ function onAuthRequired(oktaAuth, injector, options) {
 
 const oktaAuth = new OktaAuth({ ... });
 
-@NgModule({
-  imports: [
-    ...
-    OktaAuthModule.forRoot({oktaAuth, onAuthRequired})
+export const appConfig: ApplicationConfig = {
+  providers: [
+    ...,
+    provideOktaAuth({oktaAuth, onAuthRequired})
   ],
-})
-export class MyAppModule { }
+};
 ```
 
 Alternatively, you can add a `data` attribute directly to a `Route`:
 
 ```typescript
-// myApp.module.ts
+// app.routes.ts
 
 const appRoutes: Routes = [
   ...
   {
     path: 'protected',
     component: MyProtectedComponent,
-    canActivate: [ OktaAuthGuard ],
+    canActivate: [ canActivateAuthGuard ],
     data: {
       onAuthRequired: onAuthRequired
     }
@@ -499,8 +457,8 @@ Note that `onAuthResume` has the same signature as `onAuthRequired`. If you do n
 // myApp.module.ts
 
 function onAuthResume(oktaAuth, injector) {
-  // Use injector to access any service available within your application
-  const router = injector.get(Router);
+  // Use inject function to access providers within an activation context
+  const router = inject(Router);
 
   // Redirect the user to custom login page which renders the Okta SignIn Widget
   router.navigate(['/custom-login']);
