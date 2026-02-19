@@ -1,5 +1,5 @@
 {
-  "name": "@okta/test.app.ng19",
+  "name": "angular-v20",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -13,13 +13,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/compiler": "^19.2.0",
-    "@angular/core": "^19.2.0",
-    "@angular/forms": "^19.2.0",
-    "@angular/platform-browser": "^19.2.0",
-    "@angular/platform-browser-dynamic": "^19.2.0",
-    "@angular/router": "^19.2.0",
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/router": "^20.3.0",
     "@okta/okta-angular": "../../../dist",
     "@okta/okta-auth-js": "^7.1.1",
     "rxjs": "~7.8.0",
@@ -27,15 +26,13 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.15",
-    "@angular/cli": "^19.2.15",
-    "@angular/compiler-cli": "^19.2.0",
+    "@angular/build": "^20.3.15",
+    "@angular/cli": "^20.3.15",
+    "@angular/compiler-cli": "^20.3.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^16.18.38",
+    "jest": "^30.0.0",
     "lite-server": "^2.6.1",
-    "typescript": "~5.7.2"
-  },
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
+    "typescript": "~5.9.2"
   }
 }

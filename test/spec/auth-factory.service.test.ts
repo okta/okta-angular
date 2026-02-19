@@ -5,7 +5,7 @@ import { AuthSdkError, OktaAuth } from '@okta/okta-auth-js';
 import { OktaAuthModule, OKTA_AUTH } from '../../lib/src/okta-angular';
 
 jest.mock('../../lib/src/okta/packageInfo', () => ({
-  __esModule: true,
+  __esModule:  true,
   default: {
     authJSMinSupportedVersion: '5.3.1',
     version: '99.9.9',
@@ -20,9 +20,9 @@ function setupForRoot(oktaAuth: OktaAuth) {
   TestBed.configureTestingModule({
     imports: [
       RouterTestingModule.withRoutes([{ path: 'foo', redirectTo: '/foo' }]),
-      OktaAuthModule.forRoot({ oktaAuth })
-    ],
-    declarations: [ MockComponent ],
+      OktaAuthModule.forRoot({ oktaAuth }),
+      MockComponent
+    ]
   });
   return TestBed.createComponent(MockComponent);
 }

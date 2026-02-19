@@ -34,7 +34,7 @@ install_auth_js () {
 
 # Install required node version
 export NVM_DIR="/root/.nvm"
-setup_service node v18.19.1
+setup_service node v22.16.1
 setup_service python 3.6
 
 # Install yarn

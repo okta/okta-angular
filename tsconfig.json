@@ -1,21 +1,20 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": ".",
         "outDir": "./dist/out-tsc",
-        "downlevelIteration": true,
-        "emitDecoratorMetadata": true,
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
         "strict": true,
-        "strictPropertyInitialization": false,
-        "module": "ES2022",
-        "moduleResolution": "node",
-        "rootDir": ".",
-        "sourceMap": true,
-        "inlineSources": true,
-        "target": "ES2022",
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
         "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "bundler",
+        "importHelpers": true,
+        "isolatedModules": true,
+        "target": "ES2022",
+        "module": "ES2022",
+        "experimentalDecorators": true,
         "lib": [
             "ES2022",
             "dom"
@@ -26,5 +25,11 @@
     },
     "exclude": [
         "node_modules"
-    ]
+    ],
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
+    }
 }

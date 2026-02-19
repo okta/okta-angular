@@ -3,13 +3,12 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-v19": {
+    "angular-v20": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "inlineTemplate": true,
-          "inlineStyle": true,
-          "skipTests": true
+          "inlineStyle": true
         },
         "@schematics/angular:class": {
           "skipTests": true
@@ -38,23 +37,22 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/angular-v19",
-            "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
             "allowedCommonJsDependencies": [
               "p-cancelable",
               "cross-fetch",
@@ -66,13 +64,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -86,22 +84,16 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-v19:build:production"
+              "buildTarget": "angular-v20:build:production"
             },
             "development": {
-              "buildTarget": "angular-v19:build:development"
+              "buildTarget": "angular-v20:build:development"
             }
           },
           "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "angular-v19:build"
-          }
         }
       }
     }

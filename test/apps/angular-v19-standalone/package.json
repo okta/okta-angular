@@ -1,5 +1,5 @@
 {
-  "name": "@okta/test.app.ng19",
+  "name": "@okta/test.app.ng19.standalone",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
