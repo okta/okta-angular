@@ -60,6 +60,11 @@ const tasks = [
     app: 'angular-v20',
     asyncOktaConfig: true
   },
+  {
+    name: '@okta/test.app.ng19.standalone',
+    app: 'angular-v19-standalone',
+    asyncOktaConfig: true
+  },
 ]
   .reduce((tasks, app) => {
     const task = getTask(app);
