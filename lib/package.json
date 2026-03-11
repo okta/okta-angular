@@ -22,7 +22,7 @@
     "@angular/common": ">= 16.2.0",
     "@angular/core": ">= 16.2.0",
     "@angular/router": ">= 16.2.0",
-    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0",
+    "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0 || ^8.0.0",
     "rxjs": "^7.0.0 || ^8.0.0"
   }
 }
