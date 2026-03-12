@@ -1,3 +1,9 @@
+# 7.1.0
+
+### Features
+
+- [#168](https://github.com/okta/okta-angular/pull/168) adds `@okta/okta-auth-js@8.0.0` as supported
+
 # 7.0.0
 
 ### BREAKING CHANGES
