@@ -50,6 +50,9 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "tiny-emitter"
             ]
           },
           "configurations": {
