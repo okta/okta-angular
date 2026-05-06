@@ -56,7 +56,10 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "tiny-emitter"
+            ]
           },
           "configurations": {
             "production": {

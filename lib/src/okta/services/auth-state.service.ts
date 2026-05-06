@@ -1,4 +1,4 @@
-import { Injectable, inject, OnDestroy } from '@angular/core';
+import { Injectable, inject, DestroyRef } from '@angular/core';
 import { AuthState, UserClaims } from '@okta/okta-auth-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -11,8 +11,9 @@ const defaultAuthState = {
 export type Groups = string | string[] | { [key: string]: string[] };
 
 @Injectable({ providedIn: 'root' })
-export class OktaAuthStateService implements OnDestroy {
+export class OktaAuthStateService {
   #oktaAuth = inject(OKTA_AUTH);
+  #destroyRef = inject(DestroyRef);
 
   #authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(defaultAuthState);
   
@@ -26,10 +27,11 @@ export class OktaAuthStateService implements OnDestroy {
 
     // subscribe to future changes
     this.#oktaAuth.authStateManager.subscribe(this.#updateAuthState);
-  }
 
-  ngOnDestroy(): void {
-    this.#oktaAuth.authStateManager.unsubscribe(this.#updateAuthState);
+    // unsubscribe when destroyed
+    this.#destroyRef.onDestroy(() => {
+      this.#oktaAuth.authStateManager.unsubscribe(this.#updateAuthState);
+    });
   }
 
   // Observes as true when any group input can match groups from user claims 
