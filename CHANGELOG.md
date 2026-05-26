@@ -1,3 +1,13 @@
+# 8.0.0
+
+### BREAKING CHANGES
+
+- [#169](https://github.com/okta/okta-angular/pull/169) BREAKING: updates minimum Angular version to `19.x` and supports standalone architecture. 
+- See [MIGRATING](MIGRATING.md) for detailed information 
+  - Replaces OktaAuthModule with `provideOktaAuth()`  
+  - Replaces class-based guards with functional guards. Replaces `CanLoad` guard with `canMatch` guard.
+  - Support zoneless change detection
+
 # 7.1.0
 
 ### Features

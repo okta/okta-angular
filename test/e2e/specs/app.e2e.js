@@ -50,7 +50,7 @@ describe('Angular + Okta App', () => {
       await ProtectedPage.logout();
     });
 
-    it('should preserve query paramaters after redirecting to Okta with canLoad guard', async () => {
+    it('should preserve query paramaters after redirecting to Okta with canMatch guard', async () => {
       await LazyPage.navigateTo('?state=bar');
       await OktaSignInPage.waitForLoad();
       await OktaSignInPage.signIn({

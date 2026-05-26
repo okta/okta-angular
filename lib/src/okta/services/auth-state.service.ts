@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { AuthState, OktaAuth, UserClaims } from '@okta/okta-auth-js';
+import { Injectable, inject, DestroyRef } from '@angular/core';
+import { AuthState, UserClaims } from '@okta/okta-auth-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { OKTA_AUTH } from '../models/okta.config';
@@ -10,26 +10,28 @@ const defaultAuthState = {
 
 export type Groups = string | string[] | { [key: string]: string[] };
 
-@Injectable()
-export class OktaAuthStateService implements OnDestroy {
-  private _authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(defaultAuthState);
+@Injectable({ providedIn: 'root' })
+export class OktaAuthStateService {
+  #oktaAuth = inject(OKTA_AUTH);
+  #destroyRef = inject(DestroyRef);
+
+  #authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(defaultAuthState);
   
   // only expose readonly property
-  public readonly authState$: Observable<AuthState> = this._authState.asObservable();
+  public readonly authState$: Observable<AuthState> = this.#authState.asObservable();
 
-  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) {
-    this.updateAuthState = this.updateAuthState.bind(this);
-
+  constructor() {
     // set initial authState
-    const initialAuthState = this.oktaAuth.authStateManager.getAuthState() || defaultAuthState;
-    this._authState.next(initialAuthState);
+    const initialAuthState = this.#oktaAuth.authStateManager.getAuthState() || defaultAuthState;
+    this.#authState.next(initialAuthState);
 
     // subscribe to future changes
-    this.oktaAuth.authStateManager.subscribe(this.updateAuthState);
-  }
+    this.#oktaAuth.authStateManager.subscribe(this.#updateAuthState);
 
-  ngOnDestroy(): void {
-    this.oktaAuth.authStateManager.unsubscribe(this.updateAuthState);
+    // unsubscribe when destroyed
+    this.#destroyRef.onDestroy(() => {
+      this.#oktaAuth.authStateManager.unsubscribe(this.#updateAuthState);
+    });
   }
 
   // Observes as true when any group input can match groups from user claims 
@@ -59,7 +61,7 @@ export class OktaAuthStateService implements OnDestroy {
 
         // try /userinfo endpoint when thin idToken (no groups claim) is returned
         // https://developer.okta.com/docs/concepts/api-access-management/#tokens-and-scopes
-        const userInfo = await this.oktaAuth.getUser();
+        const userInfo = await this.#oktaAuth.getUser();
         if (!userInfo[key]) {
           return false;
         }
@@ -68,7 +70,7 @@ export class OktaAuthStateService implements OnDestroy {
     );
   }
 
-  private updateAuthState(authState: AuthState): void {
-    this._authState.next(authState);
+  #updateAuthState = (authState: AuthState): void => {
+    this.#authState.next(authState);
   }
 }

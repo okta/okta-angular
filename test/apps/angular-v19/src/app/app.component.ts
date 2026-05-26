@@ -1,9 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { OKTA_AUTH, OktaAuthStateService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
-  standalone: false,
+  imports: [AsyncPipe, RouterOutlet, RouterLink],
   template: `
   <button id="home-button" routerLink="/"> Home </button>
   @if (!(authStateService.authState$ | async)?.isAuthenticated) {

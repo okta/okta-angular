@@ -9,7 +9,7 @@ This folder includes Angular test apps cross all supported Angular versions (12 
 1. Outside repo directory, run the following command
 
 ```bash
-npx @angular/cli@<version> new angular-v<version> --directory <rel/path/to/repo>/test/apps/angular-v<version> --skip-git --inline-template --inline-style --style css --ssr false 
+npx @angular/cli@<version> new angular-v<version> --directory <rel/path/to/repo>/test/apps/angular-v<version> --skip-git --minimal --style css --ssr false 
 ```
 **Note:** replace `<version>` in the script with the Angular version for the new app.
 
