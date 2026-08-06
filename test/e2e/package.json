@@ -3,10 +3,10 @@
     "version": "0.1.0",
     "private": true,
     "devDependencies": {
-        "@babel/cli": "^7.19.3",
-        "@babel/core": "^7.19.3",
-        "@babel/preset-env": "^7.19.3",
-        "@babel/register": "^7.18.9",
+        "@babel/cli": "^8.0.4",
+        "@babel/core": "^8.0.1",
+        "@babel/preset-env": "^8.0.2",
+        "@babel/register": "^8.0.1",
         "@wdio/cli": "^8.35.1",
         "@wdio/jasmine-framework": "^8.35.1",
         "@wdio/junit-reporter": "^8.32.4",
@@ -14,7 +14,7 @@
         "@wdio/sauce-service": "^8.35.1",
         "@wdio/spec-reporter": "^8.32.4",
         "cross-spawn-with-kill": "^1.0.0",
-        "wait-on": "^8.0.1",
+        "wait-on": "^9.1.0",
         "eslint-plugin-jasmine": "^4.1.2",
         "eslint-plugin-webdriverio": "^1.0.1",
         "babel-eslint": "^10.1.0"

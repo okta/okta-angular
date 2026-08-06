@@ -30,7 +30,7 @@ install_auth_js () {
 
 # Install required node version
 export NVM_DIR="/root/.nvm"
-setup_service node v22.16.0
+setup_service node v22.18.0
 
 if ! npm install -g yarn@1.22.22; then
   echo "Failed to install yarn"
