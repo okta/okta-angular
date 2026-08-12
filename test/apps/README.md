@@ -15,14 +15,12 @@ npx @angular/cli@<version> new angular-v<version> --directory <rel/path/to/repo>
 
 2. Copy `prebuild.js` from the existing test apps. The `prebuild` script loads okta test configs from `testenv`, then add it to Angular's environment module (`src/environments`).
 
-3. Update `scripts` and `workspaces` field in package.json by following `package.json` in the existing apps.
+3. Update `scripts` and `workspaces` field in package.json by following `package.json` in the existing apps. In particular, add a `start:prod` script (`ng serve --configuration production --port 8080`) and a matching `prestart:prod` script (`node ./prebuild.mjs`), so the e2e tests can run against a production-configuration build served by Angular's own dev server.
 
-4. Add `lite-server` in `devDependencies`, so the e2e tests can run against the prod build artifacts. Copy over `bs-config.cjs` as the static server's config file.
+4. Update `angular.json` for the new version by adding `allowedCommonJsDependencies` property to the `build` configuration. Add any CommonJS dependencies used by Okta AuthJS. This property suppresses CJS warnings.
 
-5. Update `angular.json` for the new version by adding `allowedCommonJsDependencies` property to the `build` configuration. Add any CommonJS dependencies used by Okta AuthJS. This property suppresses CJS warnings.
+5. Once above steps are finished, try the newly generated app locally first. If everything looks good, then update `runner.cjs` under `e2e` folder to bind e2e tests with the new app.
 
-6. Once above steps are finished, try the newly generated app locally first. If everything looks good, then update `runner.cjs` under `e2e` folder to bind e2e tests with the new app.
+6. Restore toplevel `angular.json` 
 
-7. Restore toplevel `angular.json` 
-
-8. Push a commit and test on bacon.
+7. Push a commit and test on bacon.
