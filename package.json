@@ -20,9 +20,17 @@
     "test:apps:build": "sh ./scripts/build-test-apps.sh",
     "pretest:e2e": "sh ./scripts/build-test-apps.sh"
   },
-  "engines": {
-    "node": ">=22.18.0",
-    "yarn": "^1.7.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.16.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "yarn",
+      "version": "^1.7.0",
+      "onFail": "warn"
+    }
   },
   "repository": "https://github.com/okta/okta-angular",
   "homepage": "https://github.com/okta/okta-angular",
