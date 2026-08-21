@@ -14,7 +14,7 @@
         "@wdio/sauce-service": "^8.35.1",
         "@wdio/spec-reporter": "^8.32.4",
         "cross-spawn-with-kill": "^1.0.0",
-        "wait-on": "^8.0.1",
+        "wait-on": "^9.1.0",
         "eslint-plugin-jasmine": "^4.1.2",
         "eslint-plugin-webdriverio": "^1.0.1",
         "babel-eslint": "^10.1.0"

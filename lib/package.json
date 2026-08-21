@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
-    "compare-versions": "^5.0.1",
+    "compare-versions": "^6.1.1",
     "tslib": "^2.4.0"
   },
   "peerDependencies": {
