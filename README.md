@@ -470,6 +470,76 @@ const oktaConfig = {
 };
 ```
 
+## Using @okta/okta-angular/client-js (opt-in, beta)
+
+> :warning: This subpath is **beta** and **opt-in**. It has no effect on the default `@okta/okta-angular` entry point described above, and its API may change in a future minor release. `okta-auth-js`-based consumers can ignore this section entirely — nothing here is installed or evaluated unless you import from `@okta/okta-angular/client-js` yourself.
+
+`@okta/okta-angular/client-js` is a small set of Angular router adapters for [`@okta/okta-client-javascript`](https://github.com/okta/okta-client-javascript) (published as the `@okta/auth-foundation`, `@okta/oauth2-flows`, and `@okta/spa-platform` packages), offered as an alternative to the `@okta/okta-auth-js`-based API this library has always shipped.
+
+The two SDKs model authentication differently. `@okta/okta-auth-js` keeps a persistent `AuthState` that you subscribe to via `OktaAuthStateService`, and `OktaCallbackComponent`/the `okta.guard.ts` guards read from that state. `@okta/okta-client-javascript` has no such object: `AuthorizationCodeFlowOrchestrator.getToken()` and `FetchClient.fetch()` each resolve, refresh, or redirect on demand at the moment a token is actually needed, and there's nothing to subscribe to. The adapters below wrap that request-time model in Angular's native functional router primitives (`CanActivateFn` and a plain resolver helper), wired into Angular's dependency injector the same way `provideOktaAuth`/`OKTA_AUTH` wire up the `okta-auth-js` path above — you register your already-constructed `orchestrator`/`fetchClient` once via `provideClientJsAuth`, and the exported guards/resolver `inject()` them, rather than being built by factory functions you have to thread instances through yourself.
+
+### Installation
+
+```
+npm install @okta/auth-foundation @okta/oauth2-flows @okta/spa-platform
+```
+
+These three packages are optional peer dependencies of `@okta/okta-angular` — installing `@okta/okta-angular` alone does not pull them in.
+
+### Example
+
+Construct your flow, orchestrator, and fetch client once, and register them with `provideClientJsAuth`:
+
+```typescript
+// app.config.ts
+import { ApplicationConfig } from '@angular/core';
+import { AuthorizationCodeFlow } from '@okta/spa-platform';
+import { provideClientJsAuth } from '@okta/okta-angular/client-js';
+
+const flow = new AuthorizationCodeFlow({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  clientId: '{clientId}',
+  redirectUri: window.location.origin + '/login/callback',
+  scopes: ['openid', 'profile', 'email'],
+});
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...your other providers
+    provideClientJsAuth({
+      orchestrator: flow.getOrchestrator(),
+      fetchClient: flow.getFetchClient(),
+    }),
+  ],
+};
+```
+
+Then use the exported `tokenGuard`, `loginCallbackGuard`, and `fetchResolver` directly in your route config — no factories, no manual wiring of instances:
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { tokenGuard, loginCallbackGuard, fetchResolver } from '@okta/okta-angular/client-js';
+
+export const routes: Routes = [
+  { path: 'login/callback', canActivate: [loginCallbackGuard], component: LoginCallbackComponent },
+  {
+    path: 'protected',
+    canActivate: [tokenGuard],
+    resolve: { messages: () => fetchResolver('/api/messages').then((res) => res.json()) },
+    component: ProtectedComponent,
+  },
+];
+```
+
+`tokenGuard` is a `CanActivateFn` and is equally valid as a `canActivateChild` or `canMatch` guard — `orchestrator.getToken()` resolves to a truthy token or redirects externally to sign-in on its own, so the guard body doesn't vary by which router hook it's attached to. To pass per-route [`TokenOrchestrator.AuthorizeParams`](https://github.com/okta/okta-client-javascript) (e.g. extra scopes), set them on the route's `data`, the same way the existing `okta-auth-js` guards read `route.data['okta']['acrValues']`:
+
+```typescript
+{ path: 'admin', canActivate: [tokenGuard], data: { clientJs: { params: { scopes: ['openid', 'admin'] } } } }
+```
+
+`loginCallbackGuard` replaces `OktaCallbackComponent` for this SDK: it resumes the flow from the current URL and returns a [`RedirectCommand`](https://angular.dev/api/router/RedirectCommand) pointing at the original pre-login URL. `RedirectCommand`-based guard redirects require Angular Router 15.2+; this repo's existing `@angular/router` peer range (`>=19.2.0`) already covers it.
+
 ## Testing
 
 To run Jest tests for your app using `@okta/okta-angular` please add `@okta/okta-angular` (and some of its dependencies listed below) to `transformIgnorePatterns` in `jest.config.js`:

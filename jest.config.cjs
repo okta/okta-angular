@@ -3,6 +3,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     "./lib/src/**",
+    "./lib/client-js/src/**",
     "!./test/**"
   ],
   reporters: [
