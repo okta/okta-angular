@@ -8,6 +8,7 @@ node_modules
 testenv
 /test-reports
 **/src/okta/packageInfo.ts
+lib/client-js/src/package-info.ts
 .yalc
 yalc.lock
 yarn-error.log

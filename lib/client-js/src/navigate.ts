@@ -10,15 +10,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-export { provideClientJsAuth } from './provide-client-js-auth';
-export { tokenGuard, loginCallbackGuard } from './client-js.guard';
-export { oktaFetch } from './client-js.fetch';
-export { signOut } from './client-js.sign-out';
-export type { SignOutOptions } from './client-js.sign-out';
-export {
-  CLIENT_JS_CONFIG,
-  CLIENT_JS_ORCHESTRATOR,
-  CLIENT_JS_FETCH_CLIENT,
-  CLIENT_JS_SIGN_OUT_FLOW,
-} from './models/client-js.config';
-export type { ClientJsAuthConfig, ClientJsRouteData } from './models/client-js.config';
+/**
+ * The single place this entry point hands control to the browser and leaves the SPA.
+ *
+ * Kept in its own module because `window.location` is unforgeable - non-configurable on `window`,
+ * with non-writable own properties - so it cannot be spied on. Unit tests mock this module instead.
+ *
+ * @internal
+ */
+export function navigate(url: string | URL): void {
+  window.location.assign(url);
+}

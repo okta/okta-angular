@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import type { FetchClient } from '@okta/auth-foundation';
 
-import { fetchResolver } from '../../lib/client-js/src/client-js.resolver';
+import { oktaFetch } from '../../lib/client-js/src/client-js.fetch';
 import { CLIENT_JS_FETCH_CLIENT } from '../../lib/client-js/src/models/client-js.config';
 
 function setup(fetchClient: FetchClient) {
@@ -11,14 +11,14 @@ function setup(fetchClient: FetchClient) {
   });
 }
 
-describe('fetchResolver', () => {
+describe('oktaFetch', () => {
   it('forwards resource and init straight to the registered fetchClient.fetch()', async () => {
     const response = { ok: true } as Response;
     const fetch = jest.fn().mockResolvedValue(response);
     setup({ fetch } as unknown as FetchClient);
 
     const init = { method: 'POST' };
-    const res = await TestBed.runInInjectionContext(() => fetchResolver('/api/messages', init));
+    const res = await TestBed.runInInjectionContext(() => oktaFetch('/api/messages', init));
 
     expect(fetch).toHaveBeenCalledWith('/api/messages', init);
     expect(res).toBe(response);
@@ -28,7 +28,7 @@ describe('fetchResolver', () => {
     const fetch = jest.fn().mockResolvedValue({ ok: true } as Response);
     setup({ fetch } as unknown as FetchClient);
 
-    await TestBed.runInInjectionContext(() => fetchResolver('/api/messages'));
+    await TestBed.runInInjectionContext(() => oktaFetch('/api/messages'));
     expect(fetch).toHaveBeenCalledWith('/api/messages', undefined);
   });
 });

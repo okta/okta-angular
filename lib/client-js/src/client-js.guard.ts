@@ -11,9 +11,9 @@
  */
 
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, RedirectCommand, Router } from '@angular/router';
-import type { TokenOrchestrator } from '@okta/auth-foundation';
-import { CLIENT_JS_ORCHESTRATOR } from './models/client-js.config';
+import { ActivatedRouteSnapshot, CanActivateFn, GuardResult, RedirectCommand, Router } from '@angular/router';
+import { CLIENT_JS_CONFIG, CLIENT_JS_ORCHESTRATOR, ClientJsRouteData } from './models/client-js.config';
+import { toRelativeUri } from './to-relative-uri';
 
 /**
  * Functional guard for canActivate/canActivateChild/canMatch.
@@ -33,7 +33,9 @@ import { CLIENT_JS_ORCHESTRATOR } from './models/client-js.config';
  */
 export const tokenGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) => {
   const orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
-  const params = route.data?.['clientJs']?.['params'] as TokenOrchestrator.AuthorizeParams | undefined;
+  // `?.` is load-bearing despite `ActivatedRouteSnapshot.data` being non-optional: in `canMatch`
+  // position the first argument is a `Route`, whose `data` is optional.
+  const params = (route.data as ClientJsRouteData | undefined)?.clientJs?.params;
   return !!(await orchestrator.getToken(params));
 };
 
@@ -50,11 +52,30 @@ export const tokenGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) =
  * The `context` returned by `orchestrator.resumeFlow()` is whatever `meta` object was passed to
  * `flow.start()` (or the orchestrator's `login_prompt_required` listener) when the flow began -
  * `originalUri` is a convention, not a guarantee, so consumers who pass their own `meta` shape
- * should write their own guard that reads `context` themselves instead of using this one.
+ * should write their own guard that reads `context` themselves instead of using this one. Because
+ * it's external input it goes through the same same-origin reduction the `okta-auth-js` path
+ * applies via `toRelativeUrl`; anything off-origin or non-string falls back to `/`.
+ *
+ * `resumeFlow()` throws on an OAuth error response from the authorization server or a `state`
+ * mismatch, which is the single most likely thing to fail on this route. Pass
+ * {@link ClientJsAuthConfig.onLoginCallbackError} to `provideClientJsAuth` to turn that into a
+ * redirect to your own error route; without it the error is rethrown and surfaces as a router
+ * `NavigationError`.
  */
-export const loginCallbackGuard: CanActivateFn = async () => {
+export const loginCallbackGuard: CanActivateFn = async (): Promise<GuardResult> => {
   const orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
   const router = inject(Router);
-  const { originalUri } = await orchestrator.resumeFlow();
-  return new RedirectCommand(router.parseUrl(originalUri ?? '/'));
+  const { onLoginCallbackError } = inject(CLIENT_JS_CONFIG, { optional: true }) ?? {};
+
+  let context: Record<string, unknown>;
+  try {
+    context = await orchestrator.resumeFlow();
+  } catch (error) {
+    if (!onLoginCallbackError) {
+      throw error;
+    }
+    return onLoginCallbackError(error);
+  }
+
+  return new RedirectCommand(router.parseUrl(toRelativeUri(context?.['originalUri'])));
 };

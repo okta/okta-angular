@@ -19,15 +19,17 @@ import { CLIENT_JS_FETCH_CLIENT } from './models/client-js.config';
  * performs a full re-authentication redirect if not - this helper does no auth logic of its own,
  * it just fetches and returns the raw `Response`.
  *
- * Takes a resource and optional `RequestInit`, not Angular's `ActivatedRouteSnapshot`/
- * `RouterStateSnapshot` resolver args, so call it from within your own `ResolveFn` rather than
- * assigning it directly to `resolve` - `inject()` still resolves correctly here because it's
- * called synchronously within the resolver's injection context:
+ * Callable from any injection context - a component, a service, or inside a `ResolveFn`:
  *
  * @example
- * resolve: { messages: () => fetchResolver('/api/messages') }
+ * // in a component or service
+ * const res = await oktaFetch('/api/messages');
+ *
+ * @example
+ * // as route-resolved data
+ * resolve: { messages: () => oktaFetch('/api/messages').then((res) => res.json()) }
  */
-export function fetchResolver(resource: string | URL | Request, init?: RequestInit): Promise<Response> {
+export function oktaFetch(resource: string | URL | Request, init?: RequestInit): Promise<Response> {
   const fetchClient = inject(CLIENT_JS_FETCH_CLIENT);
   return fetchClient.fetch(resource, init);
 }
