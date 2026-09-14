@@ -23,6 +23,20 @@
     "@angular/core": ">= 19.2.0",
     "@angular/router": ">= 19.2.0",
     "@okta/okta-auth-js": "^5.4.3 || ^6.0.0 || ^7.0.0 || ^8.0.0",
+    "@okta/auth-foundation": "^0.6.0",
+    "@okta/oauth2-flows": "^0.6.0",
+    "@okta/spa-platform": "^0.6.0",
     "rxjs": "^7.4.0 || ^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@okta/auth-foundation": {
+      "optional": true
+    },
+    "@okta/oauth2-flows": {
+      "optional": true
+    },
+    "@okta/spa-platform": {
+      "optional": true
+    }
   }
 }

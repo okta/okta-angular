@@ -36,6 +36,7 @@
           "options": {
             "lintFilePatterns": [
               "lib/src/**/*.ts",
+              "lib/client-js/**/*.ts",
               "test/spec/**/*.ts"
             ]
           }

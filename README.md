@@ -470,6 +470,155 @@ const oktaConfig = {
 };
 ```
 
+## Using @okta/okta-angular/client-js (opt-in, beta)
+
+> :warning: This subpath is **beta** and **opt-in**. It has no effect on the default `@okta/okta-angular` entry point described above, and its API may change in a future minor release. `okta-auth-js`-based consumers can ignore this section entirely — nothing here is installed or evaluated unless you import from `@okta/okta-angular/client-js` yourself.
+
+`@okta/okta-angular/client-js` is a small set of Angular router adapters for [`@okta/okta-client-javascript`](https://github.com/okta/okta-client-javascript) (published as the `@okta/auth-foundation`, `@okta/oauth2-flows`, and `@okta/spa-platform` packages), offered as an alternative to the `@okta/okta-auth-js`-based API this library has always shipped.
+
+The two SDKs model authentication differently. `@okta/okta-auth-js` keeps a persistent `AuthState` that you subscribe to via `OktaAuthStateService`, and `OktaCallbackComponent`/the `okta.guard.ts` guards read from that state. `@okta/okta-client-javascript` has no such object: `AuthorizationCodeFlowOrchestrator.getToken()` and `FetchClient.fetch()` each resolve, refresh, or redirect on demand at the moment a token is actually needed, and there's nothing to subscribe to. The adapters below wrap that request-time model in Angular's native functional router primitives (`CanActivateFn` and a plain `fetch` helper), wired into Angular's dependency injector the same way `provideOktaAuth`/`OKTA_AUTH` wire up the `okta-auth-js` path above — you register your already-constructed `orchestrator` once via `provideClientJsAuth`, and the exported helpers `inject()` it, rather than being built by factory functions you have to thread instances through yourself.
+
+### Installation
+
+```
+npm install @okta/auth-foundation @okta/oauth2-flows @okta/spa-platform
+```
+
+These three packages are optional peer dependencies of `@okta/okta-angular` — installing `@okta/okta-angular` alone does not pull them in.
+
+### Example
+
+Construct your flow and orchestrator once, and register them with `provideClientJsAuth`:
+
+```typescript
+// app.config.ts
+import { ApplicationConfig } from '@angular/core';
+import { AuthorizationCodeFlow, AuthorizationCodeFlowOrchestrator } from '@okta/spa-platform';
+import { provideClientJsAuth } from '@okta/okta-angular/client-js';
+
+const flow = new AuthorizationCodeFlow({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  clientId: '{clientId}',
+  redirectUri: window.location.origin + '/login/callback',
+  scopes: ['openid', 'profile', 'email'],
+});
+
+const orchestrator = new AuthorizationCodeFlowOrchestrator(flow, {
+  // Required for a guard-driven app. See the note below before removing it.
+  emitBeforeRedirect: false,
+});
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...your other providers
+    provideClientJsAuth({ orchestrator }),
+  ],
+};
+```
+
+`emitBeforeRedirect: false` is not a tuning knob — it is required unless you register a listener. It defaults to `true`, and when true `AuthorizationCodeFlowOrchestrator.requestToken()` emits a `login_prompt_required` event and then awaits a promise that only that event payload's `done()` callback resolves. The SDK's event emitter is a no-op when nothing is listening, so with the default and no listener the promise never settles: `getToken()` never resolves, `tokenGuard` never returns, and the navigation stalls with no error and no redirect to Okta.
+
+Keep the default only if you register a listener, which is the hook to use when you want to run something — a confirmation prompt, analytics — immediately before the redirect. The redirect happens when you call `done()`:
+
+```typescript
+orchestrator.on('login_prompt_required', ({ done }) => {
+  // ...anything you need to do before leaving the page
+  done();
+});
+```
+
+`fetchClient` is optional: when you leave it out, `provideClientJsAuth` builds `new FetchClient(orchestrator)` for you. Pass your own only if you need to configure it — e.g. `provideClientJsAuth({ orchestrator, fetchClient: new FetchClient(orchestrator) })`.
+
+Then use the exported `tokenGuard`, `loginCallbackGuard`, and `oktaFetch` directly in your route config — no factories, no manual wiring of instances:
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { tokenGuard, loginCallbackGuard, oktaFetch } from '@okta/okta-angular/client-js';
+
+export const routes: Routes = [
+  { path: 'login/callback', canActivate: [loginCallbackGuard], children: [] },
+  {
+    path: 'protected',
+    canActivate: [tokenGuard],
+    resolve: { messages: () => oktaFetch('/api/messages').then((res) => res.json()) },
+    component: ProtectedComponent,
+  },
+];
+```
+
+The callback route needs no component of its own — `loginCallbackGuard` redirects before anything renders. Give it an empty `children: []` (or any placeholder component you like) to satisfy the router's requirement that a route do *something*.
+
+#### `tokenGuard`
+
+`tokenGuard` is a `CanActivateFn`. Because its body only reads `route.data` and calls `orchestrator.getToken()`, it also works unchanged as a `canActivateChild` or `canMatch` guard. Note that `canMatch` is not a drop-in swap for `canActivate` in behaviour: a rejected `canMatch` makes the router skip the route and keep matching (falling through to a later route or a wildcard), whereas a rejected `canActivate` aborts the navigation. Since `getToken()` redirects to sign-in rather than resolving falsy in the common case, the difference rarely shows up — but pick the hook for the routing semantics you want, not because the two are interchangeable.
+
+To pass per-route [`TokenOrchestrator.AuthorizeParams`](https://github.com/okta/okta-client-javascript) (e.g. extra scopes), set them on the route's `data`, the same way the existing `okta-auth-js` guards read `route.data['okta']['acrValues']`:
+
+```typescript
+{ path: 'admin', canActivate: [tokenGuard], data: { clientJs: { params: { scopes: ['openid', 'admin'] } } } }
+```
+
+The `data` shape is exported as `ClientJsRouteData` if you want to type your route definitions against it.
+
+#### `loginCallbackGuard`
+
+`loginCallbackGuard` replaces `OktaCallbackComponent` for this SDK: it resumes the flow from the current URL and returns a [`RedirectCommand`](https://angular.dev/api/router/RedirectCommand) pointing at the original pre-login URL. The `originalUri` recorded when the flow started is treated as untrusted input — anything that isn't a same-origin URL collapses to `/` rather than being followed.
+
+`orchestrator.resumeFlow()` **throws** when the authorization server returns an error (`access_denied`, an expired or replayed `state`, a user closing the Okta-hosted form, etc.). By default the guard lets that rejection propagate, which surfaces as a failed navigation — the browser stays on the callback URL and your `ErrorHandler` sees the error. To handle it in-app, pass `onLoginCallbackError`; whatever it returns becomes the guard's result:
+
+```typescript
+provideClientJsAuth({
+  orchestrator,
+  onLoginCallbackError: (error) => {
+    console.error(error);
+    return new RedirectCommand(inject(Router).parseUrl('/login/error'));
+  },
+});
+```
+
+`onLoginCallbackError` runs inside the guard's injection context, so `inject()` works in its body. It may return anything a `CanActivateFn` may return (`boolean`, `UrlTree`, `RedirectCommand`), synchronously or as a promise.
+
+#### `signOut`
+
+`signOut()` clears the stored credential and performs RP-initiated logout at Okta. It needs a `SessionLogoutFlow`, which you pass as `signOutFlow`:
+
+```typescript
+import { SessionLogoutFlow } from '@okta/spa-platform';
+
+provideClientJsAuth({
+  orchestrator,
+  signOutFlow: new SessionLogoutFlow({
+    issuer: 'https://{yourOktaDomain}/oauth2/default',
+    clientId: '{clientId}',
+    scopes: ['openid', 'profile', 'email'],
+    logoutRedirectUri: window.location.origin,
+  }),
+});
+```
+
+Call it from an injection context; pass `{ revokeTokens: false }` to drop the local credential without revoking at the authorization server:
+
+```typescript
+export class HeaderComponent {
+  readonly #injector = inject(Injector);
+
+  logout() {
+    runInInjectionContext(this.#injector, () => signOut());
+  }
+}
+```
+
+#### Making authenticated requests: `oktaFetch`, not an `HttpInterceptorFn`
+
+`oktaFetch` is a thin wrapper over the registered `FetchClient.fetch()` with the same signature as the global `fetch`. Use it anywhere in an injection context:
+
+```typescript
+const res = await oktaFetch('/api/messages');
+```
+
+This subpath deliberately does **not** ship an `HttpInterceptorFn` for Angular's `HttpClient`. `FetchClient` does considerably more than attach an `Authorization` header: it retries on a DPoP nonce challenge, retries once on a 401, handles ACR step-up challenges, and backs off on a 429. A header-only interceptor would look equivalent and silently drop all of that — most visibly DPoP, where the first request of a session is *expected* to fail with a nonce challenge that must be replayed. If you need `HttpClient` (for its interceptor chain, `HttpContext`, or testing utilities), write the interceptor in your app so the omission is a decision you made rather than one the library made for you, and be aware that DPoP-bound tokens will not work through it.
+
 ## Testing
 
 To run Jest tests for your app using `@okta/okta-angular` please add `@okta/okta-angular` (and some of its dependencies listed below) to `transformIgnorePatterns` in `jest.config.js`:

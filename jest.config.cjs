@@ -3,6 +3,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     "./lib/src/**",
+    "./lib/client-js/src/**",
     "!./test/**"
   ],
   reporters: [
@@ -14,8 +15,16 @@ module.exports = {
   ],
   restoreMocks: true,
 
+  moduleNameMapper: {
+    // `@okta/spa-platform` is ESM-only and node_modules is not transformed, so requiring the real
+    // package from a spec throws ERR_REQUIRE_ESM. lib/client-js/ imports exactly two values from it
+    // (`addEnv` and `FetchClient`); the stub provides both.
+    "^@okta/spa-platform$": "<rootDir>/test/mocks/spa-platform.ts"
+  },
+
   roots: [
-    "./test/spec"
+    "./test/spec",
+    "./test/mocks"
   ],
   testMatch: [
     "<rootDir>/test/spec/*.ts"

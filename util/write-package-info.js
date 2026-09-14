@@ -10,6 +10,9 @@ const __dirname = path.dirname(__filename);
 const projectPath = path.join(__dirname, '..');
 const packageJsonPath = path.join(projectPath, 'lib', 'package.json');
 const destPath = path.join(projectPath, 'lib', 'src', 'okta', 'packageInfo.ts');
+// The `client-js` secondary entry point can't import from the primary one's internals, so it gets
+// its own copy. It has no use for `authJSMinSupportedVersion`.
+const clientJsDestPath = path.join(projectPath, 'lib', 'client-js', 'src', 'package-info.ts');
 
 const packageJson = require(packageJsonPath);
 const packageInfo = {
@@ -17,8 +20,11 @@ const packageInfo = {
   version: packageJson.version,
   authJSMinSupportedVersion: '5.3.1'
 };
-const output = 'export default ' + JSON.stringify(packageInfo, null, 2).replace(/"/g, '\'') + ';\n';
+
+const serialize = (info) => 'export default ' + JSON.stringify(info, null, 2).replace(/"/g, '\'') + ';\n';
 
 console.log('Writing config to', destPath);
+fs.writeFileSync(destPath, serialize(packageInfo));
 
-fs.writeFileSync(destPath, output);
+console.log('Writing config to', clientJsDestPath);
+fs.writeFileSync(clientJsDestPath, serialize({ name: packageInfo.name, version: packageInfo.version }));
