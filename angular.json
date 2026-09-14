@@ -28,7 +28,7 @@
           "builder": "@angular-builders/jest:run",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "configPath": "./jest.config.cjs"
+            "config": "./jest.config.cjs"
           }
         },
         "lint": {
