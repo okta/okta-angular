@@ -1,0 +1,41 @@
+{
+  "name": "@okta/test.app.client-js",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "prestart": "node ./prebuild.mjs",
+    "start": "ng serve --port 8080",
+    "start:api": "node mock-api/server.mjs",
+    "start:prod": "lite-server -c bs-config.cjs",
+    "prebuild": "node ./prebuild.mjs",
+    "build": "ng build",
+    "build:prod": "yarn prebuild && ng build",
+    "watch": "ng build --watch --configuration development"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "@okta/auth-foundation": "^0.6.0",
+    "@okta/oauth2-flows": "^0.6.0",
+    "@okta/okta-angular": "../../../dist",
+    "@okta/spa-platform": "^0.6.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.2",
+    "@angular/cli": "^21.2.2",
+    "@angular/compiler-cli": "^21.2.0",
+    "lite-server": "^2.6.1",
+    "typescript": "~5.9.2"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  }
+}
