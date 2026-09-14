@@ -503,7 +503,10 @@ const flow = new AuthorizationCodeFlow({
   scopes: ['openid', 'profile', 'email'],
 });
 
-const orchestrator = new AuthorizationCodeFlowOrchestrator(flow);
+const orchestrator = new AuthorizationCodeFlowOrchestrator(flow, {
+  // Required for a guard-driven app. See the note below before removing it.
+  emitBeforeRedirect: false,
+});
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -511,6 +514,17 @@ export const appConfig: ApplicationConfig = {
     provideClientJsAuth({ orchestrator }),
   ],
 };
+```
+
+`emitBeforeRedirect: false` is not a tuning knob — it is required unless you register a listener. It defaults to `true`, and when true `AuthorizationCodeFlowOrchestrator.requestToken()` emits a `login_prompt_required` event and then awaits a promise that only that event payload's `done()` callback resolves. The SDK's event emitter is a no-op when nothing is listening, so with the default and no listener the promise never settles: `getToken()` never resolves, `tokenGuard` never returns, and the navigation stalls with no error and no redirect to Okta.
+
+Keep the default only if you register a listener, which is the hook to use when you want to run something — a confirmation prompt, analytics — immediately before the redirect. The redirect happens when you call `done()`:
+
+```typescript
+orchestrator.on('login_prompt_required', ({ done }) => {
+  // ...anything you need to do before leaving the page
+  done();
+});
 ```
 
 `fetchClient` is optional: when you leave it out, `provideClientJsAuth` builds `new FetchClient(orchestrator)` for you. Pass your own only if you need to configure it — e.g. `provideClientJsAuth({ orchestrator, fetchClient: new FetchClient(orchestrator) })`.
