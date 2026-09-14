@@ -13,11 +13,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 /**
- * Where `onLoginCallbackError` (see app.config.ts) redirects when `resumeFlow()` rejects — a `state`
- * mismatch, a replayed callback URL, `access_denied`, or the user abandoning the Okta-hosted form.
- *
- * The thrown error is not passed through the redirect; `onLoginCallbackError` logs it to the console
- * and returns only a `RedirectCommand`. Stash it in a service first if you need to render it.
+ * Where `onLoginCallbackError` redirects when `resumeFlow()` rejects. The error is not passed through
+ * the redirect, so stash it in a service first if you need to render it.
  */
 @Component({
   selector: 'app-login-error',

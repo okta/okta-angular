@@ -34,6 +34,11 @@ import { CLIENT_JS_ORCHESTRATOR, signOut } from '@okta/okta-angular/client-js';
     <button id="private-button" routerLink="/public/private">Public &rarr; Private (canActivateChild)</button>
     <button id="lazy-button" routerLink="/lazy">Lazy (canMatch)</button>
   </nav>
+  <p id="home-message">
+    Sample app for <code>&#64;okta/okta-angular/client-js</code>. It installs the three client-js
+    packages and deliberately not <code>&#64;okta/okta-auth-js</code>; that it builds is the proof
+    the subpath never reaches the other SDK.
+  </p>
   <router-outlet></router-outlet>
   `,
   styles: [`
@@ -47,37 +52,23 @@ export class AppComponent implements OnInit {
   readonly #injector = inject(Injector);
   readonly #router = inject(Router);
 
+  // There is no persistent `AuthState` to subscribe to on this path, so this is a point-in-time read
+  // re-run after login and logout rather than a stream.
   async ngOnInit(): Promise<void> {
-    // This SDK has no persistent `AuthState` to subscribe to — the `okta-auth-js` path's
-    // `OktaAuthStateService.authState$` has no counterpart here. The nearest equivalent is asking
-    // storage whether a credential exists, which is a point-in-time read, not a stream. Hence the
-    // one-shot check plus manual re-reads after login/logout.
     await this.#refreshSignedIn();
   }
 
-  /**
-   * `selectCredential()` only reads storage; unlike `getToken()` it never redirects, which is what
-   * makes it safe to call for a "am I signed in?" check.
-   */
+  /** `selectCredential()` only reads storage; unlike `getToken()` it never redirects. */
   async #refreshSignedIn(): Promise<void> {
     this.signedIn.set(!!(await this.#orchestrator.selectCredential({})));
   }
 
-  /**
-   * No `signIn()` helper exists, by design: navigating to a `tokenGuard`-protected route *is* the
-   * sign-in trigger. The guard calls `getToken()`, which finds no credential and performs the
-   * full-page redirect to Okta, recording this app's current URL as `originalUri` so
-   * `loginCallbackGuard` can send the user back afterwards.
-   */
+  /** There is no `signIn()` helper by design: navigating to a guarded route *is* the trigger. */
   login(): void {
     this.#router.navigate(['/protected']);
   }
 
-  /**
-   * `signOut()` calls `inject()` internally, so it is only valid inside an injection context. A DOM
-   * event handler is not one — calling it bare here throws NG0203. `runInInjectionContext` supplies
-   * the missing context.
-   */
+  /** `signOut()` needs an injection context; a DOM handler is not one. */
   async logout(): Promise<void> {
     await runInInjectionContext(this.#injector, () => signOut());
     await this.#refreshSignedIn();

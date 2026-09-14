@@ -15,11 +15,8 @@ import { RouterOutlet } from '@angular/router';
 import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
 
 /**
- * Reached only through `tokenGuard`, so a credential is guaranteed to exist by the time this renders.
- *
- * Injects `CLIENT_JS_ORCHESTRATOR` directly rather than going through one of the library's helpers:
- * the tokens `provideClientJsAuth` registers are part of the public API precisely so the underlying
- * SDK objects stay reachable for anything the four helper functions don't cover.
+ * Reached only through `tokenGuard`, so a credential exists by the time this renders. Injects
+ * `CLIENT_JS_ORCHESTRATOR` directly, which is why that token is public.
  */
 @Component({
   selector: 'app-protected',
@@ -41,8 +38,7 @@ export class ProtectedComponent implements OnInit {
   readonly #orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
 
   async ngOnInit(): Promise<void> {
-    // `selectCredential()` reads storage without ever redirecting, which is what makes it usable
-    // from a component. `getToken()` would be wrong here — it can trigger a full-page redirect.
+    // `selectCredential()` reads storage without redirecting; `getToken()` would be wrong here.
     const credential = await this.#orchestrator.selectCredential({});
 
     if (!credential) {
@@ -52,11 +48,9 @@ export class ProtectedComponent implements OnInit {
 
     this.scopes.set(JSON.stringify(credential.token.scopes, null, 2));
 
-    // `token.idToken` is a `JWT` instance, not the raw string — `.claims` is already parsed. The raw
-    // string is `.rawValue`, which is what `signOut()` needs for the logout URL.
+    // `idToken` is a `JWT` instance, so `.claims` is already parsed (`.rawValue` is the string).
     this.claims.set(JSON.stringify(credential.token.idToken?.claims ?? null, null, 2));
 
-    // Network call to the `/userinfo` endpoint, cached on the credential after the first call.
     const info = await credential.userInfo();
     this.user.set(JSON.stringify(info, null, 2));
   }

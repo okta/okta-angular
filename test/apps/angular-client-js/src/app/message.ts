@@ -20,3 +20,12 @@ export interface Message {
 export interface MessagesResponse {
   messages: Message[];
 }
+
+/**
+ * What the resolver hands the component. The failure reason is carried rather than swallowed: a
+ * resolver cannot reject without aborting the navigation, but returning a bare `null` reports every
+ * failure identically, which is useless when the cause is a CORS preflight or a missing credential.
+ */
+export type MessagesResult =
+  | { messages: Message[] }
+  | { error: string };

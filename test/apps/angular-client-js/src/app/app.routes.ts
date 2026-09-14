@@ -15,51 +15,44 @@ import { ClientJsRouteData, loginCallbackGuard, oktaFetch, tokenGuard } from '@o
 
 import { environment } from '../environments/environment';
 import { AdminComponent } from './admin.component';
-import { HomeComponent } from './home.component';
 import { LoginErrorComponent } from './login-error.component';
-import { Message, MessagesResponse } from './message';
+import { MessagesResponse, MessagesResult } from './message';
 import { MessagesComponent } from './messages.component';
 import { ProtectedComponent } from './protected.component';
 import { PublicComponent } from './public.component';
 
 /**
- * `oktaFetch` in its third valid position: a `ResolveFn` runs in an injection context, so it can be
- * called directly here just like inside a guard.
- *
- * Failures resolve to `null` rather than rejecting. A rejected resolver aborts the whole navigation,
- * which would make `/messages` unreachable whenever the mock API isn't running — not a useful demo.
- * Note this only swallows *resource server* failures: if no credential can be resolved, `oktaFetch`
- * redirects to Okta before the request is ever made, and this `catch` is never reached.
+ * A `ResolveFn` runs in an injection context, so `oktaFetch` can be called directly. Failures are
+ * returned as data rather than rethrown, since a rejected resolver aborts the whole navigation.
  */
-const messagesResolver: ResolveFn<Message[] | null> = async () => {
+const messagesResolver: ResolveFn<MessagesResult> = async () => {
   try {
     const response = await oktaFetch(environment.resourceServer.messagesUrl);
 
     if (!response.ok) {
-      return null;
+      return { error: `Resource server answered HTTP ${response.status}.` };
     }
 
-    const body = await response.json() as MessagesResponse;
-    return body.messages;
-  } catch {
-    return null;
+    return await response.json() as MessagesResponse;
+  } catch (e) {
+    // A CORS preflight rejection lands here as a bare "Failed to fetch"/"Network failure", with the
+    // actual reason only in the browser console — hence logging it as well as rendering it.
+    console.error('[client-js] messagesResolver: oktaFetch rejected', e);
+    return { error: `oktaFetch rejected: ${String(e)} — check the console and the :8000 log.` };
   }
 };
 
 export const routes: Routes = [
+  // The app shell renders the intro, so `/` needs no component of its own. `pathMatch: 'full'` keeps
+  // this empty path from being tried as a prefix of every other URL.
+  { path: '', pathMatch: 'full', children: [] },
   {
-    path: '',
-    component: HomeComponent
-  },
-  {
-    // `loginCallbackGuard` redirects before anything renders, so there is nothing to show. `children:
-    // []` satisfies the router's requirement that a route resolve to *something*.
+    // Redirects before anything renders; `children: []` gives the router something to resolve to.
     path: 'login/callback',
     canActivate: [loginCallbackGuard],
     children: []
   },
   {
-    // Where `onLoginCallbackError` sends the user. Reachable directly for a look at the UI.
     path: 'login/error',
     component: LoginErrorComponent
   },
@@ -76,8 +69,8 @@ export const routes: Routes = [
     ]
   },
   {
-    // Step-up: the extra `groups` scope makes `selectCredential()` miss the credential stored for the
-    // default scope set, so `getToken()` starts a fresh authorize request for the wider scope.
+    // Step-up: the extra `groups` scope misses the credential stored for the default scopes, so
+    // `getToken()` starts a fresh authorize request.
     path: 'admin',
     component: AdminComponent,
     canActivate: [tokenGuard],
@@ -106,9 +99,8 @@ export const routes: Routes = [
     ]
   },
   {
-    // `tokenGuard` unchanged in `canMatch` position. Here the argument the guard receives is a
-    // `Route`, not an `ActivatedRouteSnapshot` — its `data` is optional, which is why the guard reads
-    // `route.data` with `?.`.
+    // `tokenGuard` unchanged in `canMatch` position, where it receives a `Route` rather than an
+    // `ActivatedRouteSnapshot`.
     path: 'lazy',
     loadComponent: () => import('./lazy-load/lazy-load.component').then(c => c.LazyLoadComponent),
     canMatch: [tokenGuard]

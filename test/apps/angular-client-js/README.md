@@ -69,7 +69,7 @@ mode; `yarn start` is the better path for exercising routes directly.
 | `/protected` | `tokenGuard` as `canActivate`; injects `CLIENT_JS_ORCHESTRATOR` to render claims + `/userinfo` |
 | `/protected/child` | a child route inheriting the parent's `canActivate` |
 | `/admin` | per-route `AuthorizeParams` via route `data`, typed with `ClientJsRouteData` (step-up for an extra scope) |
-| `/messages` | `oktaFetch` in all three legal positions (see below) |
+| `/messages` | `oktaFetch` from a `ResolveFn` and from a click handler (see below) |
 | `/public` → `/public/private` | `canActivateChild` — parent renders for everyone, child does not |
 | `/lazy` | `tokenGuard` as `canMatch` + `loadComponent`, so the chunk isn't fetched without a token |
 
@@ -80,14 +80,16 @@ leaving it out is what makes `provideClientJsAuth` build the `new FetchClient(or
 ### The injection-context rule
 
 `oktaFetch` and `signOut` call `inject()` internally, so they inherit Angular's injection-context
-rule. `messages.component.ts` shows all three legal positions plus the escape hatch:
+rule — they are only valid while Angular is constructing something, or inside a router guard or
+resolver. Both sides of that rule are in the app:
 
-1. a `ResolveFn` in `app.routes.ts` — guards and resolvers run in an injection context
-2. a component **field initializer** — construction is an injection context
-3. a **click handler** — *not* an injection context; a bare call throws `NG0203`, so it goes through
-   `runInInjectionContext(injector, () => oktaFetch(...))`
+- the `messagesResolver` in `app.routes.ts` calls `oktaFetch` directly, because a `ResolveFn` runs in
+  an injection context
+- `messages.component.ts`'s click handler does **not** have one — a bare call there throws `NG0203`,
+  so it goes through `runInInjectionContext(injector, () => oktaFetch(...))`
 
-`app.component.ts` does the same for `signOut()`.
+A component **field initializer** is also a valid position, since construction is an injection
+context. `app.component.ts` shows the same escape hatch for `signOut()`.
 
 ## `emitBeforeRedirect: false` is required, not a tuning knob
 

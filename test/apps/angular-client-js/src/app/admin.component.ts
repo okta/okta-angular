@@ -14,13 +14,8 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
 
 /**
- * Reached through `tokenGuard` with per-route `AuthorizeParams` on the route's `data` (typed as
- * `ClientJsRouteData` — see app.routes.ts).
- *
- * The route asks for an extra `groups` scope. `getToken()` matches stored credentials on their scope
- * set, so the credential minted for the app's default scopes does not satisfy this route and a fresh
- * authorize request is made for the wider set. That is the client-js equivalent of the `okta-auth-js`
- * path's `data: { okta: { acrValues } }` step-up.
+ * Reached through `tokenGuard` with per-route `AuthorizeParams` on the route's `data`. The client-js
+ * equivalent of the `okta-auth-js` path's `data: { okta: { acrValues } }` step-up.
  */
 @Component({
   selector: 'app-admin',
@@ -37,8 +32,7 @@ export class AdminComponent implements OnInit {
   readonly #orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
 
   async ngOnInit(): Promise<void> {
-    // Queried with the same scopes the route asked for, so this reads back the step-up credential
-    // rather than whichever one happens to be first in storage.
+    // Queried with the route's scopes, so this reads back the step-up credential specifically.
     const credential = await this.#orchestrator.selectCredential({
       scopes: ['openid', 'profile', 'email', 'groups']
     });
