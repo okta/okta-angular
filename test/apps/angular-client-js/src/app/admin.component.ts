@@ -11,7 +11,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
+import { JsonPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { CLIENT_JS_ORCHESTRATOR, ClientJsRouteData } from '@okta/okta-angular/client-js';
 
 /**
  * Reached through `tokenGuard` with per-route `AuthorizeParams` on the route's `data`. The client-js
@@ -19,24 +21,32 @@ import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
  */
 @Component({
   selector: 'app-admin',
+  imports: [JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <div id="admin-message">Admin! Reached with per-route scopes.</div>
-  Scopes on the credential backing this route:
-  <pre id="admin-scopes-container">{{ scopes() }}</pre>
+  Requested by the route: <pre id="admin-requested-container">{{ requestedScopes() | json }}</pre>
+  Granted on the credential: <pre id="admin-scopes-container">{{ grantedScopes() | json }}</pre>
   `
 })
 export class AdminComponent implements OnInit {
-  readonly scopes = signal('');
+  readonly grantedScopes = signal<string[] | null>(null);
 
   readonly #orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
 
+  /**
+   * Read back off the route rather than restated here, so the route stays the single source of truth
+   * and the same `ClientJsRouteData` type checks the read as well as the write.
+   */
+  readonly #routeData: ClientJsRouteData = inject(ActivatedRoute).snapshot.data;
+  readonly requestedScopes = signal(this.#routeData.clientJs?.params?.scopes ?? null);
+
   async ngOnInit(): Promise<void> {
-    // Queried with the route's scopes, so this reads back the step-up credential specifically.
+    // Queried with the route's own scopes, so this reads back the credential the guard just obtained.
     const credential = await this.#orchestrator.selectCredential({
-      scopes: ['openid', 'profile', 'email', 'groups']
+      scopes: this.requestedScopes() ?? undefined
     });
 
-    this.scopes.set(JSON.stringify(credential?.token.scopes ?? null, null, 2));
+    this.grantedScopes.set(credential?.token.scopes ?? null);
   }
 }

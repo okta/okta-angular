@@ -1,7 +1,5 @@
 
   export const environment = {
-    production: 'false',
-    appBaseHref: '/',
     oidc: {
       clientId: '0oapmwm72082GXal14x6',
       issuer: 'https://samples-javascript.okta.com/oauth2/default',

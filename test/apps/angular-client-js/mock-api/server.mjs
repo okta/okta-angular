@@ -118,7 +118,7 @@ const server = http.createServer((req, res) => {
   // `x-okta-user-agent-extended` is not optional: `APIClient` adds that header to every request it
   // sends, and it is not a CORS-simple header. Omitting it here makes the browser's preflight fail,
   // so the real request is never sent — the app sees a network error and the server logs nothing.
-  res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type, dpop, x-okta-user-agent-extended');
+  res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type, x-okta-user-agent-extended');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Max-Age', '600');
 

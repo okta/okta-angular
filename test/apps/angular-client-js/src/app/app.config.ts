@@ -11,7 +11,14 @@
  */
 
 import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, RedirectCommand, Router, withComponentInputBinding } from '@angular/router';
+import {
+  provideRouter,
+  RedirectCommand,
+  Router,
+  withComponentInputBinding,
+  withNavigationErrorHandler,
+  withRouterConfig
+} from '@angular/router';
 import {
   AuthorizationCodeFlow,
   AuthorizationCodeFlowOrchestrator,
@@ -48,7 +55,24 @@ const signOutFlow = new SessionLogoutFlow({
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding()),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      // `urlUpdateStrategy: 'eager'` is load-bearing, not a preference. The orchestrator captures the
+      // return URL by calling its `getOriginalUri` option, whose default reads `window.location.href`,
+      // and it does so *inside* the guard. Under Angular's default `'deferred'` strategy the address
+      // bar still holds the previous URL at that point, so signing in from a link would send you back
+      // to where you came from instead of where you were going. Unlike the default entry point, which
+      // passes the router's own `state.url`, the client-js path has no access to the pending
+      // navigation - so the URL has to be committed before the guard runs.
+      withRouterConfig({ urlUpdateStrategy: 'eager' }),
+      // `tokenGuard` rejects when `getToken()` rejects; without a handler that surfaces only as an
+      // unhandled rejection in the console.
+      withNavigationErrorHandler(({ error }) => {
+        console.error('[client-js] navigation failed', error);
+        return new RedirectCommand(inject(Router).parseUrl('/login/error'));
+      })
+    ),
     provideClientJsAuth({
       orchestrator,
       signOutFlow,

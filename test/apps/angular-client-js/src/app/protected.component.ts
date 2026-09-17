@@ -11,7 +11,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { JsonPipe } from '@angular/common';
 import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
 
 /**
@@ -20,38 +20,46 @@ import { CLIENT_JS_ORCHESTRATOR } from '@okta/okta-angular/client-js';
  */
 @Component({
   selector: 'app-protected',
-  imports: [RouterOutlet],
+  imports: [JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <div id="protected-message">Protected!</div>
-  Scopes: <pre id="scopes-container">{{ scopes() }}</pre>
-  ID token claims: <pre id="claims-container">{{ claims() }}</pre>
-  UserInfo: <pre id="userinfo-container">{{ user() }}</pre>
-  <router-outlet></router-outlet>
+  @if (error(); as message) {
+    <p id="protected-error">{{ message }}</p>
+  }
+  Scopes: <pre id="scopes-container">{{ scopes() | json }}</pre>
+  ID token claims: <pre id="claims-container">{{ claims() | json }}</pre>
+  UserInfo: <pre id="userinfo-container">{{ userInfo() | json }}</pre>
   `
 })
 export class ProtectedComponent implements OnInit {
-  readonly claims = signal('');
-  readonly user = signal('');
-  readonly scopes = signal('');
+  readonly scopes = signal<string[] | null>(null);
+  readonly claims = signal<unknown>(null);
+  readonly userInfo = signal<unknown>(null);
+  readonly error = signal<string | null>(null);
 
   readonly #orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
 
   async ngOnInit(): Promise<void> {
-    // `selectCredential()` reads storage without redirecting; `getToken()` would be wrong here.
-    const credential = await this.#orchestrator.selectCredential({});
+    try {
+      // `selectCredential()` reads storage without redirecting; `getToken()` would be wrong here.
+      // An empty filter matches anything, so after a step-up this returns whichever credential
+      // storage yields first - pass a filter if you need a specific one.
+      const credential = await this.#orchestrator.selectCredential({});
 
-    if (!credential) {
-      this.claims.set('no credential in storage');
-      return;
+      if (!credential) {
+        this.error.set('No credential in storage.');
+        return;
+      }
+
+      this.scopes.set(credential.token.scopes);
+
+      // `idToken` is a `JWT` instance, so `.claims` is already parsed (`.rawValue` is the string).
+      this.claims.set(credential.token.idToken?.claims ?? null);
+      this.userInfo.set(await credential.userInfo());
+    } catch (e) {
+      // `userInfo()` is a network call. Without this the rejection would be invisible in the UI.
+      this.error.set(`Reading the credential failed: ${String(e)}`);
     }
-
-    this.scopes.set(JSON.stringify(credential.token.scopes, null, 2));
-
-    // `idToken` is a `JWT` instance, so `.claims` is already parsed (`.rawValue` is the string).
-    this.claims.set(JSON.stringify(credential.token.idToken?.claims ?? null, null, 2));
-
-    const info = await credential.userInfo();
-    this.user.set(JSON.stringify(info, null, 2));
   }
 }

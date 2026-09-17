@@ -10,16 +10,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Injector, input, runInInjectionContext, signal } from '@angular/core';
-import { oktaFetch } from '@okta/okta-angular/client-js';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { CLIENT_JS_FETCH_CLIENT } from '@okta/okta-angular/client-js';
 
 import { environment } from '../environments/environment';
 import { Message, MessagesResponse, MessagesResult } from './message';
 
-/**
- * `oktaFetch` needs an injection context. The resolver in app.routes.ts has one; a click handler does
- * not, and needs `runInInjectionContext`. See README.
- */
 @Component({
   selector: 'app-messages',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +24,7 @@ import { Message, MessagesResponse, MessagesResult } from './message';
 
   <h3>Resolved by a <code>ResolveFn</code></h3>
   @if (messages(); as result) {
-    @if ('messages' in result) {
+    @if (result.ok) {
       <ul id="resolved-messages">
         @for (message of result.messages; track message.id) {
           <li>{{ message.date }} — {{ message.text }}</li>
@@ -49,8 +45,8 @@ import { Message, MessagesResponse, MessagesResult } from './message';
       }
     </ul>
   }
-  @if (error()) {
-    <p id="messages-error">{{ error() }}</p>
+  @if (error(); as message) {
+    <p id="messages-error">{{ message }}</p>
   }
   `
 })
@@ -62,17 +58,22 @@ export class MessagesComponent {
   readonly boomUrl = environment.resourceServer.boomUrl;
 
   readonly refreshed = signal<Message[] | null>(null);
-  readonly error = signal('');
+  readonly error = signal<string | null>(null);
 
-  readonly #injector = inject(Injector);
+  /**
+   * `oktaFetch()` is just `inject(CLIENT_JS_FETCH_CLIENT).fetch()`, so it only works where injection
+   * works - a field initializer or a `ResolveFn`, not a click handler. Injecting the token here and
+   * keeping the client is the ordinary Angular answer; reaching for `runInInjectionContext` in the
+   * handler would work too, but there is no reason to.
+   */
+  readonly #fetchClient = inject(CLIENT_JS_FETCH_CLIENT);
 
-  /** A bare `oktaFetch()` here would throw NG0203 — the handler is not an injection context. */
   async load(url: string): Promise<void> {
-    this.error.set('');
+    this.error.set(null);
     this.refreshed.set(null);
 
     try {
-      const response = await runInInjectionContext(this.#injector, () => oktaFetch(url));
+      const response = await this.#fetchClient.fetch(url, { cache: 'no-store' });
 
       // A 500 is a *resolved* fetch, not a rejection, so status is checked rather than caught.
       if (!response.ok) {

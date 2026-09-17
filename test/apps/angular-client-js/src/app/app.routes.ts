@@ -30,21 +30,21 @@ const messagesResolver: ResolveFn<MessagesResult> = async () => {
     const response = await oktaFetch(environment.resourceServer.messagesUrl);
 
     if (!response.ok) {
-      return { error: `Resource server answered HTTP ${response.status}.` };
+      return { ok: false, error: `Resource server answered HTTP ${response.status}.` };
     }
 
-    return await response.json() as MessagesResponse;
+    const { messages } = await response.json() as MessagesResponse;
+    return { ok: true, messages };
   } catch (e) {
     // A CORS preflight rejection lands here as a bare "Failed to fetch"/"Network failure", with the
     // actual reason only in the browser console — hence logging it as well as rendering it.
     console.error('[client-js] messagesResolver: oktaFetch rejected', e);
-    return { error: `oktaFetch rejected: ${String(e)} — check the console and the :8000 log.` };
+    return { ok: false, error: `oktaFetch rejected: ${String(e)} — check the console and the :8000 log.` };
   }
 };
 
 export const routes: Routes = [
-  // The app shell renders the intro, so `/` needs no component of its own. `pathMatch: 'full'` keeps
-  // this empty path from being tried as a prefix of every other URL.
+  // Nothing to render at `/` beyond the app shell's nav.
   { path: '', pathMatch: 'full', children: [] },
   {
     // Redirects before anything renders; `children: []` gives the router something to resolve to.
@@ -59,24 +59,21 @@ export const routes: Routes = [
   {
     path: 'protected',
     component: ProtectedComponent,
-    canActivate: [tokenGuard],
-    children: [
-      {
-        // Inherits the parent's `canActivate` — no guard of its own.
-        path: 'child',
-        component: ProtectedComponent
-      }
-    ]
+    canActivate: [tokenGuard]
   },
   {
-    // Step-up: the extra `groups` scope misses the credential stored for the default scopes, so
-    // `getToken()` starts a fresh authorize request.
+    // Step-up. `['openid', 'groups']` rather than the configured scopes plus `groups`, and that is not
+    // a cosmetic choice: `selectCredential` compares scopes with `hasSameValues(filter, stored, false)`,
+    // and the non-strict mode is a *subset* test in whichever direction - it takes the larger set and
+    // asks whether the smaller one fits inside it. So asking for the three configured scopes plus a
+    // fourth matches the stored three-scope credential and no step-up happens at all. Asking for a
+    // smaller set that contains a scope the credential lacks is what forces a fresh authorize request.
     path: 'admin',
     component: AdminComponent,
     canActivate: [tokenGuard],
     data: {
       clientJs: {
-        params: { scopes: ['openid', 'profile', 'email', 'groups'] }
+        params: { scopes: ['openid', 'groups'] }
       }
     } satisfies ClientJsRouteData
   },

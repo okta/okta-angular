@@ -10,8 +10,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, Injector, runInInjectionContext, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { CLIENT_JS_ORCHESTRATOR, signOut } from '@okta/okta-angular/client-js';
 
 @Component({
@@ -20,42 +22,42 @@ import { CLIENT_JS_ORCHESTRATOR, signOut } from '@okta/okta-angular/client-js';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <nav>
-    <button id="home-button" routerLink="/">Home</button>
+    <a id="home-link" routerLink="/">Home</a>
+    <a id="protected-link" routerLink="/protected">Protected</a>
+    <a id="messages-link" routerLink="/messages">Messages (resource server)</a>
+    <a id="admin-link" routerLink="/admin">Admin (step-up scopes)</a>
+    <a id="public-link" routerLink="/public">Public (parent)</a>
+    <a id="private-link" routerLink="/public/private">Public &rarr; Private (canActivateChild)</a>
+    <a id="lazy-link" routerLink="/lazy">Lazy (canMatch)</a>
     @if (signedIn()) {
       <button id="logout-button" (click)="logout()">Logout</button>
     } @else {
       <button id="login-button" (click)="login()">Login</button>
     }
-    <button id="protected-button" routerLink="/protected">Protected</button>
-    <button id="protected-child-button" routerLink="/protected/child">Protected (child route)</button>
-    <button id="messages-button" routerLink="/messages">Messages (resource server)</button>
-    <button id="admin-button" routerLink="/admin">Admin (step-up scopes)</button>
-    <button id="public-button" routerLink="/public">Public (parent)</button>
-    <button id="private-button" routerLink="/public/private">Public &rarr; Private (canActivateChild)</button>
-    <button id="lazy-button" routerLink="/lazy">Lazy (canMatch)</button>
   </nav>
-  <p id="home-message">
-    Sample app for <code>&#64;okta/okta-angular/client-js</code>. It installs the three client-js
-    packages and deliberately not <code>&#64;okta/okta-auth-js</code>; that it builds is the proof
-    the subpath never reaches the other SDK.
-  </p>
   <router-outlet></router-outlet>
   `,
-  styles: [`
-    nav { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 1rem; }
-  `]
+  styles: `
+    nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: baseline; margin-bottom: 1rem; }
+  `
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   readonly signedIn = signal(false);
 
   readonly #orchestrator = inject(CLIENT_JS_ORCHESTRATOR);
   readonly #injector = inject(Injector);
   readonly #router = inject(Router);
 
-  // There is no persistent `AuthState` to subscribe to on this path, so this is a point-in-time read
-  // re-run after login and logout rather than a stream.
-  async ngOnInit(): Promise<void> {
-    await this.#refreshSignedIn();
+  constructor() {
+    // There is no observable `AuthState` on this path, only a point-in-time storage read - so it has
+    // to be re-run whenever it could have changed. `NavigationEnd` is the right trigger and covers
+    // the case a one-shot `ngOnInit` misses: `loginCallbackGuard` finishes the code exchange and
+    // returns a `RedirectCommand`, which is an in-app navigation with no page reload, so this root
+    // component is never re-created and would otherwise still show "Login" after signing in.
+    // Fires on the initial navigation too, so no separate first read is needed.
+    this.#router.events
+      .pipe(filter((event) => event instanceof NavigationEnd), takeUntilDestroyed())
+      .subscribe(() => void this.#refreshSignedIn());
   }
 
   /** `selectCredential()` only reads storage; unlike `getToken()` it never redirects. */
@@ -68,9 +70,11 @@ export class AppComponent implements OnInit {
     this.#router.navigate(['/protected']);
   }
 
-  /** `signOut()` needs an injection context; a DOM handler is not one. */
-  async logout(): Promise<void> {
-    await runInInjectionContext(this.#injector, () => signOut());
-    await this.#refreshSignedIn();
+  /**
+   * `signOut()` needs an injection context and a DOM handler is not one, hence
+   * `runInInjectionContext`. It ends in `window.location.assign`, so nothing after it runs.
+   */
+  logout(): void {
+    void runInInjectionContext(this.#injector, () => signOut());
   }
 }

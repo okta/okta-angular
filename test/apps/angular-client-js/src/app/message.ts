@@ -27,5 +27,5 @@ export interface MessagesResponse {
  * failure identically, which is useless when the cause is a CORS preflight or a missing credential.
  */
 export type MessagesResult =
-  | { messages: Message[] }
-  | { error: string };
+  | { ok: true; messages: Message[] }
+  | { ok: false; error: string };
